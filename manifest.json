@@ -1,0 +1,21 @@
+{
+  "name": "N.I. CONSEILS-MANAGEMENTS",
+  "short_name": "N.I. CONSEILS",
+  "description": "Gestion de carrière pour joueurs de football ambitieux.",
+  "start_url": "/index.html",
+  "display": "standalone",
+  "background_color": "#0a0a0a",
+  "theme_color": "#c5a059",
+  "icons": [
+    {
+      "src": "/assets/images/logo.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/assets/images/logo.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

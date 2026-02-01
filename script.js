@@ -90,4 +90,44 @@ ${message}`;
             }, 500);
         });
     }
+
+    // PWA Service Worker Registration
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('/service-worker.js')
+                .then(reg => console.log('SW Registered', reg))
+                .catch(err => console.log('SW Registration Error', err));
+        });
+    }
+
+    // iOS Install Prompt Logic
+    const isIos = () => {
+        const userAgent = window.navigator.userAgent.toLowerCase();
+        return /iphone|ipad|ipod/.test(userAgent);
+    }
+
+    const isInStandaloneMode = () => ('standalone' in window.navigator) && (window.navigator.standalone);
+
+    if (isIos() && !isInStandaloneMode()) {
+        const prompt = document.createElement('div');
+        prompt.id = 'ios-install-prompt';
+        prompt.innerHTML = `
+            <span class="close-prompt">&times;</span>
+            <img src="assets/images/logo.png" alt="Logo" class="prompt-icon">
+            <div class="prompt-text">
+                <h3>Installer l'application</h3>
+                <p>Appuyez sur <i class="fa-solid fa-arrow-up-from-bracket"></i> puis <strong>"Sur l'écran d'accueil"</strong> pour l'installer sur votre iPhone.</p>
+            </div>
+        `;
+        document.body.appendChild(prompt);
+
+        // Show after a delay
+        setTimeout(() => {
+            prompt.style.display = 'flex';
+        }, 4000);
+
+        prompt.querySelector('.close-prompt').addEventListener('click', () => {
+            prompt.style.display = 'none';
+        });
+    }
 });

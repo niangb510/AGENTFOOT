@@ -599,9 +599,63 @@ footer {
 @media (max-width: 768px) {
     .whatsapp-float {
         width: 50px;
-        height: 50px;
+    height: 50px;
         bottom: 20px;
         right: 20px;
         font-size: 25px;
     }
+}
+
+/* iOS PWA Install Prompt */
+#ios-install-prompt {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    right: 20px;
+    background: white;
+    padding: 15px 20px;
+    border-radius: 20px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    z-index: 9999;
+    display: none;
+    align-items: center;
+    gap: 15px;
+    border: 1px solid rgba(0,0,0,0.1);
+    animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+#ios-install-prompt .prompt-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 12px;
+    object-fit: cover;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+#ios-install-prompt .prompt-text h3 {
+    font-size: 1rem;
+    margin-bottom: 2px;
+    color: var(--primary-color);
+}
+
+#ios-install-prompt .prompt-text p {
+    font-size: 0.85rem;
+    margin-bottom: 0;
+    color: #475569;
+    line-height: 1.4;
+}
+
+#ios-install-prompt .close-prompt {
+    position: absolute;
+    top: 5px;
+    right: 12px;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: #94a3b8;
+    padding: 5px;
+}
+
+@keyframes slideUp {
+    from { transform: translateY(120%); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
 }
