@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>N.I. CONSEILS-MANAGEMENTS | Nos Joueurs</title>
+    <!-- Security Headers -->
+    <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self'; script-src 'self' https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://fonts.googleapis.com; font-src 'self' https://cdnjs.cloudflare.com https://fonts.gstatic.com; img-src 'self' data: https://wa.me; connect-src 'self';">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+        integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .players-header {
+            background-color: var(--primary-color);
+            padding: 180px 0 60px;
+            text-align: center;
+            color: white;
+        }
+
+        .player-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 30px;
+            padding: 60px 0;
+        }
+
+        .player-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .player-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .player-img {
+            height: 350px;
+            width: 100%;
+            object-fit: cover;
+            object-position: top;
+        }
+
+        .player-info {
+            padding: 20px;
+        }
+
+        .player-name {
+            font-size: 1.5rem;
+            color: var(--primary-color);
+            margin-bottom: 5px;
+        }
+
+        .player-meta {
+            color: #64748b;
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .player-club {
+            font-weight: 600;
+            color: var(--secondary-color);
+        }
+
+        .video-btn {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            background: var(--primary-color);
+            color: white;
+            text-align: center;
+            border-radius: 8px;
+            margin-top: 10px;
+        }
+
+        .video-btn:hover {
+            background: var(--secondary-color);
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav class="navbar">
+        <div class="container">
+            <a href="index.html" class="logo">
+                <img src="assets/images/logo.png" alt="N.I. CONSEILS">
+            </a>
+            <ul class="nav-links">
+                <li><a href="index.html">Accueil</a></li>
+                <li><a href="agent.html">L'Agence</a></li>
+                <li><a href="players.html" class="active">Joueurs</a></li>
+                <li><a href="services.html">Services</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+            <div class="hamburger">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+        </div>
+    </nav>
+
+    <header class="players-header">
+        <div class="container">
+            <h1>Nos Talents</h1>
+            <p>Découvrez les joueurs qui nous font confiance.</p>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="player-grid">
+            <!-- Player 1: Cyriaque Irié -->
+            <div class="player-card reveal">
+                <div class="player-badge">INTERNATIONAL</div>
+                <div class="player-img-container">
+                    <img src="assets/images/cyriaque.png" alt="Cyriaque Irié" class="player-img"
+                        onerror="this.src='assets/images/player1.png'">
+                </div>
+                <div class="player-info">
+                    <h3 class="player-name">Cyriaque Irié</h3>
+                    <div class="player-meta">
+                        <span><i class="fa-solid fa-bolt"></i> Ailier / Attaquant</span>
+                        <span>19 ans</span>
+                    </div>
+                    <div class="player-club">
+                        <img src="assets/images/troyes.png" alt="ESTAC" class="club-logo-mini">
+                        SC Fribourg (Bundesliga)
+                    </div>
+                    <div style="margin-top: 10px; font-size: 0.85rem; color: #64748b;">
+                        <p><i class="fa-solid fa-flag"></i> International Burkinabé</p>
+                        <p><i class="fa-solid fa-shoe-prints"></i> Pied Gauche</p>
+                    </div>
+                    <p style="font-size: 0.9rem; margin-top: 10px;">Explosif et percutant. Révélation à Dijon, confirmé
+                        à Troyes, désormais en Bundesliga.</p>
+                    <div
+                        style="background: #f8fafc; padding: 10px; border-radius: 8px; margin-top: 10px; font-size: 0.8rem;">
+                        <strong>Stats Clés :</strong><br>
+                        Dijon (N1) : 26 matchs, 7 buts<br>
+                        Troyes (L2) : 14 matchs, 2 buts
+                    </div>
+                    <a href="https://www.youtube.com/results?search_query=Cyriaque+Iri%C3%A9+highlights" target="_blank"
+                        rel="noopener noreferrer" class="video-btn"><i class="fa-brands fa-youtube"></i> Voir
+                        Highlights</a>
+                </div>
+            </div>
+
+
+
+
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h4>N.I. CONSEILS</h4>
+                    <p>Votre partenaire de confiance.</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Liens Rapides</h4>
+                    <ul class="footer-links">
+                        <li><a href="index.html">Accueil</a></li>
+                        <li><a href="agent.html">L'Agence</a></li>
+                        <li><a href="players.html">Nos Joueurs</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Contact</h4>
+                    <ul class="footer-links">
+                        <li><i class="fa-solid fa-envelope"></i> <span
+                                class="email-obfuscated">n.iconseilsmanagements.fr [at] gmail.com</span></li>
+                        <li><i class="fa-solid fa-phone"></i> +226 74 80 60 22</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2024 N.I. CONSEILS-MANAGEMENTS. Tous droits réservés.</p>
+            </div>
+        </div>
+    </footer>
+
+    <a href="https://wa.me/22674806022?text=Bonjour%20Ibrahim,%20je%20vous%20contacte%20depuis%20votre%20application%20mobile%20pour%20avoir%20des%20renseignements."
+        class="whatsapp-float" target="_blank" rel="noopener noreferrer">
+        <i class="fa-brands fa-whatsapp"></i>
+    </a>
+    <script src="script.js"></script>
+</body>
+
+</html>

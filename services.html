@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>N.I. CONSEILS-MANAGEMENTS | Nos Services</title>
+    <!-- Security Headers -->
+    <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self'; script-src 'self' https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://fonts.googleapis.com; font-src 'self' https://cdnjs.cloudflare.com https://fonts.gstatic.com; img-src 'self' data: https://wa.me; connect-src 'self';">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+        integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .services-header {
+            background-color: var(--primary-color);
+            padding: 180px 0 60px;
+            text-align: center;
+            color: white;
+        }
+
+        .service-row {
+            display: flex;
+            align-items: center;
+            gap: 50px;
+            margin-bottom: 80px;
+        }
+
+        .service-row:nth-child(even) {
+            flex-direction: row-reverse;
+        }
+
+        .service-text {
+            flex: 1;
+        }
+
+        .service-icon-large {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 8rem;
+            color: var(--secondary-color);
+            opacity: 0.2;
+        }
+
+        .service-list {
+            margin-top: 20px;
+        }
+
+        .service-list li {
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .service-list i {
+            color: var(--secondary-color);
+        }
+
+        @media (max-width: 768px) {
+            .services-header {
+                padding: 140px 0 40px;
+            }
+
+            .service-row,
+            .service-row:nth-child(even) {
+                flex-direction: column;
+                text-align: center;
+                gap: 30px;
+                margin-bottom: 60px;
+            }
+
+            .service-icon-large {
+                font-size: 5rem;
+                order: -1;
+                /* Place icon above text on mobile */
+            }
+
+            .service-list li {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav class="navbar">
+        <div class="container">
+            <a href="index.html" class="logo">
+                <img src="assets/images/logo.png" alt="N.I. CONSEILS">
+            </a>
+            <ul class="nav-links">
+                <li><a href="index.html">Accueil</a></li>
+                <li><a href="agent.html">L'Agence</a></li>
+                <li><a href="players.html">Joueurs</a></li>
+                <li><a href="services.html" class="active">Services</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+            <div class="hamburger">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+        </div>
+    </nav>
+
+    <header class="services-header">
+        <div class="container">
+            <h1>Nos Services</h1>
+            <p>Un accompagnement à 360° pour votre carrière.</p>
+        </div>
+    </header>
+
+    <section class="section-padding">
+        <div class="container">
+
+            <!-- Service 1 -->
+            <div class="service-row">
+                <div class="service-text">
+                    <h2>Gestion de Carrière</h2>
+                    <p>Nous définissons ensemble un plan de carrière clair et ambitieux. Chaque choix est stratégique
+                        pour vous permettre d'atteindre vos objectifs sportifs.</p>
+                    <ul class="service-list">
+                        <li><i class="fa-solid fa-check"></i> Planification à court, moyen et long terme</li>
+                        <li><i class="fa-solid fa-check"></i> Analyse des opportunités sportives</li>
+                        <li><i class="fa-solid fa-check"></i> Suivi des performances et débriefing</li>
+                    </ul>
+                </div>
+                <div class="service-icon-large">
+                    <i class="fa-solid fa-chess-knight"></i>
+                </div>
+            </div>
+
+            <!-- Service 2 -->
+            <div class="service-row">
+                <div class="service-text">
+                    <h2>Transferts & Négociation</h2>
+                    <p>Notre expertise juridique et notre réseau nous permettent de négocier les meilleurs contrats pour
+                        vous, en protégeant vos intérêts avant tout.</p>
+                    <ul class="service-list">
+                        <li><i class="fa-solid fa-check"></i> Négociation salariale et primes</li>
+                        <li><i class="fa-solid fa-check"></i> Clauses libératoires et bonus</li>
+                        <li><i class="fa-solid fa-check"></i> Gestion des transferts internationaux</li>
+                    </ul>
+                </div>
+                <div class="service-icon-large">
+                    <i class="fa-solid fa-file-signature"></i>
+                </div>
+            </div>
+
+            <!-- Service 3 -->
+            <div class="service-row">
+                <div class="service-text">
+                    <h2>Marketing & Sponsoring</h2>
+                    <p>Votre image est un atout précieux. Nous vous aidons à la développer et à la monétiser auprès de
+                        marques prestigieuses.</p>
+                    <ul class="service-list">
+                        <li><i class="fa-solid fa-check"></i> Gestion des réseaux sociaux</li>
+                        <li><i class="fa-solid fa-check"></i> Recherche de sponsors et partenariats</li>
+                        <li><i class="fa-solid fa-check"></i> Relations presse et media training</li>
+                    </ul>
+                </div>
+                <div class="service-icon-large">
+                    <i class="fa-solid fa-bullhorn"></i>
+                </div>
+            </div>
+
+            <!-- Service 4 -->
+            <div class="service-row">
+                <div class="service-text">
+                    <h2>Accompagnement Vie Privée</h2>
+                    <p>Pour que vous puissiez vous concentrer à 100% sur le terrain, nous vous assistons dans la gestion
+                        de votre quotidien.</p>
+                    <ul class="service-list">
+                        <li><i class="fa-solid fa-check"></i> Gestion de patrimoine et fiscalité</li>
+                        <li><i class="fa-solid fa-check"></i> Conciergerie de luxe</li>
+                        <li><i class="fa-solid fa-check"></i> Soutien à la famille</li>
+                    </ul>
+                </div>
+                <div class="service-icon-large">
+                    <i class="fa-solid fa-house-user"></i>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h4>N.I. CONSEILS</h4>
+                    <p>Votre partenaire de confiance.</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Liens Rapides</h4>
+                    <ul class="footer-links">
+                        <li><a href="index.html">Accueil</a></li>
+                        <li><a href="agent.html">L'Agence</a></li>
+                        <li><a href="players.html">Nos Joueurs</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Contact</h4>
+                    <ul class="footer-links">
+                        <li><i class="fa-solid fa-envelope"></i> <span
+                                class="email-obfuscated">n.iconseilsmanagements.fr [at] gmail.com</span></li>
+                        <li><i class="fa-solid fa-phone"></i> +226 74 80 60 22</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2024 N.I. CONSEILS-MANAGEMENTS. Tous droits réservés.</p>
+            </div>
+        </div>
+    </footer>
+
+    <a href="https://wa.me/22674806022?text=Bonjour%20Ibrahim,%20je%20vous%20contacte%20depuis%20votre%20application%20mobile%20pour%20avoir%20des%20renseignements."
+        class="whatsapp-float" target="_blank" rel="noopener noreferrer">
+        <i class="fa-brands fa-whatsapp"></i>
+    </a>
+    <script src="script.js"></script>
+</body>
+
+</html>
