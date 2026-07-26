@@ -2,24 +2,24 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
 <channel>
   <title>N.I. CONSEILS-MANAGEMENTS - Actualités &amp; Mercato</title>
-  <link>https://niconseilsmanagements.fr/actualites.html</link>
+  <link>https://ni-conseils-managements.netlify.app/actualites.html</link>
   <description>Actualités officielles, transferts, signatures et performances des joueurs suivis par l'agence N.I. CONSEILS-MANAGEMENTS.</description>
   <language>fr-FR</language>
   <lastBuildDate>Sun, 26 Jul 2026 12:00:00 GMT</lastBuildDate>
-  <atom:link href="https://niconseilsmanagements.fr/feed.xml" rel="self" type="application/rss+xml" />
+  <atom:link href="https://ni-conseils-managements.netlify.app/feed.xml" rel="self" type="application/rss+xml" />
 
   <item>
     <title>Cyriaque Irié rejoint le SC Fribourg en Bundesliga</title>
-    <link>https://niconseilsmanagements.fr/actualites.html?id=cyriaque-irie-transfert-fribourg</link>
-    <guid>https://niconseilsmanagements.fr/actualites.html?id=cyriaque-irie-transfert-fribourg</guid>
+    <link>https://ni-conseils-managements.netlify.app/actualites.html?id=cyriaque-irie-transfert-fribourg</link>
+    <guid>https://ni-conseils-managements.netlify.app/actualites.html?id=cyriaque-irie-transfert-fribourg</guid>
     <pubDate>Mon, 20 Jul 2026 10:00:00 GMT</pubDate>
     <description>Après une saison étincelante à Dijon puis Troyes, le jeune ailier international burkinabé s'engage avec le SC Fribourg en Bundesliga.</description>
   </item>
 
   <item>
     <title>N.I. CONSEILS renforce son réseau de partenariats en Europe</title>
-    <link>https://niconseilsmanagements.fr/actualites.html?id=developpement-reseau-recrutement-europe</link>
-    <guid>https://niconseilsmanagements.fr/actualites.html?id=developpement-reseau-recrutement-europe</guid>
+    <link>https://ni-conseils-managements.netlify.app/actualites.html?id=developpement-reseau-recrutement-europe</link>
+    <guid>https://ni-conseils-managements.netlify.app/actualites.html?id=developpement-reseau-recrutement-europe</guid>
     <pubDate>Wed, 15 Jul 2026 09:00:00 GMT</pubDate>
     <description>L'agence étend ses connexions avec de nouveaux clubs partenaires en Ligue 1, Ligue 2 et Bundesliga pour offrir de meilleures opportunités à ses joueurs.</description>
   </item>
