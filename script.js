@@ -290,6 +290,7 @@ ${message}`;
                 }, null, 2);
             }
 
+            articleModal.style.display = 'flex';
             articleModal.classList.add('active');
             document.body.style.overflow = 'hidden';
         };
@@ -297,12 +298,14 @@ ${message}`;
         // Fermeture de la modale
         if (modalCloseBtn) {
             modalCloseBtn.addEventListener('click', () => {
+                articleModal.style.display = 'none';
                 articleModal.classList.remove('active');
                 document.body.style.overflow = 'auto';
             });
 
             articleModal.addEventListener('click', (e) => {
                 if (e.target === articleModal) {
+                    articleModal.style.display = 'none';
                     articleModal.classList.remove('active');
                     document.body.style.overflow = 'auto';
                 }

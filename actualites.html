@@ -7,9 +7,9 @@
     <title>N.I. CONSEILS-MANAGEMENTS | Actualités & Fil Info</title>
     <meta name="description"
         content="Actualités officielles, signatures, transferts et performances des joueurs gérés par N.I. CONSEILS-MANAGEMENTS. Suivez l'actualité de nos talents.">
-    <!-- Security Headers -->
+    <!-- Security & Resource Headers -->
     <meta http-equiv="Content-Security-Policy"
-        content="default-src 'self'; script-src 'self' https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://fonts.googleapis.com; font-src 'self' https://cdnjs.cloudflare.com https://fonts.gstatic.com; img-src 'self' data: https://wa.me; connect-src 'self';">
+        content="default-src 'self' 'unsafe-inline' https:; script-src 'self' 'unsafe-inline' https:; style-src 'self' 'unsafe-inline' https:; font-src 'self' https: data:; img-src 'self' data: https:;">
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -20,8 +20,8 @@
         crossorigin="anonymous" referrerpolicy="no-referrer">
     <!-- RSS Feed Link for Google News -->
     <link rel="alternate" type="application/rss+xml" title="N.I. CONSEILS-MANAGEMENTS RSS Feed" href="feed.xml">
-    <!-- Custom CSS -->
-    <link rel="stylesheet" href="style.css">
+    <!-- Custom CSS with Cache-Busting -->
+    <link rel="stylesheet" href="style.css?v=2.0">
     <!-- PWA Settings -->
     <link rel="manifest" href="manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -111,7 +111,7 @@
     </section>
 
     <!-- Modal Detail Article -->
-    <div class="modal-overlay" id="article-modal">
+    <div class="modal-overlay" id="article-modal" style="display: none;">
         <div class="modal-content">
             <button class="modal-close" id="modal-close-btn"><i class="fa-solid fa-xmark"></i></button>
             <img src="" alt="" class="modal-banner" id="modal-img">
