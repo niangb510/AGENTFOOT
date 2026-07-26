@@ -130,4 +130,198 @@ ${message}`;
             prompt.style.display = 'none';
         });
     }
+
+    /* ==========================================
+       LOGIQUE GESTION DES ACTUALITÉS & GOOGLE NEWS
+       ========================================== */
+
+    const newsContainer = document.getElementById('news-container');
+    const articleModal = document.getElementById('article-modal');
+    const modalCloseBtn = document.getElementById('modal-close-btn');
+
+    if (newsContainer) {
+        let allArticles = [];
+
+        // Charger articles depuis news.json et localStorage
+        const loadArticles = async () => {
+            let jsonArticles = [];
+            try {
+                const response = await fetch('news.json');
+                if (response.ok) {
+                    jsonArticles = await response.json();
+                }
+            } catch (err) {
+                console.log('Fichier news.json non trouvé ou erreur de lecture:', err);
+            }
+
+            const localArticles = JSON.parse(localStorage.getItem('custom_news_articles') || '[]');
+            allArticles = [...localArticles, ...jsonArticles];
+
+            // Tri par date décroissante
+            allArticles.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+            renderNewsGrid(allArticles);
+            checkUrlParamArticle();
+        };
+
+        const renderNewsGrid = (articles) => {
+            newsContainer.innerHTML = '';
+
+            if (articles.length === 0) {
+                newsContainer.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 40px; color: #64748b;">
+                    <i class="fa-solid fa-newspaper" style="font-size: 3rem; margin-bottom: 15px;"></i>
+                    <p>Aucun article disponible pour le moment.</p>
+                </div>`;
+                return;
+            }
+
+            articles.forEach(article => {
+                const card = document.createElement('article');
+                card.className = 'news-card reveal active';
+                card.setAttribute('itemscope', '');
+                card.setAttribute('itemtype', 'https://schema.org/NewsArticle');
+
+                card.innerHTML = `
+                    <img src="${article.image}" alt="${article.title}" class="news-card-img" itemprop="image">
+                    <div class="news-card-body">
+                        <div class="news-card-meta">
+                            <span class="news-tag" itemprop="articleSection">${article.category}</span>
+                            <span itemprop="datePublished" content="${article.date}"><i class="fa-regular fa-calendar"></i> ${article.dateFormatted || article.date}</span>
+                        </div>
+                        <h3 class="news-card-title" itemprop="headline">${article.title}</h3>
+                        <p class="news-card-excerpt" itemprop="description">${article.summary}</p>
+                        <div class="news-card-footer">
+                            <span style="font-size:0.8rem; color:#94a3b8;"><i class="fa-solid fa-user-ninja"></i> ${article.player || 'Joueur'}</span>
+                            <button class="news-read-btn" data-id="${article.id}">
+                                Lire l'article <i class="fa-solid fa-arrow-right"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+
+                card.querySelector('.news-read-btn').addEventListener('click', () => {
+                    openArticleModal(article);
+                });
+
+                newsContainer.appendChild(card);
+            });
+        };
+
+        // Filtres par catégorie
+        const filterBtns = document.querySelectorAll('.filter-btn');
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                filterBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+
+                const category = btn.dataset.category;
+                if (category === 'all') {
+                    renderNewsGrid(allArticles);
+                } else {
+                    const filtered = allArticles.filter(a => a.category === category);
+                    renderNewsGrid(filtered);
+                }
+            });
+        });
+
+        // Recherche en temps réel
+        const searchInput = document.getElementById('news-search-input');
+        if (searchInput) {
+            searchInput.addEventListener('input', (e) => {
+                const query = e.target.value.toLowerCase().trim();
+                const filtered = allArticles.filter(a => 
+                    a.title.toLowerCase().includes(query) ||
+                    a.summary.toLowerCase().includes(query) ||
+                    (a.player && a.player.toLowerCase().includes(query)) ||
+                    (a.category && a.category.toLowerCase().includes(query))
+                );
+                renderNewsGrid(filtered);
+            });
+        }
+
+        // Ouverture de la modale article & mise à jour SEO Schema.org
+        const openArticleModal = (article) => {
+            document.getElementById('modal-img').src = article.image;
+            document.getElementById('modal-img').alt = article.title;
+            document.getElementById('modal-title').innerText = article.title;
+            document.getElementById('modal-date').innerHTML = `<i class="fa-regular fa-calendar"></i> ${article.dateFormatted || article.date}`;
+            document.getElementById('modal-author').innerHTML = `<i class="fa-solid fa-user"></i> ${article.author || 'N.I. CONSEILS'}`;
+            document.getElementById('modal-category').innerText = article.category;
+            document.getElementById('modal-content').innerHTML = article.content;
+
+            // Liens de partage
+            const currentUrl = window.location.origin + window.location.pathname + '?id=' + article.id;
+            document.getElementById('share-whatsapp').href = `https://wa.me/?text=${encodeURIComponent(article.title + ' : ' + currentUrl)}`;
+            document.getElementById('share-facebook').href = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(currentUrl)}`;
+            
+            const copyBtn = document.getElementById('copy-link-btn');
+            copyBtn.onclick = () => {
+                navigator.clipboard.writeText(currentUrl);
+                alert('Lien de l\'article copié !');
+            };
+
+            // Injection dynamique du Schema.org NewsArticle pour Google News
+            const schemaTag = document.getElementById('seo-news-schema');
+            if (schemaTag) {
+                schemaTag.textContent = JSON.stringify({
+                    "@context": "https://schema.org",
+                    "@type": "NewsArticle",
+                    "mainEntityOfPage": {
+                        "@type": "WebPage",
+                        "@id": currentUrl
+                    },
+                    "headline": article.title,
+                    "image": [ window.location.origin + '/' + article.image ],
+                    "datePublished": article.date,
+                    "dateModified": article.date,
+                    "author": {
+                        "@type": "Organization",
+                        "name": article.author || "N.I. CONSEILS-MANAGEMENTS"
+                    },
+                    "publisher": {
+                        "@type": "Organization",
+                        "name": "N.I. CONSEILS-MANAGEMENTS",
+                        "logo": {
+                            "@type": "ImageObject",
+                            "url": window.location.origin + "/assets/images/logo.png"
+                        }
+                    },
+                    "description": article.summary
+                }, null, 2);
+            }
+
+            articleModal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        };
+
+        // Fermeture de la modale
+        if (modalCloseBtn) {
+            modalCloseBtn.addEventListener('click', () => {
+                articleModal.classList.remove('active');
+                document.body.style.overflow = 'auto';
+            });
+
+            articleModal.addEventListener('click', (e) => {
+                if (e.target === articleModal) {
+                    articleModal.classList.remove('active');
+                    document.body.style.overflow = 'auto';
+                }
+            });
+        }
+
+        // Vérification si un ID d'article est présent dans l'URL (?id=...)
+        const checkUrlParamArticle = () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const articleId = urlParams.get('id');
+            if (articleId) {
+                const targetArticle = allArticles.find(a => a.id === articleId);
+                if (targetArticle) {
+                    openArticleModal(targetArticle);
+                }
+            }
+        };
+
+        loadArticles();
+    }
 });
+

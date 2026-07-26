@@ -1,0 +1,41 @@
+[
+    {
+        "id": "cyriaque-irie-transfert-fribourg",
+        "title": "Cyriaque Irié rejoint le SC Fribourg en Bundesliga",
+        "date": "2026-07-20",
+        "dateFormatted": "20 Juillet 2026",
+        "category": "Transfert",
+        "author": "N.I. CONSEILS-MANAGEMENTS",
+        "player": "Cyriaque Irié",
+        "image": "assets/images/cyriaque.png",
+        "summary": "Après une saison étincelante à Dijon puis Troyes, le jeune ailier international burkinabé s'engage avec le SC Fribourg en Bundesliga.",
+        "content": "<p>N.I. CONSEILS-MANAGEMENTS a le grand plaisir d'annoncer la signature officielle de <strong>Cyriaque Irié</strong> au <strong>SC Fribourg</strong> en Bundesliga allemande.</p><p>Révélé sous les couleurs du DFCO Dijon avec 26 matchs et 7 buts inscrits, puis confirmé à l'ESTAC Troyes, l'international burkinabé de 19 ans franchit une étape majeure dans sa carrière sportive.</p><p>Cette signature concrétise le travail d'accompagnement sur-mesure mené par notre agence pour placer nos talents dans les plus grands championnats européens.</p>",
+        "tags": ["Cyriaque Irié", "Bundesliga", "Fribourg", "Transfert", "Mercato"]
+    },
+    {
+        "id": "developpement-reseau-recrutement-europe",
+        "title": "N.I. CONSEILS renforce son réseau de partenariats en Europe",
+        "date": "2026-07-15",
+        "dateFormatted": "15 Juillet 2026",
+        "category": "Agence",
+        "author": "Ibrahim Niang",
+        "player": "Équipe N.I. Conseils",
+        "image": "assets/images/hero.png",
+        "summary": "L'agence étend ses connexions avec de nouveaux clubs partenaires en Ligue 1, Ligue 2 et Bundesliga pour offrir de meilleures opportunités à ses joueurs.",
+        "content": "<p>Dans le cadre de son développement stratégique, <strong>N.I. CONSEILS-MANAGEMENTS</strong> intensifie ses échanges avec les cellules de recrutement et directeurs sportifs à travers l'Europe.</p><p>Après avoir consolidé nos liens avec des clubs historiques comme le DFCO Dijon, l'ESTAC Troyes et le SC Bastia, l'agence poursuit son expansion pour garantir une exposition maximale aux talents que nous accompagnons.</p><p>Notre priorité absolue reste la défense des intérêts de nos athlètes et la construction de carrières durables au plus haut niveau.</p>",
+        "tags": ["Agence", "Partenariats", "Football", "Mercato", "Recrutement"]
+    },
+    {
+        "id": "preparation-estivale-talents-agence",
+        "title": "Bilan positif de la préparation estivale pour nos talents",
+        "date": "2026-07-05",
+        "dateFormatted": "05 Juillet 2026",
+        "category": "Performance",
+        "author": "N.I. CONSEILS-MANAGEMENTS",
+        "player": "Nos Joueurs",
+        "image": "assets/images/player1.png",
+        "summary": "Retour sur les performances marquantes et la préparation physique d'avant-saison pour l'ensemble des joueurs gérés par l'agence.",
+        "content": "<p>La préparation estivale bat son plein et nos joueurs affichent une forme athlétique impressionnante. Suivis de près par nos préparateurs et conseillers, nos athlètes ont abordé la reprise avec rigueur et détermination.</p><p>Des stages de perfectionnement individuel ont été mis en place pour optimiser les performances dès les premières journées de championnat.</p>",
+        "tags": ["Performance", "Préparation", "Saison", "Entraînement"]
+    }
+]

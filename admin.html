@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>N.I. CONSEILS | Espaces d'Administration & Publication</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+        integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .admin-header {
+            background-color: var(--primary-color);
+            padding: 140px 0 50px;
+            color: white;
+            text-align: center;
+        }
+        .login-box {
+            max-width: 400px;
+            margin: 50px auto;
+            padding: 30px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav class="navbar">
+        <div class="container">
+            <a href="index.html" class="logo">
+                <img src="assets/images/logo.png" alt="N.I. CONSEILS">
+            </a>
+            <ul class="nav-links">
+                <li><a href="index.html">Accueil</a></li>
+                <li><a href="actualites.html">Voir le site</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <header class="admin-header">
+        <div class="container">
+            <h1>Espace de Publication <span>Actualités</span></h1>
+            <p>Rédigez et publiez les articles officiels de l'agence pour vos joueurs et Google News.</p>
+        </div>
+    </header>
+
+    <div class="container">
+
+        <!-- Access Protection Step -->
+        <div id="admin-auth-sec" class="login-box">
+            <i class="fa-solid fa-lock" style="font-size: 2.5rem; color: var(--secondary-color); margin-bottom: 15px;"></i>
+            <h3>Accès Sécurisé</h3>
+            <p style="font-size: 0.9rem; color: #64748b; margin-bottom: 20px;">Veuillez entrer votre code d'accès administrateur.</p>
+            <input type="password" id="admin-passcode" placeholder="Code d'accès..." style="width: 100%; padding: 12px; border: 1px solid #cbd5e1; border-radius: 8px; margin-bottom: 15px; text-align: center; font-size: 1.1rem;">
+            <button id="admin-login-btn" class="btn btn-primary" style="width: 100%;">Se Connecter</button>
+            <p id="admin-error" style="color: #ef4444; font-size: 0.85rem; margin-top: 10px; display: none;">Code d'accès incorrect.</p>
+        </div>
+
+        <!-- Main Form Panel (Hidden until login) -->
+        <div id="admin-panel" style="display: none;">
+            <div class="admin-card">
+                <h2 style="color: var(--primary-color); margin-bottom: 25px;"><i class="fa-solid fa-pen-to-square"></i> Nouvel Article / Actualité Joueur</h2>
+                
+                <form id="publish-form" class="admin-form">
+                    <div class="form-group">
+                        <label for="art-title">Titre de l'article *</label>
+                        <input type="text" id="art-title" placeholder="Ex: Cyriaque Irié décisif avec le Burkina Faso" required>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                        <div class="form-group">
+                            <label for="art-category">Catégorie *</label>
+                            <select id="art-category" required>
+                                <option value="Transfert">Transfert & Mercato</option>
+                                <option value="Performance">Performance & Match</option>
+                                <option value="Agence">Actualité Agence</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="art-player">Joueur concerné</label>
+                            <input type="text" id="art-player" placeholder="Ex: Cyriaque Irié">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="art-image">Image de l'article (Chemin ou URL) *</label>
+                        <input type="text" id="art-image" value="assets/images/cyriaque.png" placeholder="Ex: assets/images/cyriaque.png ou URL d'image" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="art-summary">Résumé court (Affiché sur Google et sur les cartes) *</label>
+                        <textarea id="art-summary" rows="2" placeholder="Brève description de 1 à 2 phrases..." required></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="art-content">Contenu complet de l'article *</label>
+                        <textarea id="art-content" rows="6" placeholder="Rédigez l'article complet ici. Paragraphes séparés par des retours à la ligne." required></textarea>
+                    </div>
+
+                    <div style="display: flex; gap: 15px; flex-wrap: wrap;">
+                        <button type="submit" class="btn btn-primary" style="flex: 1;"><i class="fa-solid fa-paper-plane"></i> Publier l'Article sur le Site</button>
+                    </div>
+                </form>
+
+                <!-- Output Generator Section -->
+                <div id="admin-output-sec" style="margin-top: 40px; display: none;">
+                    <hr style="margin-bottom: 25px; border-color: #e2e8f0;">
+                    <h3 style="color: var(--primary-color);"><i class="fa-solid fa-check-circle" style="color: #22c55e;"></i> Article publié dans le navigateur !</h3>
+                    <p style="font-size: 0.9rem; color: #475569;">L'article a été ajouté localement et apparaît désormais sur votre page <a href="actualites.html" target="_blank" style="color: var(--secondary-color); font-weight: bold;">actualites.html</a>.</p>
+                    
+                    <h4 style="margin-top: 20px; font-size: 0.95rem; color: #64748b;">Code JSON à copier dans <code>news.json</code> (Optionnel pour persistance permanente) :</h4>
+                    <pre class="code-output" id="json-code-out"></pre>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        // Logique spécifique d'authentification admin
+        document.addEventListener('DOMContentLoaded', () => {
+            const passcodeVal = "NICONSEILS2026"; // Code de démonstration modifiable
+            const loginBtn = document.getElementById('admin-login-btn');
+            const passInput = document.getElementById('admin-passcode');
+            const authSec = document.getElementById('admin-auth-sec');
+            const adminPanel = document.getElementById('admin-panel');
+            const errMsg = document.getElementById('admin-error');
+
+            // Restauration de session si déjà connecté
+            if (sessionStorage.getItem('admin_logged') === 'true') {
+                authSec.style.display = 'none';
+                adminPanel.style.display = 'block';
+            }
+
+            loginBtn.addEventListener('click', () => {
+                if (passInput.value.trim() === passcodeVal) {
+                    sessionStorage.setItem('admin_logged', 'true');
+                    authSec.style.display = 'none';
+                    adminPanel.style.display = 'block';
+                } else {
+                    errMsg.style.display = 'block';
+                }
+            });
+
+            // Form Submit Logic
+            const form = document.getElementById('publish-form');
+            form.addEventListener('submit', (e) => {
+                e.preventDefault();
+
+                const title = document.getElementById('art-title').value.trim();
+                const category = document.getElementById('art-category').value;
+                const player = document.getElementById('art-player').value.trim() || 'Joueur N.I. Conseils';
+                const image = document.getElementById('art-image').value.trim();
+                const summary = document.getElementById('art-summary').value.trim();
+                const rawContent = document.getElementById('art-content').value.trim();
+                
+                // Formater les paragraphes
+                const contentHtml = rawContent.split('\n\n').map(p => `<p>${p.replace(/\n/g, '<br>')}</p>`).join('');
+
+                const today = new Date();
+                const dateIso = today.toISOString().split('T')[0];
+                const dateFr = today.toLocaleDateString('fr-FR', { day: '2-digit', month: 'long', year: 'numeric' });
+
+                // Identifiant slug unique
+                const idSlug = title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '') + '-' + Date.now().toString().slice(-4);
+
+                const newArticle = {
+                    id: idSlug,
+                    title: title,
+                    date: dateIso,
+                    dateFormatted: dateFr,
+                    category: category,
+                    author: "N.I. CONSEILS-MANAGEMENTS",
+                    player: player,
+                    image: image,
+                    summary: summary,
+                    content: contentHtml,
+                    tags: [player, category, "N.I. Conseils"]
+                };
+
+                // Sauvegarde dans localStorage pour affichage direct
+                let storedArticles = JSON.parse(localStorage.getItem('custom_news_articles') || '[]');
+                storedArticles.unshift(newArticle);
+                localStorage.setItem('custom_news_articles', JSON.stringify(storedArticles));
+
+                // Affichage du code JSON généré pour news.json
+                document.getElementById('json-code-out').textContent = JSON.stringify(newArticle, null, 4);
+                document.getElementById('admin-output-sec').style.display = 'block';
+                
+                // Réinitialiser le formulaire
+                form.reset();
+            });
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /admin.html
+
+Sitemap: https://niconseilsmanagements.fr/sitemap.xml
+Sitemap: https://niconseilsmanagements.fr/feed.xml

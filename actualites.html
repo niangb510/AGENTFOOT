@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>N.I. CONSEILS-MANAGEMENTS | Actualités & Fil Info</title>
+    <meta name="description"
+        content="Actualités officielles, signatures, transferts et performances des joueurs gérés par N.I. CONSEILS-MANAGEMENTS. Suivez l'actualité de nos talents.">
+    <!-- Security Headers -->
+    <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self'; script-src 'self' https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://fonts.googleapis.com; font-src 'self' https://cdnjs.cloudflare.com https://fonts.gstatic.com; img-src 'self' data: https://wa.me; connect-src 'self';">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+        integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer">
+    <!-- RSS Feed Link for Google News -->
+    <link rel="alternate" type="application/rss+xml" title="N.I. CONSEILS-MANAGEMENTS RSS Feed" href="feed.xml">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="style.css">
+    <!-- PWA Settings -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="N.I. CONSEILS">
+    <link rel="apple-touch-icon" href="assets/images/logo.png">
+
+    <!-- Schema.org NewsArticle Container dynamically populated for Google News -->
+    <script id="seo-news-schema" type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "NewsArticle",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "https://niconseilsmanagements.fr/actualites.html"
+        },
+        "headline": "N.I. CONSEILS-MANAGEMENTS | Fil d'actualités des joueurs",
+        "description": "Suivez les signatures, transferts et performances officielles des joueurs gérés par N.I. CONSEILS-MANAGEMENTS.",
+        "publisher": {
+            "@type": "Organization",
+            "name": "N.I. CONSEILS-MANAGEMENTS",
+            "logo": {
+                "@type": "ImageObject",
+                "url": "https://niconseilsmanagements.fr/assets/images/logo.png"
+            }
+        }
+    }
+    </script>
+</head>
+
+<body>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <a href="index.html" class="logo">
+                <img src="assets/images/logo.png" alt="N.I. CONSEILS">
+            </a>
+            <ul class="nav-links">
+                <li><a href="index.html">Accueil</a></li>
+                <li><a href="agent.html">L'Agence</a></li>
+                <li><a href="players.html">Joueurs</a></li>
+                <li><a href="actualites.html" class="active">Actualités</a></li>
+                <li><a href="services.html">Services</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+            <div class="hamburger">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Header Section -->
+    <header class="news-header">
+        <div class="container">
+            <h1>Actualités & <span>Fil Info</span></h1>
+            <p>Suivez en direct les performances, signatures et l'actualité de nos talents.</p>
+        </div>
+    </header>
+
+    <!-- Main News Container -->
+    <section class="section-padding" style="background-color: #f8fafc;">
+        <div class="container">
+
+            <!-- Controls: Filters & Search -->
+            <div class="news-controls">
+                <div class="news-filter-btns">
+                    <button class="filter-btn active" data-category="all">Tous</button>
+                    <button class="filter-btn" data-category="Transfert">Transferts & Mercato</button>
+                    <button class="filter-btn" data-category="Agence">Agence</button>
+                    <button class="filter-btn" data-category="Performance">Performances</button>
+                </div>
+                <div class="news-search-box">
+                    <input type="text" id="news-search-input" placeholder="Rechercher un joueur, club...">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                </div>
+            </div>
+
+            <!-- News Grid -->
+            <div class="news-grid" id="news-container">
+                <!-- Articles dynamically inserted by script.js -->
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Modal Detail Article -->
+    <div class="modal-overlay" id="article-modal">
+        <div class="modal-content">
+            <button class="modal-close" id="modal-close-btn"><i class="fa-solid fa-xmark"></i></button>
+            <img src="" alt="" class="modal-banner" id="modal-img">
+            <div class="modal-body">
+                <div class="modal-meta">
+                    <span id="modal-date"><i class="fa-regular fa-calendar"></i> --</span>
+                    <span id="modal-author"><i class="fa-solid fa-user"></i> N.I. CONSEILS</span>
+                    <span class="news-tag" id="modal-category">Transfert</span>
+                </div>
+                <h2 class="modal-title" id="modal-title">Titre de l'article</h2>
+                <div class="modal-article-text" id="modal-content">
+                    <!-- HTML Content -->
+                </div>
+                <div class="modal-share-bar">
+                    <div style="font-weight: 600; color: var(--primary-color);">Partager cet article :</div>
+                    <div class="social-links">
+                        <a href="#" id="share-whatsapp" target="_blank" class="social-btn"><i class="fa-brands fa-whatsapp"></i></a>
+                        <a href="#" id="share-facebook" target="_blank" class="social-btn"><i class="fa-brands fa-facebook-f"></i></a>
+                        <button id="copy-link-btn" class="social-btn" style="border:none; cursor:pointer;" title="Copier le lien"><i class="fa-solid fa-link"></i></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h4>N.I. CONSEILS</h4>
+                    <p>Votre partenaire de confiance pour une carrière au sommet.</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Liens Rapides</h4>
+                    <ul class="footer-links">
+                        <li><a href="index.html">Accueil</a></li>
+                        <li><a href="agent.html">L'Agence</a></li>
+                        <li><a href="players.html">Nos Joueurs</a></li>
+                        <li><a href="actualites.html">Actualités</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Contact</h4>
+                    <ul class="footer-links">
+                        <li><i class="fa-solid fa-envelope"></i> <span
+                                class="email-obfuscated">n.iconseilsmanagements.fr [at] gmail.com</span></li>
+                        <li><i class="fa-solid fa-phone"></i> +226 74 80 60 22</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2024 N.I. CONSEILS-MANAGEMENTS. Tous droits réservés.</p>
+            </div>
+        </div>
+    </footer>
+
+    <a href="https://wa.me/22674806022?text=Bonjour%20Ibrahim,%20je%20vous%20contacte%20depuis%20votre%20site%20pour%20avoir%20des%20renseignements."
+        class="whatsapp-float" target="_blank" rel="noopener noreferrer">
+        <i class="fa-brands fa-whatsapp"></i>
+    </a>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
