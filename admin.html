@@ -4,11 +4,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>N.I. CONSEILS | Panneau d'Administration & CMS du Site</title>
+    <title>N.I. CONSEILS | Panneau d'Administration & Gestion des Articles</title>
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;700;800&family=Poppins:wght@300;400;600;700&family=Montserrat:wght@400;600;800&family=Playfair+Display:wght@600;800&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;700;800&family=Poppins:wght@300;400;600;700&family=Montserrat:wght@400;600;800&display=swap" rel="stylesheet">
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
         integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
@@ -75,30 +75,48 @@
             border-radius: 10px;
             display: none;
             text-align: center;
+            position: relative;
         }
         .media-preview-box img, .media-preview-box video {
             max-height: 200px;
             width: auto;
             border-radius: 10px;
         }
-        .theme-preset-card {
-            padding: 15px;
-            border-radius: 12px;
-            border: 2px solid #e2e8f0;
+        .delete-media-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #ef4444;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-weight: bold;
             cursor: pointer;
-            transition: var(--transition);
-            text-align: center;
         }
-        .theme-preset-card:hover, .theme-preset-card.active {
-            border-color: var(--secondary-color);
-            background: #fffbeb;
+        .article-admin-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: white;
+            padding: 18px;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+            margin-bottom: 15px;
+            gap: 20px;
+            flex-wrap: wrap;
         }
-        .color-circle {
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            display: inline-block;
-            margin: 0 4px;
+        .article-admin-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex: 1;
+        }
+        .article-admin-thumb {
+            width: 80px;
+            height: 60px;
+            border-radius: 8px;
+            object-fit: cover;
         }
     </style>
 </head>
@@ -119,12 +137,12 @@
 
     <header class="admin-header">
         <div class="container">
-            <h1>Panneau de Gestion <span>WordPress/CMS</span></h1>
-            <p>Personnalisez tout votre site en direct (Logo, Couverture, Polices, Couleurs, Articles).</p>
+            <h1>Panneau de Gestion <span>WordPress / CMS</span></h1>
+            <p>Rédigez, modifiez, supprimez des articles ou personnalisez le design de votre site.</p>
 
             <div class="admin-tabs" id="tab-controls" style="display: none;">
-                <button class="tab-btn active" data-tab="tab-customization"><i class="fa-solid fa-palette"></i> Personnaliser l'Apparence du Site</button>
-                <button class="tab-btn" data-tab="tab-articles"><i class="fa-solid fa-newspaper"></i> Publier des Articles (Photos & Vidéos)</button>
+                <button class="tab-btn active" data-tab="tab-articles"><i class="fa-solid fa-newspaper"></i> Gérer & Publier les Articles</button>
+                <button class="tab-btn" data-tab="tab-customization"><i class="fa-solid fa-palette"></i> Personnaliser l'Apparence (Design)</button>
             </div>
         </div>
     </header>
@@ -145,129 +163,28 @@
         <div id="admin-panel" style="display: none;">
 
             <!-- ==========================================
-                 TAB 1: PERSONNALISATION DU SITE (LOGO, COVER, FONTS, COLORS)
+                 TAB 1: GESTION & PUBLICATION DES ARTICLES
                  ========================================== -->
-            <div id="tab-customization" class="admin-card">
-                <h2 style="color: var(--primary-color); margin-bottom: 10px;"><i class="fa-solid fa-paint-roller" style="color: var(--secondary-color);"></i> Personnalisation du Style & Identité Visuelle</h2>
-                <p style="color: #64748b; margin-bottom: 30px;">Modifiez le logo de l'agence, la photo de couverture, la police de caractères et les couleurs principales en temps réel sans toucher au code !</p>
-
-                <form id="config-form" class="admin-form">
-
-                    <!-- Section 1: Logo & Couverture -->
-                    <div style="background: #f8fafc; padding: 25px; border-radius: 15px; margin-bottom: 30px; border: 1px solid #e2e8f0;">
-                        <h3 style="color: var(--primary-color); font-size: 1.2rem; margin-bottom: 15px;"><i class="fa-solid fa-image" style="color: var(--secondary-color);"></i> 1. Logo & Photo de Couverture</h3>
-                        
-                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
-                            <!-- Logo Upload -->
-                            <div class="form-group">
-                                <label><i class="fa-solid fa-circle-user"></i> Logo de l'Agence (Photo de Profil)</label>
-                                <div class="upload-zone" onclick="document.getElementById('cfg-logo-file').click();">
-                                    <i class="fa-solid fa-cloud-arrow-up" style="font-size: 1.8rem; color: var(--secondary-color);"></i>
-                                    <p style="margin: 5px 0 0; font-size: 0.9rem; font-weight: 600;">Changer le Logo (Téléversement)</p>
-                                    <input type="file" id="cfg-logo-file" accept="image/*" style="display: none;">
-                                </div>
-                                <input type="text" id="cfg-logo-url" placeholder="Ou entrez le chemin de l'image..." style="margin-top: 8px;">
-                                <div class="media-preview-box" id="logo-preview-box">
-                                    <img id="logo-preview-img" src="assets/images/logo.png" alt="Aperçu Logo" style="background: #0f172a; padding: 10px;">
-                                </div>
-                            </div>
-
-                            <!-- Cover Image Upload -->
-                            <div class="form-group">
-                                <label><i class="fa-solid fa-mountain-sun"></i> Photo de Couverture (Bannière Hero)</label>
-                                <div class="upload-zone" onclick="document.getElementById('cfg-cover-file').click();">
-                                    <i class="fa-solid fa-images" style="font-size: 1.8rem; color: var(--secondary-color);"></i>
-                                    <p style="margin: 5px 0 0; font-size: 0.9rem; font-weight: 600;">Changer la Couverture (Téléversement)</p>
-                                    <input type="file" id="cfg-cover-file" accept="image/*" style="display: none;">
-                                </div>
-                                <input type="text" id="cfg-cover-url" placeholder="Ou entrez le chemin de l'image..." style="margin-top: 8px;">
-                                <div class="media-preview-box" id="cover-preview-box">
-                                    <img id="cover-preview-img" src="assets/images/hero.png" alt="Aperçu Couverture">
-                                </div>
-                            </div>
-                        </div>
+            <div id="tab-articles" class="admin-card">
+                
+                <!-- LIST OF EXISTING ARTICLES TO EDIT/DELETE -->
+                <div style="margin-bottom: 40px; background: #f8fafc; padding: 25px; border-radius: 16px; border: 1px solid #e2e8f0;">
+                    <h3 style="color: var(--primary-color); margin-bottom: 15px;"><i class="fa-solid fa-list-check" style="color: var(--secondary-color);"></i> Articles en Ligne (Modifier ou Supprimer)</h3>
+                    <p style="font-size: 0.9rem; color: #64748b; margin-bottom: 20px;">Cliquez sur <strong>Modifier</strong> pour changer le texte, la photo ou la vidéo d'un article, ou sur <strong>Supprimer</strong> pour le retirer du site.</p>
+                    
+                    <div id="admin-articles-list">
+                        <!-- Articles dynamically listed here -->
                     </div>
+                </div>
 
-                    <!-- Section 2: Police d'écriture (Typography) -->
-                    <div style="background: #f8fafc; padding: 25px; border-radius: 15px; margin-bottom: 30px; border: 1px solid #e2e8f0;">
-                        <h3 style="color: var(--primary-color); font-size: 1.2rem; margin-bottom: 15px;"><i class="fa-solid fa-font" style="color: var(--secondary-color);"></i> 2. Police d'écriture (Style Typographique)</h3>
-                        
-                        <div class="form-group">
-                            <label for="cfg-font-select">Choisir la Police d'écriture globale du site :</label>
-                            <select id="cfg-font-select" style="font-size: 1.1rem; padding: 12px;">
-                                <option value="'Outfit', sans-serif" data-url="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;700;800&display=swap">Outfit (Design Moderne & Épuré - Par défaut)</option>
-                                <option value="'Poppins', sans-serif" data-url="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap">Poppins (Dynamique & Sport)</option>
-                                <option value="'Montserrat', sans-serif" data-url="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&display=swap">Montserrat (Puissant & Premium)</option>
-                                <option value="'Inter', sans-serif" data-url="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap">Inter (Clean & Précision)</option>
-                                <option value="'Playfair Display', serif" data-url="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;800&display=swap">Playfair Display (Luxe & Prestige)</option>
-                            </select>
-                        </div>
+                <hr style="margin: 30px 0; border-color: #e2e8f0;">
 
-                        <div id="font-sample-preview" style="padding: 15px; background: white; border-radius: 10px; border: 1px solid #cbd5e1; font-size: 1.2rem; font-weight: 700; color: var(--primary-color);">
-                            Aperçu Typographique : N.I. CONSEILS-MANAGEMENTS (Football & Carrière)
-                        </div>
-                    </div>
-
-                    <!-- Section 3: Palette de Couleurs & Thèmes -->
-                    <div style="background: #f8fafc; padding: 25px; border-radius: 15px; margin-bottom: 30px; border: 1px solid #e2e8f0;">
-                        <h3 style="color: var(--primary-color); font-size: 1.2rem; margin-bottom: 15px;"><i class="fa-solid fa-droplet" style="color: var(--secondary-color);"></i> 3. Palette de Couleurs du Site</h3>
-                        
-                        <label style="margin-bottom: 12px;">Choisissez un Thème Préconfiguré :</label>
-                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; margin-bottom: 20px;">
-                            <div class="theme-preset-card active" data-primary="#0f172a" data-secondary="#d97706">
-                                <strong>Doré & Prestige</strong>
-                                <div style="margin-top: 8px;">
-                                    <span class="color-circle" style="background: #0f172a;"></span>
-                                    <span class="color-circle" style="background: #d97706;"></span>
-                                </div>
-                            </div>
-                            <div class="theme-preset-card" data-primary="#064e3b" data-secondary="#f59e0b">
-                                <strong>Vert Émeraude</strong>
-                                <div style="margin-top: 8px;">
-                                    <span class="color-circle" style="background: #064e3b;"></span>
-                                    <span class="color-circle" style="background: #f59e0b;"></span>
-                                </div>
-                            </div>
-                            <div class="theme-preset-card" data-primary="#1e3a8a" data-secondary="#dc2626">
-                                <strong>Bleu & Rouge</strong>
-                                <div style="margin-top: 8px;">
-                                    <span class="color-circle" style="background: #1e3a8a;"></span>
-                                    <span class="color-circle" style="background: #dc2626;"></span>
-                                </div>
-                            </div>
-                            <div class="theme-preset-card" data-primary="#111827" data-secondary="#b45309">
-                                <strong>Noir & Cuivre</strong>
-                                <div style="margin-top: 8px;">
-                                    <span class="color-circle" style="background: #111827;"></span>
-                                    <span class="color-circle" style="background: #b45309;"></span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Custom Colors Pickers -->
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
-                            <div class="form-group">
-                                <label for="cfg-primary-color">Couleur Principale (Arrière-plans/Headers)</label>
-                                <input type="color" id="cfg-primary-color" value="#0f172a" style="height: 45px; cursor: pointer;">
-                            </div>
-                            <div class="form-group">
-                                <label for="cfg-secondary-color">Couleur d'Accentuation (Boutons/Titres)</label>
-                                <input type="color" id="cfg-secondary-color" value="#d97706" style="height: 45px; cursor: pointer;">
-                            </div>
-                        </div>
-                    </div>
-
-                    <button type="submit" class="btn btn-primary" style="width: 100%; padding: 16px; font-size: 1.15rem;"><i class="fa-solid fa-floppy-disk"></i> Enregistrer & Appliquer la Personnalisation sur Tout le Site</button>
-                </form>
-            </div>
-
-            <!-- ==========================================
-                 TAB 2: PUBLICATION D'ARTICLES (PHOTOS & VIDÉOS)
-                 ========================================== -->
-            <div id="tab-articles" class="admin-card" style="display: none;">
-                <h2 style="color: var(--primary-color); margin-bottom: 25px;"><i class="fa-solid fa-photo-film" style="color: var(--secondary-color);"></i> Publier un Article avec Photo & Vidéo</h2>
+                <!-- FORM TO CREATE OR EDIT AN ARTICLE -->
+                <h2 id="form-mode-title" style="color: var(--primary-color); margin-bottom: 25px;"><i class="fa-solid fa-pen-to-square" style="color: var(--secondary-color);"></i> Publier un Nouvel Article</h2>
                 
                 <form id="publish-form" class="admin-form">
+                    <input type="hidden" id="editing-article-id" value="">
+
                     <div class="form-group">
                         <label for="art-title">Titre de l'article *</label>
                         <input type="text" id="art-title" placeholder="Ex: Signature officielle de Bayala Joël au Dijon FCO" required>
@@ -293,11 +210,13 @@
                         <label><i class="fa-solid fa-image"></i> Photo de l'article *</label>
                         <div class="upload-zone" onclick="document.getElementById('art-img-file').click();">
                             <i class="fa-solid fa-cloud-arrow-up" style="font-size: 2rem; color: var(--secondary-color);"></i>
-                            <p style="margin: 5px 0 0; font-size: 0.95rem; font-weight: 600;">Cliquez ici pour Téléverser une Photo (depuis votre téléphone/ordinateur)</p>
+                            <p style="margin: 5px 0 0; font-size: 0.95rem; font-weight: 600;">Cliquez ici pour Choisir/Changer la Photo (Galerie / Fichier)</p>
                             <input type="file" id="art-img-file" accept="image/*" style="display: none;">
                         </div>
-                        <input type="text" id="art-img-url" placeholder="Ou entrez une URL d'image..." style="margin-top: 5px;">
+                        <input type="text" id="art-img-url" placeholder="Ou entrez un chemin/URL d'image..." style="margin-top: 5px;">
+                        
                         <div class="media-preview-box" id="article-img-preview-box">
+                            <button type="button" class="delete-media-btn" id="remove-img-btn"><i class="fa-solid fa-trash"></i> Supprimer la Photo</button>
                             <img id="article-img-preview" src="" alt="Aperçu Photo">
                         </div>
                     </div>
@@ -307,40 +226,89 @@
                         <label><i class="fa-solid fa-video"></i> Vidéo de l'article (Optionnel)</label>
                         <div class="upload-zone" onclick="document.getElementById('art-video-file').click();">
                             <i class="fa-solid fa-file-video" style="font-size: 2rem; color: var(--secondary-color);"></i>
-                            <p style="margin: 5px 0 0; font-size: 0.95rem; font-weight: 600;">Cliquez ici pour Téléverser une Vidéo (depuis votre galerie)</p>
+                            <p style="margin: 5px 0 0; font-size: 0.95rem; font-weight: 600;">Cliquez ici pour Choisir/Changer la Vidéo (MP4 / Galerie)</p>
                             <input type="file" id="art-video-file" accept="video/*" style="display: none;">
                         </div>
                         <input type="text" id="art-video-url" placeholder="Ou collez un lien YouTube..." style="margin-top: 5px;">
+                        
                         <div class="media-preview-box" id="article-video-preview-box">
+                            <button type="button" class="delete-media-btn" id="remove-video-btn"><i class="fa-solid fa-trash"></i> Supprimer la Vidéo</button>
                             <video id="article-video-preview" controls src=""></video>
                         </div>
                     </div>
 
                     <div class="form-group">
-                        <label for="art-summary">Résumé court (Google News & carte d'actualité) *</label>
+                        <label for="art-summary">Résumé court (Affiché sur les cartes et Google News) *</label>
                         <textarea id="art-summary" rows="2" placeholder="Brève description de 1 à 2 phrases..." required></textarea>
                     </div>
 
                     <div class="form-group">
                         <label for="art-content">Contenu complet de l'article *</label>
-                        <textarea id="art-content" rows="6" placeholder="Rédigez l'article complet ici." required></textarea>
+                        <textarea id="art-content" rows="6" placeholder="Rédigez ou collez le texte de l'article." required></textarea>
                     </div>
 
-                    <button type="submit" class="btn btn-primary" style="width: 100%; padding: 15px; font-size: 1.1rem;"><i class="fa-solid fa-paper-plane"></i> Publier l'Article Immédiatement</button>
+                    <div style="display: flex; gap: 15px; flex-wrap: wrap;">
+                        <button type="submit" id="submit-art-btn" class="btn btn-primary" style="flex: 1; padding: 15px; font-size: 1.1rem;"><i class="fa-solid fa-paper-plane"></i> Enregistrer & Publier l'Article</button>
+                        <button type="button" id="cancel-edit-btn" class="btn" style="display: none; background: #64748b; color: white; padding: 15px;"><i class="fa-solid fa-xmark"></i> Annuler la modification</button>
+                    </div>
                 </form>
+            </div>
 
-                <div id="admin-output-sec" style="margin-top: 40px; display: none;">
-                    <hr style="margin-bottom: 25px; border-color: #e2e8f0;">
-                    <h3 style="color: var(--primary-color);"><i class="fa-solid fa-circle-check" style="color: #22c55e;"></i> Article Publié en Direct !</h3>
-                    <p style="font-size: 0.95rem; color: #475569;">L'article et ses fichiers médias sont maintenant en ligne sur la page <a href="actualites.html" target="_blank" style="color: var(--secondary-color); font-weight: bold; text-decoration: underline;">Actualités</a>.</p>
-                </div>
+            <!-- ==========================================
+                 TAB 2: PERSONNALISATION DU SITE (DESIGN)
+                 ========================================== -->
+            <div id="tab-customization" class="admin-card" style="display: none;">
+                <h2 style="color: var(--primary-color); margin-bottom: 10px;"><i class="fa-solid fa-paint-roller" style="color: var(--secondary-color);"></i> Personnalisation du Style & Identité Visuelle</h2>
+                <p style="color: #64748b; margin-bottom: 30px;">Modifiez le logo, la couverture, les polices et les couleurs en direct.</p>
+
+                <form id="config-form" class="admin-form">
+                    <div style="background: #f8fafc; padding: 25px; border-radius: 15px; margin-bottom: 30px; border: 1px solid #e2e8f0;">
+                        <h3 style="color: var(--primary-color); font-size: 1.2rem; margin-bottom: 15px;"><i class="fa-solid fa-image" style="color: var(--secondary-color);"></i> 1. Logo & Photo de Couverture</h3>
+                        
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
+                            <div class="form-group">
+                                <label><i class="fa-solid fa-circle-user"></i> Logo de l'Agence (Photo de Profil)</label>
+                                <div class="upload-zone" onclick="document.getElementById('cfg-logo-file').click();">
+                                    <i class="fa-solid fa-cloud-arrow-up" style="font-size: 1.8rem; color: var(--secondary-color);"></i>
+                                    <p style="margin: 5px 0 0; font-size: 0.9rem; font-weight: 600;">Changer le Logo</p>
+                                    <input type="file" id="cfg-logo-file" accept="image/*" style="display: none;">
+                                </div>
+                                <input type="text" id="cfg-logo-url" placeholder="Ou chemin de l'image..." style="margin-top: 8px;">
+                            </div>
+
+                            <div class="form-group">
+                                <label><i class="fa-solid fa-mountain-sun"></i> Photo de Couverture (Bannière Hero)</label>
+                                <div class="upload-zone" onclick="document.getElementById('cfg-cover-file').click();">
+                                    <i class="fa-solid fa-images" style="font-size: 1.8rem; color: var(--secondary-color);"></i>
+                                    <p style="margin: 5px 0 0; font-size: 0.9rem; font-weight: 600;">Changer la Couverture</p>
+                                    <input type="file" id="cfg-cover-file" accept="image/*" style="display: none;">
+                                </div>
+                                <input type="text" id="cfg-cover-url" placeholder="Ou chemin de l'image..." style="margin-top: 8px;">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="background: #f8fafc; padding: 25px; border-radius: 15px; margin-bottom: 30px; border: 1px solid #e2e8f0;">
+                        <h3 style="color: var(--primary-color); font-size: 1.2rem; margin-bottom: 15px;"><i class="fa-solid fa-font" style="color: var(--secondary-color);"></i> 2. Police d'écriture</h3>
+                        <div class="form-group">
+                            <select id="cfg-font-select" style="font-size: 1.1rem; padding: 12px;">
+                                <option value="'Outfit', sans-serif">Outfit (Design Moderne & Épuré)</option>
+                                <option value="'Poppins', sans-serif">Poppins (Dynamique & Sport)</option>
+                                <option value="'Montserrat', sans-serif">Montserrat (Puissant & Premium)</option>
+                                <option value="'Inter', sans-serif">Inter (Clean & Précision)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary" style="width: 100%; padding: 16px; font-size: 1.15rem;"><i class="fa-solid fa-floppy-disk"></i> Enregistrer le Design</button>
+                </form>
             </div>
 
         </div>
 
     </div>
 
-    <script src="script.js"></script>
+    <script src="script.js?v=2.1"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const passcodeVal = "NICONSEILS2026";
@@ -349,12 +317,12 @@
             const authSec = document.getElementById('admin-auth-sec');
             const adminPanel = document.getElementById('admin-panel');
             const tabControls = document.getElementById('tab-controls');
-            const errMsg = document.getElementById('admin-error');
 
             if (sessionStorage.getItem('admin_logged') === 'true') {
                 authSec.style.display = 'none';
                 adminPanel.style.display = 'block';
                 tabControls.style.display = 'flex';
+                loadAdminArticlesList();
             }
 
             loginBtn.addEventListener('click', () => {
@@ -363,12 +331,13 @@
                     authSec.style.display = 'none';
                     adminPanel.style.display = 'block';
                     tabControls.style.display = 'flex';
+                    loadAdminArticlesList();
                 } else {
-                    errMsg.style.display = 'block';
+                    document.getElementById('admin-error').style.display = 'block';
                 }
             });
 
-            // Gestion des Onglets Administrateur
+            // Tabs
             const tabBtns = document.querySelectorAll('.tab-btn');
             tabBtns.forEach(btn => {
                 btn.addEventListener('click', () => {
@@ -376,128 +345,200 @@
                     btn.classList.add('active');
 
                     const targetTab = btn.dataset.tab;
-                    document.getElementById('tab-customization').style.display = targetTab === 'tab-customization' ? 'block' : 'none';
                     document.getElementById('tab-articles').style.display = targetTab === 'tab-articles' ? 'block' : 'none';
+                    document.getElementById('tab-customization').style.display = targetTab === 'tab-customization' ? 'block' : 'none';
                 });
             });
 
-            // LOGIQUE PERSONNALISATION DU SITE (TAB 1)
-            const savedConfig = JSON.parse(localStorage.getItem('ni_site_custom_config') || '{}');
+            // GESTION DES ARTICLES (LISTER, ÉDITER, SUPPRIMER)
+            window.loadAdminArticlesList = function() {
+                const listContainer = document.getElementById('admin-articles-list');
+                if (!listContainer) return;
 
-            let currentLogoData = savedConfig.logo || 'assets/images/logo.png';
-            let currentCoverData = savedConfig.heroCover || 'assets/images/hero.png';
+                const defaultArticles = [
+                    {
+                        "id": "joel-bayala-transfert-dijon-fco",
+                        "title": "Mercato : Le milieu burkinabè Bayala Joël s’engage officiellement au Dijon FCO grâce à N.I Conseils Managements",
+                        "date": "2026-07-23",
+                        "dateFormatted": "23 Juillet 2026",
+                        "category": "Transfert",
+                        "player": "Bayala Joël",
+                        "image": "assets/images/mercato_dijon_1.webp",
+                        "summary": "À 19 ans, le prodige du milieu de terrain burkinabè Bayala Joël quitte le Sporting Club de Tenakourou pour signer son contrat avec le Dijon FCO.",
+                        "content": "<p>C'est une grande étape pour le football burkinabè. Le jeune milieu de terrain de 19 ans, <strong>Bayala Joël</strong>, s'est officiellement engagé en faveur du club français du <strong>Dijon FCO</strong>.</p>"
+                    },
+                    {
+                        "id": "kelvin-kwasi-adamtay-premier-contrat-pro-dijon",
+                        "title": "Premier contrat pro au Dijon FCO pour l’attaquant Kelvin Kwasi Adamtay supervisé par Ibrahim Niang",
+                        "date": "2026-07-23",
+                        "dateFormatted": "23 Juillet 2026",
+                        "category": "Transfert",
+                        "player": "Kelvin Kwasi Adamtay",
+                        "image": "assets/images/dijon.png",
+                        "summary": "Formé à l’Académie Afca Burkina, le jeune avant-centre polyvalent de 18 ans Kelvin Kwasi Adamtay signe son premier contrat professionnel au Dijon FCO.",
+                        "content": "<p>Le marché des transferts s'emballe pour l'agence <strong>N.I Conseils Managements</strong> ! L'avant-centre de 18 ans <strong>Kelvin Kwasi Adamtay</strong> signe son premier contrat pro.</p>"
+                    },
+                    {
+                        "id": "cyriaque-irie-transfert-fribourg",
+                        "title": "Cyriaque Irié rejoint le SC Fribourg en Bundesliga",
+                        "date": "2026-07-20",
+                        "dateFormatted": "20 Juillet 2026",
+                        "category": "Transfert",
+                        "player": "Cyriaque Irié",
+                        "image": "assets/images/cyriaque.png",
+                        "summary": "Après une saison étincelante à Dijon puis Troyes, le jeune ailier international burkinabé s'engage avec le SC Fribourg en Bundesliga.",
+                        "content": "<p>N.I. CONSEILS-MANAGEMENTS annonce la signature officielle de <strong>Cyriaque Irié</strong> au <strong>SC Fribourg</strong>.</p>"
+                    }
+                ];
 
-            // Initialiser les champs avec la config enregistrée
-            if (savedConfig.primaryColor) document.getElementById('cfg-primary-color').value = savedConfig.primaryColor;
-            if (savedConfig.secondaryColor) document.getElementById('cfg-secondary-color').value = savedConfig.secondaryColor;
-            if (savedConfig.fontFamily) {
-                const fontSelect = document.getElementById('cfg-font-select');
-                fontSelect.value = savedConfig.fontFamily;
-                document.getElementById('font-sample-preview').style.fontFamily = savedConfig.fontFamily;
+                const deletedIds = JSON.parse(localStorage.getItem('deleted_news_ids') || '[]');
+                const localArticles = JSON.parse(localStorage.getItem('custom_news_articles') || '[]');
+
+                // Fusionner
+                const map = new Map();
+                [...localArticles, ...defaultArticles].forEach(item => {
+                    if (!deletedIds.includes(item.id) && !map.has(item.id)) {
+                        map.set(item.id, item);
+                    }
+                });
+
+                const articles = Array.from(map.values());
+                listContainer.innerHTML = '';
+
+                if (articles.length === 0) {
+                    listContainer.innerHTML = '<p style="color:#64748b;">Aucun article présent.</p>';
+                    return;
+                }
+
+                articles.forEach(art => {
+                    const item = document.createElement('div');
+                    item.className = 'article-admin-item';
+                    item.innerHTML = `
+                        <div class="article-admin-info">
+                            <img src="${art.image || 'assets/images/logo.png'}" class="article-admin-thumb" alt="">
+                            <div>
+                                <h4 style="margin:0; color:var(--primary-color); font-size:1.05rem;">${art.title}</h4>
+                                <span style="font-size:0.8rem; color:#64748b;">📅 ${art.dateFormatted || art.date} | 🏷️ ${art.category} | 👤 ${art.player}</span>
+                            </div>
+                        </div>
+                        <div style="display:flex; gap:10px;">
+                            <button class="btn edit-art-btn" style="background:#3b82f6; color:white; padding:8px 15px; font-size:0.85rem;" data-id="${art.id}"><i class="fa-solid fa-pen-to-square"></i> Modifier</button>
+                            <button class="btn del-art-btn" style="background:#ef4444; color:white; padding:8px 15px; font-size:0.85rem;" data-id="${art.id}"><i class="fa-solid fa-trash"></i> Supprimer</button>
+                        </div>
+                    `;
+
+                    // Bouton Éditer
+                    item.querySelector('.edit-art-btn').addEventListener('click', () => {
+                        editArticle(art);
+                    });
+
+                    // Bouton Supprimer
+                    item.querySelector('.del-art-btn').addEventListener('click', () => {
+                        deleteArticle(art.id, art.title);
+                    });
+
+                    listContainer.appendChild(item);
+                });
+            };
+
+            // SUPPRIMER UN ARTICLE DEFINITIVEMENT
+            function deleteArticle(id, title) {
+                if (confirm(`Êtes-vous sûr de vouloir SUPPRIMER DÉFINITIVEMENT l'article :\n"${title}" ?`)) {
+                    // Ajouter aux IDs supprimés
+                    let deletedIds = JSON.parse(localStorage.getItem('deleted_news_ids') || '[]');
+                    if (!deletedIds.includes(id)) {
+                        deletedIds.push(id);
+                        localStorage.setItem('deleted_news_ids', JSON.stringify(deletedIds));
+                    }
+
+                    // Retirer de custom_news_articles si présent
+                    let customArticles = JSON.parse(localStorage.getItem('custom_news_articles') || '[]');
+                    customArticles = customArticles.filter(a => a.id !== id);
+                    localStorage.setItem('custom_news_articles', JSON.stringify(customArticles));
+
+                    alert('Article supprimé du site avec succès !');
+                    loadAdminArticlesList();
+                }
             }
 
-            // Preview Logo Upload
-            document.getElementById('cfg-logo-file').addEventListener('change', (e) => {
-                const file = e.target.files[0];
-                if (file) {
-                    const reader = new FileReader();
-                    reader.onload = (evt) => {
-                        currentLogoData = evt.target.result;
-                        document.getElementById('logo-preview-img').src = currentLogoData;
-                        document.getElementById('logo-preview-box').style.display = 'block';
-                    };
-                    reader.readAsDataURL(file);
-                }
-            });
+            // ÉDITER UN ARTICLE
+            let currentArtImageData = '';
+            let currentArtVideoData = '';
 
-            document.getElementById('cfg-logo-url').addEventListener('input', (e) => {
-                if (e.target.value.trim() !== '') {
-                    currentLogoData = e.target.value.trim();
-                    document.getElementById('logo-preview-img').src = currentLogoData;
-                    document.getElementById('logo-preview-box').style.display = 'block';
-                }
-            });
-
-            // Preview Cover Upload
-            document.getElementById('cfg-cover-file').addEventListener('change', (e) => {
-                const file = e.target.files[0];
-                if (file) {
-                    const reader = new FileReader();
-                    reader.onload = (evt) => {
-                        currentCoverData = evt.target.result;
-                        document.getElementById('cover-preview-img').src = currentCoverData;
-                        document.getElementById('cover-preview-box').style.display = 'block';
-                    };
-                    reader.readAsDataURL(file);
-                }
-            });
-
-            document.getElementById('cfg-cover-url').addEventListener('input', (e) => {
-                if (e.target.value.trim() !== '') {
-                    currentCoverData = e.target.value.trim();
-                    document.getElementById('cover-preview-img').src = currentCoverData;
-                    document.getElementById('cover-preview-box').style.display = 'block';
-                }
-            });
-
-            // Font Select Live Preview
-            const fontSelect = document.getElementById('cfg-font-select');
-            fontSelect.addEventListener('change', () => {
-                const fontVal = fontSelect.value;
-                document.getElementById('font-sample-preview').style.fontFamily = fontVal;
-            });
-
-            // Presets de couleurs
-            document.querySelectorAll('.theme-preset-card').forEach(card => {
-                card.addEventListener('click', () => {
-                    document.querySelectorAll('.theme-preset-card').forEach(c => c.classList.remove('active'));
-                    card.classList.add('active');
-
-                    const pColor = card.dataset.primary;
-                    const sColor = card.dataset.secondary;
-
-                    document.getElementById('cfg-primary-color').value = pColor;
-                    document.getElementById('cfg-secondary-color').value = sColor;
-                });
-            });
-
-            // Enregistrement de la configuration
-            document.getElementById('config-form').addEventListener('submit', (e) => {
-                e.preventDefault();
-
-                const selectedOption = fontSelect.options[fontSelect.selectedIndex];
-                const fontUrl = selectedOption.dataset.url;
-
-                const newConfig = {
-                    logo: currentLogoData,
-                    heroCover: currentCoverData,
-                    fontFamily: fontSelect.value,
-                    fontUrl: fontUrl,
-                    primaryColor: document.getElementById('cfg-primary-color').value,
-                    secondaryColor: document.getElementById('cfg-secondary-color').value
-                };
-
-                localStorage.setItem('ni_site_custom_config', JSON.stringify(newConfig));
+            function editArticle(art) {
+                document.getElementById('editing-article-id').value = art.id;
+                document.getElementById('art-title').value = art.title;
+                document.getElementById('art-category').value = art.category;
+                document.getElementById('art-player').value = art.player || '';
+                document.getElementById('art-summary').value = art.summary || '';
                 
-                // Appliquer immédiatement
-                if (window.applySiteConfig) {
-                    window.applySiteConfig(newConfig);
+                // Convertir <p> en texte brut pour édition facile
+                const tempDiv = document.createElement('div');
+                tempDiv.innerHTML = art.content || '';
+                document.getElementById('art-content').value = tempDiv.innerText || art.content;
+
+                // Photo
+                currentArtImageData = art.image || '';
+                if (currentArtImageData) {
+                    document.getElementById('article-img-preview').src = currentArtImageData;
+                    document.getElementById('article-img-preview-box').style.display = 'block';
                 }
 
-                alert('🎉 Félicitations ! La nouvelle personnalisation de votre site (Logo, Couverture, Police et Couleurs) a été appliquée avec succès sur l\'ensemble des pages !');
+                // Vidéo
+                currentArtVideoData = art.video || '';
+                if (currentArtVideoData) {
+                    document.getElementById('article-video-preview').src = currentArtVideoData;
+                    document.getElementById('article-video-preview-box').style.display = 'block';
+                }
+
+                document.getElementById('form-mode-title').innerHTML = `<i class="fa-solid fa-pen-to-square" style="color:var(--secondary-color);"></i> Modification de l'article`;
+                document.getElementById('submit-art-btn').innerHTML = `<i class="fa-solid fa-floppy-disk"></i> Enregistrer les Modifications de l'Article`;
+                document.getElementById('cancel-edit-btn').style.display = 'inline-block';
+
+                window.scrollTo({ top: document.getElementById('publish-form').offsetTop - 100, behavior: 'smooth' });
+            }
+
+            // Supprimer la photo dans le formulaire
+            document.getElementById('remove-img-btn').addEventListener('click', () => {
+                currentArtImageData = '';
+                document.getElementById('art-img-file').value = '';
+                document.getElementById('art-img-url').value = '';
+                document.getElementById('article-img-preview-box').style.display = 'none';
             });
 
-            // LOGIQUE PUBLICATION ARTICLES (TAB 2)
-            let articleImgData = '';
-            let articleVideoData = '';
+            // Supprimer la vidéo dans le formulaire
+            document.getElementById('remove-video-btn').addEventListener('click', () => {
+                currentArtVideoData = '';
+                document.getElementById('art-video-file').value = '';
+                document.getElementById('art-video-url').value = '';
+                document.getElementById('article-video-preview-box').style.display = 'none';
+            });
 
+            // Annuler l'édition
+            document.getElementById('cancel-edit-btn').addEventListener('click', () => {
+                resetForm();
+            });
+
+            function resetForm() {
+                document.getElementById('editing-article-id').value = '';
+                document.getElementById('publish-form').reset();
+                currentArtImageData = '';
+                currentArtVideoData = '';
+                document.getElementById('article-img-preview-box').style.display = 'none';
+                document.getElementById('article-video-preview-box').style.display = 'none';
+                document.getElementById('form-mode-title').innerHTML = `<i class="fa-solid fa-pen-to-square" style="color:var(--secondary-color);"></i> Publier un Nouvel Article`;
+                document.getElementById('submit-art-btn').innerHTML = `<i class="fa-solid fa-paper-plane"></i> Enregistrer & Publier l'Article`;
+                document.getElementById('cancel-edit-btn').style.display = 'none';
+            }
+
+            // Gestion Fichiers Media
             document.getElementById('art-img-file').addEventListener('change', (e) => {
                 const file = e.target.files[0];
                 if (file) {
                     const r = new FileReader();
                     r.onload = (evt) => {
-                        articleImgData = evt.target.result;
-                        document.getElementById('article-img-preview').src = articleImgData;
+                        currentArtImageData = evt.target.result;
+                        document.getElementById('article-img-preview').src = currentArtImageData;
                         document.getElementById('article-img-preview-box').style.display = 'block';
                     };
                     r.readAsDataURL(file);
@@ -509,32 +550,37 @@
                 if (file) {
                     const r = new FileReader();
                     r.onload = (evt) => {
-                        articleVideoData = evt.target.result;
-                        document.getElementById('article-video-preview').src = articleVideoData;
+                        currentArtVideoData = evt.target.result;
+                        document.getElementById('article-video-preview').src = currentArtVideoData;
                         document.getElementById('article-video-preview-box').style.display = 'block';
                     };
                     r.readAsDataURL(file);
                 }
             });
 
+            // Soumission du Formulaire Article (Créer ou Modifier)
             document.getElementById('publish-form').addEventListener('submit', (e) => {
                 e.preventDefault();
+
+                const editId = document.getElementById('editing-article-id').value;
                 const title = document.getElementById('art-title').value.trim();
                 const category = document.getElementById('art-category').value;
                 const player = document.getElementById('art-player').value.trim() || 'Joueur N.I. Conseils';
                 const summary = document.getElementById('art-summary').value.trim();
                 const rawContent = document.getElementById('art-content').value.trim();
-                
-                const finalImg = articleImgData || document.getElementById('art-img-url').value.trim() || 'assets/images/logo.png';
-                const finalVid = articleVideoData || document.getElementById('art-video-url').value.trim() || '';
 
-                const contentHtml = rawContent.split('\n\n').map(p => `<p>${p.replace(/\n/g, '<br>')}</p>`).join('');
+                const finalImg = currentArtImageData || document.getElementById('art-img-url').value.trim() || 'assets/images/logo.png';
+                const finalVid = currentArtVideoData || document.getElementById('art-video-url').value.trim() || '';
+
+                const contentHtml = rawContent.includes('<p>') ? rawContent : rawContent.split('\n\n').map(p => `<p>${p.replace(/\n/g, '<br>')}</p>`).join('');
+                
                 const today = new Date();
                 const dateIso = today.toISOString().split('T')[0];
                 const dateFr = today.toLocaleDateString('fr-FR', { day: '2-digit', month: 'long', year: 'numeric' });
-                const idSlug = title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '') + '-' + Date.now().toString().slice(-4);
+                
+                const idSlug = editId ? editId : title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '') + '-' + Date.now().toString().slice(-4);
 
-                const newArticle = {
+                const articleObj = {
                     id: idSlug,
                     title: title,
                     date: dateIso,
@@ -549,12 +595,26 @@
                     tags: [player, category, "N.I. Conseils"]
                 };
 
-                let storedArticles = JSON.parse(localStorage.getItem('custom_news_articles') || '[]');
-                storedArticles.unshift(newArticle);
-                localStorage.setItem('custom_news_articles', JSON.stringify(storedArticles));
+                let customArticles = JSON.parse(localStorage.getItem('custom_news_articles') || '[]');
+                
+                if (editId) {
+                    // Mode Modification : mettre à jour
+                    const index = customArticles.findIndex(a => a.id === editId);
+                    if (index !== -1) {
+                        customArticles[index] = articleObj;
+                    } else {
+                        customArticles.unshift(articleObj);
+                    }
+                } else {
+                    // Mode Création : ajouter au début
+                    customArticles.unshift(articleObj);
+                }
 
-                document.getElementById('admin-output-sec').style.display = 'block';
-                alert('Article publié avec succès !');
+                localStorage.setItem('custom_news_articles', JSON.stringify(customArticles));
+
+                alert(editId ? '🎉 Article modifié avec succès !' : '🎉 Nouvel article publié avec succès !');
+                resetForm();
+                loadAdminArticlesList();
             });
         });
     </script>

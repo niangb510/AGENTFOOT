@@ -200,12 +200,19 @@ ${message}`;
                 jsonArticles = defaultBackupArticles;
             }
 
+            const deletedIds = JSON.parse(localStorage.getItem('deleted_news_ids') || '[]');
             const localArticles = JSON.parse(localStorage.getItem('custom_news_articles') || '[]');
             
-            // Éviter les doublons par ID
             const articleMap = new Map();
-            [...localArticles, ...jsonArticles].forEach(item => {
-                if (!articleMap.has(item.id)) {
+            // Les articles modifiés/créés localement sont prioritaires
+            localArticles.forEach(item => {
+                if (!deletedIds.includes(item.id)) {
+                    articleMap.set(item.id, item);
+                }
+            });
+            // Les articles de news.json s'ajoutent s'ils ne sont ni supprimés ni modifiés
+            jsonArticles.forEach(item => {
+                if (!deletedIds.includes(item.id) && !articleMap.has(item.id)) {
                     articleMap.set(item.id, item);
                 }
             });
