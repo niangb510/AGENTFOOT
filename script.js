@@ -312,35 +312,32 @@ ${message}`;
             const gallerySec = document.getElementById('modal-gallery-sec');
             
             const photoList = (article.images && article.images.length > 0) ? article.images : (article.image ? [article.image] : []);
-            if (photoList.length > 0) {
+
+            if (photoList.length === 0) {
+                mainImg.style.display = 'none';
+                if (gallerySec) gallerySec.style.display = 'none';
+            } else if (photoList.length === 1) {
                 mainImg.src = photoList[0];
                 mainImg.alt = article.title;
                 mainImg.style.display = 'block';
+                if (gallerySec) gallerySec.style.display = 'none';
             } else {
+                // 2 ou plusieurs photos : affichage SIMULTANÉ côte à côte en grille
                 mainImg.style.display = 'none';
-            }
-
-            // Galerie multi-photos miniatures
-            if (gallerySec) {
-                if (photoList.length > 1) {
-                    let thumbsHtml = `<div style="font-size:0.85rem; font-weight:700; color:var(--primary-color); margin-bottom:8px;"><i class="fa-solid fa-images"></i> Galerie (${photoList.length} photos) - Cliquez pour changer :</div><div style="display:flex; gap:10px; overflow-x:auto; padding-bottom:5px;">`;
+                if (gallerySec) {
+                    let gridCols = photoList.length === 2 ? 'grid-template-columns: repeat(2, 1fr);' : 'grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));';
+                    let galleryHtml = `<div style="display: grid; ${gridCols} gap: 15px; margin-bottom: 15px;">`;
+                    
                     photoList.forEach((src, index) => {
-                        thumbsHtml += `<img src="${src}" class="modal-thumb-item" data-index="${index}" style="width:80px; height:60px; object-fit:cover; border-radius:6px; cursor:pointer; border:2px solid ${index === 0 ? 'var(--secondary-color)' : '#cbd5e1'}; transition:var(--transition);">`;
+                        galleryHtml += `
+                            <div style="border-radius: 12px; overflow: hidden; box-shadow: 0 8px 20px rgba(0,0,0,0.12); height: 260px; background: #0f172a; position: relative;">
+                                <img src="${src}" alt="${article.title} - Photo ${index + 1}" style="width: 100%; height: 100%; object-fit: cover; cursor: pointer; transition: transform 0.3s ease;" onclick="window.open('${src}', '_blank')">
+                            </div>
+                        `;
                     });
-                    thumbsHtml += `</div>`;
-                    gallerySec.innerHTML = thumbsHtml;
+                    galleryHtml += `</div>`;
+                    gallerySec.innerHTML = galleryHtml;
                     gallerySec.style.display = 'block';
-
-                    gallerySec.querySelectorAll('.modal-thumb-item').forEach(thumb => {
-                        thumb.addEventListener('click', (e) => {
-                            gallerySec.querySelectorAll('.modal-thumb-item').forEach(t => t.style.borderColor = '#cbd5e1');
-                            e.target.style.borderColor = 'var(--secondary-color)';
-                            mainImg.src = e.target.src;
-                        });
-                    });
-                } else {
-                    gallerySec.innerHTML = '';
-                    gallerySec.style.display = 'none';
                 }
             }
 
