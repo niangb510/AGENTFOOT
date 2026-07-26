@@ -421,9 +421,11 @@
             });
 
             // GESTION DE LA LISTE DES ARTICLES EXISTANTS (Lister, Éditer, Supprimer)
-            window.loadAdminArticlesList = function() {
+            window.loadAdminArticlesList = async function() {
                 const listContainer = document.getElementById('admin-articles-list');
                 if (!listContainer) return;
+
+                listContainer.innerHTML = '<p style="color:#64748b;"><i class="fa-solid fa-spinner fa-spin"></i> Chargement des articles...</p>';
 
                 const defaultArticles = [
                     {
@@ -461,13 +463,37 @@
                     }
                 ];
 
+                let jsonArticles = [];
+                try {
+                    const response = await fetch('./news.json?t=' + Date.now(), { cache: 'no-store' });
+                    if (response.ok) {
+                        jsonArticles = await response.json();
+                    }
+                } catch (err) {
+                    console.log('Erreur chargement news.json admin:', err);
+                }
+
+                if (!jsonArticles || jsonArticles.length === 0) {
+                    jsonArticles = defaultArticles;
+                }
+
                 const deletedIds = JSON.parse(localStorage.getItem('deleted_news_ids') || '[]');
                 const localArticles = JSON.parse(localStorage.getItem('custom_news_articles') || '[]');
 
                 const map = new Map();
-                [...localArticles, ...defaultArticles].forEach(item => {
+                // Priorité aux articles créés/modifiés localement
+                localArticles.forEach(item => {
+                    if (!deletedIds.includes(item.id)) {
+                        if (!item.images || item.images.length === 0) {
+                            item.images = item.image ? [item.image] : ['assets/images/logo.png'];
+                        }
+                        map.set(item.id, item);
+                    }
+                });
+
+                // Ajouter les articles du serveur/news.json s'ils ne sont ni modifiés ni supprimés
+                jsonArticles.forEach(item => {
                     if (!deletedIds.includes(item.id) && !map.has(item.id)) {
-                        // Rétro-compatibilité image/images
                         if (!item.images || item.images.length === 0) {
                             item.images = item.image ? [item.image] : ['assets/images/logo.png'];
                         }
@@ -476,6 +502,7 @@
                 });
 
                 const articles = Array.from(map.values());
+                articles.sort((a, b) => new Date(b.date) - new Date(a.date));
                 listContainer.innerHTML = '';
 
                 if (articles.length === 0) {
