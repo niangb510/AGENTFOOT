@@ -4,20 +4,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>N.I. CONSEILS | Espace d'Administration & Publication Media</title>
+    <title>N.I. CONSEILS | Panneau d'Administration & CMS du Site</title>
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;700;800&family=Poppins:wght@300;400;600;700&family=Montserrat:wght@400;600;800&family=Playfair+Display:wght@600;800&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
         integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
         crossorigin="anonymous" referrerpolicy="no-referrer">
     <link rel="stylesheet" href="style.css?v=2.0">
+    <!-- Dynamic Config Loader -->
+    <script src="site-config.js"></script>
     <style>
         .admin-header {
             background-color: var(--primary-color);
-            padding: 140px 0 50px;
+            padding: 140px 0 40px;
             color: white;
             text-align: center;
         }
@@ -29,6 +31,28 @@
             border-radius: 15px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.1);
             text-align: center;
+        }
+        .admin-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+        .tab-btn {
+            padding: 12px 24px;
+            border-radius: 30px;
+            background: rgba(255, 255, 255, 0.15);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            font-weight: 700;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        .tab-btn:hover, .tab-btn.active {
+            background: var(--secondary-color);
+            color: white;
+            border-color: var(--secondary-color);
         }
         .upload-zone {
             border: 2px dashed #cbd5e1;
@@ -46,16 +70,35 @@
         }
         .media-preview-box {
             margin-top: 15px;
-            max-height: 250px;
+            max-height: 200px;
             overflow: hidden;
             border-radius: 10px;
             display: none;
+            text-align: center;
         }
         .media-preview-box img, .media-preview-box video {
-            width: 100%;
-            max-height: 250px;
-            object-fit: cover;
+            max-height: 200px;
+            width: auto;
             border-radius: 10px;
+        }
+        .theme-preset-card {
+            padding: 15px;
+            border-radius: 12px;
+            border: 2px solid #e2e8f0;
+            cursor: pointer;
+            transition: var(--transition);
+            text-align: center;
+        }
+        .theme-preset-card:hover, .theme-preset-card.active {
+            border-color: var(--secondary-color);
+            background: #fffbeb;
+        }
+        .color-circle {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: inline-block;
+            margin: 0 4px;
         }
     </style>
 </head>
@@ -68,7 +111,7 @@
                 <img src="assets/images/logo.png" alt="N.I. CONSEILS">
             </a>
             <ul class="nav-links">
-                <li><a href="index.html">Accueil</a></li>
+                <li><a href="index.html" target="_blank">Voir le Site Live</a></li>
                 <li><a href="actualites.html" target="_blank">Voir les Actualités</a></li>
             </ul>
         </div>
@@ -76,8 +119,13 @@
 
     <header class="admin-header">
         <div class="container">
-            <h1>Espace de Publication <span>Media & Actualités</span></h1>
-            <p>Téléversez directement vos photos et vidéos pour publier les actualités de vos joueurs.</p>
+            <h1>Panneau de Gestion <span>WordPress/CMS</span></h1>
+            <p>Personnalisez tout votre site en direct (Logo, Couverture, Polices, Couleurs, Articles).</p>
+
+            <div class="admin-tabs" id="tab-controls" style="display: none;">
+                <button class="tab-btn active" data-tab="tab-customization"><i class="fa-solid fa-palette"></i> Personnaliser l'Apparence du Site</button>
+                <button class="tab-btn" data-tab="tab-articles"><i class="fa-solid fa-newspaper"></i> Publier des Articles (Photos & Vidéos)</button>
+            </div>
         </div>
     </header>
 
@@ -86,16 +134,137 @@
         <!-- Access Protection Step -->
         <div id="admin-auth-sec" class="login-box">
             <i class="fa-solid fa-lock" style="font-size: 2.5rem; color: var(--secondary-color); margin-bottom: 15px;"></i>
-            <h3>Accès Sécurisé Administrateur</h3>
-            <p style="font-size: 0.9rem; color: #64748b; margin-bottom: 20px;">Veuillez entrer votre code d'accès administrateur.</p>
+            <h3>Connexion Administrateur</h3>
+            <p style="font-size: 0.9rem; color: #64748b; margin-bottom: 20px;">Entrez votre code d'accès pour modifier le site.</p>
             <input type="password" id="admin-passcode" placeholder="Code d'accès..." style="width: 100%; padding: 12px; border: 1px solid #cbd5e1; border-radius: 8px; margin-bottom: 15px; text-align: center; font-size: 1.1rem;">
-            <button id="admin-login-btn" class="btn btn-primary" style="width: 100%;">Se Connecter</button>
+            <button id="admin-login-btn" class="btn btn-primary" style="width: 100%;">Accéder au Panneau d'Administration</button>
             <p id="admin-error" style="color: #ef4444; font-size: 0.85rem; margin-top: 10px; display: none;">Code d'accès incorrect.</p>
         </div>
 
-        <!-- Main Form Panel (Hidden until login) -->
+        <!-- MAIN ADMIN PANEL CONTAINER -->
         <div id="admin-panel" style="display: none;">
-            <div class="admin-card">
+
+            <!-- ==========================================
+                 TAB 1: PERSONNALISATION DU SITE (LOGO, COVER, FONTS, COLORS)
+                 ========================================== -->
+            <div id="tab-customization" class="admin-card">
+                <h2 style="color: var(--primary-color); margin-bottom: 10px;"><i class="fa-solid fa-paint-roller" style="color: var(--secondary-color);"></i> Personnalisation du Style & Identité Visuelle</h2>
+                <p style="color: #64748b; margin-bottom: 30px;">Modifiez le logo de l'agence, la photo de couverture, la police de caractères et les couleurs principales en temps réel sans toucher au code !</p>
+
+                <form id="config-form" class="admin-form">
+
+                    <!-- Section 1: Logo & Couverture -->
+                    <div style="background: #f8fafc; padding: 25px; border-radius: 15px; margin-bottom: 30px; border: 1px solid #e2e8f0;">
+                        <h3 style="color: var(--primary-color); font-size: 1.2rem; margin-bottom: 15px;"><i class="fa-solid fa-image" style="color: var(--secondary-color);"></i> 1. Logo & Photo de Couverture</h3>
+                        
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
+                            <!-- Logo Upload -->
+                            <div class="form-group">
+                                <label><i class="fa-solid fa-circle-user"></i> Logo de l'Agence (Photo de Profil)</label>
+                                <div class="upload-zone" onclick="document.getElementById('cfg-logo-file').click();">
+                                    <i class="fa-solid fa-cloud-arrow-up" style="font-size: 1.8rem; color: var(--secondary-color);"></i>
+                                    <p style="margin: 5px 0 0; font-size: 0.9rem; font-weight: 600;">Changer le Logo (Téléversement)</p>
+                                    <input type="file" id="cfg-logo-file" accept="image/*" style="display: none;">
+                                </div>
+                                <input type="text" id="cfg-logo-url" placeholder="Ou entrez le chemin de l'image..." style="margin-top: 8px;">
+                                <div class="media-preview-box" id="logo-preview-box">
+                                    <img id="logo-preview-img" src="assets/images/logo.png" alt="Aperçu Logo" style="background: #0f172a; padding: 10px;">
+                                </div>
+                            </div>
+
+                            <!-- Cover Image Upload -->
+                            <div class="form-group">
+                                <label><i class="fa-solid fa-mountain-sun"></i> Photo de Couverture (Bannière Hero)</label>
+                                <div class="upload-zone" onclick="document.getElementById('cfg-cover-file').click();">
+                                    <i class="fa-solid fa-images" style="font-size: 1.8rem; color: var(--secondary-color);"></i>
+                                    <p style="margin: 5px 0 0; font-size: 0.9rem; font-weight: 600;">Changer la Couverture (Téléversement)</p>
+                                    <input type="file" id="cfg-cover-file" accept="image/*" style="display: none;">
+                                </div>
+                                <input type="text" id="cfg-cover-url" placeholder="Ou entrez le chemin de l'image..." style="margin-top: 8px;">
+                                <div class="media-preview-box" id="cover-preview-box">
+                                    <img id="cover-preview-img" src="assets/images/hero.png" alt="Aperçu Couverture">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Section 2: Police d'écriture (Typography) -->
+                    <div style="background: #f8fafc; padding: 25px; border-radius: 15px; margin-bottom: 30px; border: 1px solid #e2e8f0;">
+                        <h3 style="color: var(--primary-color); font-size: 1.2rem; margin-bottom: 15px;"><i class="fa-solid fa-font" style="color: var(--secondary-color);"></i> 2. Police d'écriture (Style Typographique)</h3>
+                        
+                        <div class="form-group">
+                            <label for="cfg-font-select">Choisir la Police d'écriture globale du site :</label>
+                            <select id="cfg-font-select" style="font-size: 1.1rem; padding: 12px;">
+                                <option value="'Outfit', sans-serif" data-url="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;700;800&display=swap">Outfit (Design Moderne & Épuré - Par défaut)</option>
+                                <option value="'Poppins', sans-serif" data-url="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap">Poppins (Dynamique & Sport)</option>
+                                <option value="'Montserrat', sans-serif" data-url="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&display=swap">Montserrat (Puissant & Premium)</option>
+                                <option value="'Inter', sans-serif" data-url="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap">Inter (Clean & Précision)</option>
+                                <option value="'Playfair Display', serif" data-url="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;800&display=swap">Playfair Display (Luxe & Prestige)</option>
+                            </select>
+                        </div>
+
+                        <div id="font-sample-preview" style="padding: 15px; background: white; border-radius: 10px; border: 1px solid #cbd5e1; font-size: 1.2rem; font-weight: 700; color: var(--primary-color);">
+                            Aperçu Typographique : N.I. CONSEILS-MANAGEMENTS (Football & Carrière)
+                        </div>
+                    </div>
+
+                    <!-- Section 3: Palette de Couleurs & Thèmes -->
+                    <div style="background: #f8fafc; padding: 25px; border-radius: 15px; margin-bottom: 30px; border: 1px solid #e2e8f0;">
+                        <h3 style="color: var(--primary-color); font-size: 1.2rem; margin-bottom: 15px;"><i class="fa-solid fa-droplet" style="color: var(--secondary-color);"></i> 3. Palette de Couleurs du Site</h3>
+                        
+                        <label style="margin-bottom: 12px;">Choisissez un Thème Préconfiguré :</label>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; margin-bottom: 20px;">
+                            <div class="theme-preset-card active" data-primary="#0f172a" data-secondary="#d97706">
+                                <strong>Doré & Prestige</strong>
+                                <div style="margin-top: 8px;">
+                                    <span class="color-circle" style="background: #0f172a;"></span>
+                                    <span class="color-circle" style="background: #d97706;"></span>
+                                </div>
+                            </div>
+                            <div class="theme-preset-card" data-primary="#064e3b" data-secondary="#f59e0b">
+                                <strong>Vert Émeraude</strong>
+                                <div style="margin-top: 8px;">
+                                    <span class="color-circle" style="background: #064e3b;"></span>
+                                    <span class="color-circle" style="background: #f59e0b;"></span>
+                                </div>
+                            </div>
+                            <div class="theme-preset-card" data-primary="#1e3a8a" data-secondary="#dc2626">
+                                <strong>Bleu & Rouge</strong>
+                                <div style="margin-top: 8px;">
+                                    <span class="color-circle" style="background: #1e3a8a;"></span>
+                                    <span class="color-circle" style="background: #dc2626;"></span>
+                                </div>
+                            </div>
+                            <div class="theme-preset-card" data-primary="#111827" data-secondary="#b45309">
+                                <strong>Noir & Cuivre</strong>
+                                <div style="margin-top: 8px;">
+                                    <span class="color-circle" style="background: #111827;"></span>
+                                    <span class="color-circle" style="background: #b45309;"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Custom Colors Pickers -->
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                            <div class="form-group">
+                                <label for="cfg-primary-color">Couleur Principale (Arrière-plans/Headers)</label>
+                                <input type="color" id="cfg-primary-color" value="#0f172a" style="height: 45px; cursor: pointer;">
+                            </div>
+                            <div class="form-group">
+                                <label for="cfg-secondary-color">Couleur d'Accentuation (Boutons/Titres)</label>
+                                <input type="color" id="cfg-secondary-color" value="#d97706" style="height: 45px; cursor: pointer;">
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary" style="width: 100%; padding: 16px; font-size: 1.15rem;"><i class="fa-solid fa-floppy-disk"></i> Enregistrer & Appliquer la Personnalisation sur Tout le Site</button>
+                </form>
+            </div>
+
+            <!-- ==========================================
+                 TAB 2: PUBLICATION D'ARTICLES (PHOTOS & VIDÉOS)
+                 ========================================== -->
+            <div id="tab-articles" class="admin-card" style="display: none;">
                 <h2 style="color: var(--primary-color); margin-bottom: 25px;"><i class="fa-solid fa-photo-film" style="color: var(--secondary-color);"></i> Publier un Article avec Photo & Vidéo</h2>
                 
                 <form id="publish-form" class="admin-form">
@@ -119,37 +288,31 @@
                         </div>
                     </div>
 
-                    <!-- Photo Upload / URL Zone -->
+                    <!-- Photo Upload Zone -->
                     <div class="form-group">
                         <label><i class="fa-solid fa-image"></i> Photo de l'article *</label>
                         <div class="upload-zone" onclick="document.getElementById('art-img-file').click();">
                             <i class="fa-solid fa-cloud-arrow-up" style="font-size: 2rem; color: var(--secondary-color);"></i>
                             <p style="margin: 5px 0 0; font-size: 0.95rem; font-weight: 600;">Cliquez ici pour Téléverser une Photo (depuis votre téléphone/ordinateur)</p>
-                            <span style="font-size: 0.8rem; color: #64748b;">Formats acceptés : JPG, PNG, WEBP</span>
                             <input type="file" id="art-img-file" accept="image/*" style="display: none;">
                         </div>
-                        <div style="margin-top: 10px; font-size: 0.85rem; color: #64748b; text-align: center;">-- OU entrez une URL / un chemin d'image --</div>
-                        <input type="text" id="art-img-url" placeholder="Ex: assets/images/mercato_dijon_1.webp" style="margin-top: 5px;">
-                        
-                        <div class="media-preview-box" id="img-preview-container">
-                            <img id="img-preview" src="" alt="Aperçu Photo">
+                        <input type="text" id="art-img-url" placeholder="Ou entrez une URL d'image..." style="margin-top: 5px;">
+                        <div class="media-preview-box" id="article-img-preview-box">
+                            <img id="article-img-preview" src="" alt="Aperçu Photo">
                         </div>
                     </div>
 
-                    <!-- Video Upload / URL Zone -->
+                    <!-- Video Upload Zone -->
                     <div class="form-group">
                         <label><i class="fa-solid fa-video"></i> Vidéo de l'article (Optionnel)</label>
                         <div class="upload-zone" onclick="document.getElementById('art-video-file').click();">
                             <i class="fa-solid fa-file-video" style="font-size: 2rem; color: var(--secondary-color);"></i>
-                            <p style="margin: 5px 0 0; font-size: 0.95rem; font-weight: 600;">Cliquez ici pour Téléverser une Fichier Vidéo (MP4, WEBM)</p>
-                            <span style="font-size: 0.8rem; color: #64748b;">Téléversement direct depuis votre galerie</span>
+                            <p style="margin: 5px 0 0; font-size: 0.95rem; font-weight: 600;">Cliquez ici pour Téléverser une Vidéo (depuis votre galerie)</p>
                             <input type="file" id="art-video-file" accept="video/*" style="display: none;">
                         </div>
-                        <div style="margin-top: 10px; font-size: 0.85rem; color: #64748b; text-align: center;">-- OU collez un lien vidéo (YouTube, MP4, etc.) --</div>
-                        <input type="text" id="art-video-url" placeholder="Ex: https://www.youtube.com/watch?v=..." style="margin-top: 5px;">
-                        
-                        <div class="media-preview-box" id="video-preview-container">
-                            <video id="video-preview" controls src=""></video>
+                        <input type="text" id="art-video-url" placeholder="Ou collez un lien YouTube..." style="margin-top: 5px;">
+                        <div class="media-preview-box" id="article-video-preview-box">
+                            <video id="article-video-preview" controls src=""></video>
                         </div>
                     </div>
 
@@ -160,24 +323,19 @@
 
                     <div class="form-group">
                         <label for="art-content">Contenu complet de l'article *</label>
-                        <textarea id="art-content" rows="6" placeholder="Rédigez l'article complet ici. Paragraphes séparés par des retours à la ligne." required></textarea>
+                        <textarea id="art-content" rows="6" placeholder="Rédigez l'article complet ici." required></textarea>
                     </div>
 
-                    <div style="display: flex; gap: 15px; flex-wrap: wrap;">
-                        <button type="submit" class="btn btn-primary" style="flex: 1; padding: 15px; font-size: 1.1rem;"><i class="fa-solid fa-paper-plane"></i> Publier l'Article Immédiatement</button>
-                    </div>
+                    <button type="submit" class="btn btn-primary" style="width: 100%; padding: 15px; font-size: 1.1rem;"><i class="fa-solid fa-paper-plane"></i> Publier l'Article Immédiatement</button>
                 </form>
 
-                <!-- Output Generator Section -->
                 <div id="admin-output-sec" style="margin-top: 40px; display: none;">
                     <hr style="margin-bottom: 25px; border-color: #e2e8f0;">
-                    <h3 style="color: var(--primary-color);"><i class="fa-solid fa-circle-check" style="color: #22c55e;"></i> Article Publié avec Succès !</h3>
-                    <p style="font-size: 0.95rem; color: #475569;">L'article et ses fichiers médias (photo/vidéo) sont désormais publiés en direct sur votre page <a href="actualites.html" target="_blank" style="color: var(--secondary-color); font-weight: bold; text-decoration: underline;">Actualités</a>.</p>
-                    
-                    <h4 style="margin-top: 20px; font-size: 0.95rem; color: #64748b;">Code JSON de l'article (à conserver si besoin) :</h4>
-                    <pre class="code-output" id="json-code-out"></pre>
+                    <h3 style="color: var(--primary-color);"><i class="fa-solid fa-circle-check" style="color: #22c55e;"></i> Article Publié en Direct !</h3>
+                    <p style="font-size: 0.95rem; color: #475569;">L'article et ses fichiers médias sont maintenant en ligne sur la page <a href="actualites.html" target="_blank" style="color: var(--secondary-color); font-weight: bold; text-decoration: underline;">Actualités</a>.</p>
                 </div>
             </div>
+
         </div>
 
     </div>
@@ -190,11 +348,13 @@
             const passInput = document.getElementById('admin-passcode');
             const authSec = document.getElementById('admin-auth-sec');
             const adminPanel = document.getElementById('admin-panel');
+            const tabControls = document.getElementById('tab-controls');
             const errMsg = document.getElementById('admin-error');
 
             if (sessionStorage.getItem('admin_logged') === 'true') {
                 authSec.style.display = 'none';
                 adminPanel.style.display = 'block';
+                tabControls.style.display = 'flex';
             }
 
             loginBtn.addEventListener('click', () => {
@@ -202,91 +362,176 @@
                     sessionStorage.setItem('admin_logged', 'true');
                     authSec.style.display = 'none';
                     adminPanel.style.display = 'block';
+                    tabControls.style.display = 'flex';
                 } else {
                     errMsg.style.display = 'block';
                 }
             });
 
-            // Variables de stockage media Base64
-            let uploadedImageData = "";
-            let uploadedVideoData = "";
+            // Gestion des Onglets Administrateur
+            const tabBtns = document.querySelectorAll('.tab-btn');
+            tabBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    tabBtns.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
 
-            // Gestionnaire de fichier Image
-            const imgFileInput = document.getElementById('art-img-file');
-            const imgUrlInput = document.getElementById('art-img-url');
-            const imgPreviewContainer = document.getElementById('img-preview-container');
-            const imgPreview = document.getElementById('img-preview');
+                    const targetTab = btn.dataset.tab;
+                    document.getElementById('tab-customization').style.display = targetTab === 'tab-customization' ? 'block' : 'none';
+                    document.getElementById('tab-articles').style.display = targetTab === 'tab-articles' ? 'block' : 'none';
+                });
+            });
 
-            imgFileInput.addEventListener('change', (e) => {
+            // LOGIQUE PERSONNALISATION DU SITE (TAB 1)
+            const savedConfig = JSON.parse(localStorage.getItem('ni_site_custom_config') || '{}');
+
+            let currentLogoData = savedConfig.logo || 'assets/images/logo.png';
+            let currentCoverData = savedConfig.heroCover || 'assets/images/hero.png';
+
+            // Initialiser les champs avec la config enregistrée
+            if (savedConfig.primaryColor) document.getElementById('cfg-primary-color').value = savedConfig.primaryColor;
+            if (savedConfig.secondaryColor) document.getElementById('cfg-secondary-color').value = savedConfig.secondaryColor;
+            if (savedConfig.fontFamily) {
+                const fontSelect = document.getElementById('cfg-font-select');
+                fontSelect.value = savedConfig.fontFamily;
+                document.getElementById('font-sample-preview').style.fontFamily = savedConfig.fontFamily;
+            }
+
+            // Preview Logo Upload
+            document.getElementById('cfg-logo-file').addEventListener('change', (e) => {
                 const file = e.target.files[0];
                 if (file) {
                     const reader = new FileReader();
-                    reader.onload = (event) => {
-                        uploadedImageData = event.target.result;
-                        imgPreview.src = uploadedImageData;
-                        imgPreviewContainer.style.display = 'block';
-                        imgUrlInput.value = ''; // effacer URL si fichier sélectionné
+                    reader.onload = (evt) => {
+                        currentLogoData = evt.target.result;
+                        document.getElementById('logo-preview-img').src = currentLogoData;
+                        document.getElementById('logo-preview-box').style.display = 'block';
                     };
                     reader.readAsDataURL(file);
                 }
             });
 
-            imgUrlInput.addEventListener('input', (e) => {
+            document.getElementById('cfg-logo-url').addEventListener('input', (e) => {
                 if (e.target.value.trim() !== '') {
-                    uploadedImageData = e.target.value.trim();
-                    imgPreview.src = uploadedImageData;
-                    imgPreviewContainer.style.display = 'block';
+                    currentLogoData = e.target.value.trim();
+                    document.getElementById('logo-preview-img').src = currentLogoData;
+                    document.getElementById('logo-preview-box').style.display = 'block';
                 }
             });
 
-            // Gestionnaire de fichier Vidéo
-            const videoFileInput = document.getElementById('art-video-file');
-            const videoUrlInput = document.getElementById('art-video-url');
-            const videoPreviewContainer = document.getElementById('video-preview-container');
-            const videoPreview = document.getElementById('video-preview');
-
-            videoFileInput.addEventListener('change', (e) => {
+            // Preview Cover Upload
+            document.getElementById('cfg-cover-file').addEventListener('change', (e) => {
                 const file = e.target.files[0];
                 if (file) {
                     const reader = new FileReader();
-                    reader.onload = (event) => {
-                        uploadedVideoData = event.target.result;
-                        videoPreview.src = uploadedVideoData;
-                        videoPreviewContainer.style.display = 'block';
-                        videoUrlInput.value = '';
+                    reader.onload = (evt) => {
+                        currentCoverData = evt.target.result;
+                        document.getElementById('cover-preview-img').src = currentCoverData;
+                        document.getElementById('cover-preview-box').style.display = 'block';
                     };
                     reader.readAsDataURL(file);
                 }
             });
 
-            videoUrlInput.addEventListener('input', (e) => {
+            document.getElementById('cfg-cover-url').addEventListener('input', (e) => {
                 if (e.target.value.trim() !== '') {
-                    uploadedVideoData = e.target.value.trim();
-                    videoPreview.src = uploadedVideoData;
-                    videoPreviewContainer.style.display = 'block';
+                    currentCoverData = e.target.value.trim();
+                    document.getElementById('cover-preview-img').src = currentCoverData;
+                    document.getElementById('cover-preview-box').style.display = 'block';
                 }
             });
 
-            // Publication de l'article
-            const form = document.getElementById('publish-form');
-            form.addEventListener('submit', (e) => {
+            // Font Select Live Preview
+            const fontSelect = document.getElementById('cfg-font-select');
+            fontSelect.addEventListener('change', () => {
+                const fontVal = fontSelect.value;
+                document.getElementById('font-sample-preview').style.fontFamily = fontVal;
+            });
+
+            // Presets de couleurs
+            document.querySelectorAll('.theme-preset-card').forEach(card => {
+                card.addEventListener('click', () => {
+                    document.querySelectorAll('.theme-preset-card').forEach(c => c.classList.remove('active'));
+                    card.classList.add('active');
+
+                    const pColor = card.dataset.primary;
+                    const sColor = card.dataset.secondary;
+
+                    document.getElementById('cfg-primary-color').value = pColor;
+                    document.getElementById('cfg-secondary-color').value = sColor;
+                });
+            });
+
+            // Enregistrement de la configuration
+            document.getElementById('config-form').addEventListener('submit', (e) => {
                 e.preventDefault();
 
+                const selectedOption = fontSelect.options[fontSelect.selectedIndex];
+                const fontUrl = selectedOption.dataset.url;
+
+                const newConfig = {
+                    logo: currentLogoData,
+                    heroCover: currentCoverData,
+                    fontFamily: fontSelect.value,
+                    fontUrl: fontUrl,
+                    primaryColor: document.getElementById('cfg-primary-color').value,
+                    secondaryColor: document.getElementById('cfg-secondary-color').value
+                };
+
+                localStorage.setItem('ni_site_custom_config', JSON.stringify(newConfig));
+                
+                // Appliquer immédiatement
+                if (window.applySiteConfig) {
+                    window.applySiteConfig(newConfig);
+                }
+
+                alert('🎉 Félicitations ! La nouvelle personnalisation de votre site (Logo, Couverture, Police et Couleurs) a été appliquée avec succès sur l\'ensemble des pages !');
+            });
+
+            // LOGIQUE PUBLICATION ARTICLES (TAB 2)
+            let articleImgData = '';
+            let articleVideoData = '';
+
+            document.getElementById('art-img-file').addEventListener('change', (e) => {
+                const file = e.target.files[0];
+                if (file) {
+                    const r = new FileReader();
+                    r.onload = (evt) => {
+                        articleImgData = evt.target.result;
+                        document.getElementById('article-img-preview').src = articleImgData;
+                        document.getElementById('article-img-preview-box').style.display = 'block';
+                    };
+                    r.readAsDataURL(file);
+                }
+            });
+
+            document.getElementById('art-video-file').addEventListener('change', (e) => {
+                const file = e.target.files[0];
+                if (file) {
+                    const r = new FileReader();
+                    r.onload = (evt) => {
+                        articleVideoData = evt.target.result;
+                        document.getElementById('article-video-preview').src = articleVideoData;
+                        document.getElementById('article-video-preview-box').style.display = 'block';
+                    };
+                    r.readAsDataURL(file);
+                }
+            });
+
+            document.getElementById('publish-form').addEventListener('submit', (e) => {
+                e.preventDefault();
                 const title = document.getElementById('art-title').value.trim();
                 const category = document.getElementById('art-category').value;
                 const player = document.getElementById('art-player').value.trim() || 'Joueur N.I. Conseils';
                 const summary = document.getElementById('art-summary').value.trim();
                 const rawContent = document.getElementById('art-content').value.trim();
                 
-                const finalImage = uploadedImageData || imgUrlInput.value.trim() || 'assets/images/logo.png';
-                const finalVideo = uploadedVideoData || videoUrlInput.value.trim() || '';
+                const finalImg = articleImgData || document.getElementById('art-img-url').value.trim() || 'assets/images/logo.png';
+                const finalVid = articleVideoData || document.getElementById('art-video-url').value.trim() || '';
 
                 const contentHtml = rawContent.split('\n\n').map(p => `<p>${p.replace(/\n/g, '<br>')}</p>`).join('');
-
                 const today = new Date();
                 const dateIso = today.toISOString().split('T')[0];
                 const dateFr = today.toLocaleDateString('fr-FR', { day: '2-digit', month: 'long', year: 'numeric' });
-
                 const idSlug = title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '') + '-' + Date.now().toString().slice(-4);
 
                 const newArticle = {
@@ -297,8 +542,8 @@
                     category: category,
                     author: "Ibrahim Niang",
                     player: player,
-                    image: finalImage,
-                    video: finalVideo,
+                    image: finalImg,
+                    video: finalVid,
                     summary: summary,
                     content: contentHtml,
                     tags: [player, category, "N.I. Conseils"]
@@ -308,10 +553,8 @@
                 storedArticles.unshift(newArticle);
                 localStorage.setItem('custom_news_articles', JSON.stringify(storedArticles));
 
-                document.getElementById('json-code-out').textContent = JSON.stringify(newArticle, null, 4);
                 document.getElementById('admin-output-sec').style.display = 'block';
-                
-                window.scrollTo({ top: document.getElementById('admin-output-sec').offsetTop - 80, behavior: 'smooth' });
+                alert('Article publié avec succès !');
             });
         });
     </script>
