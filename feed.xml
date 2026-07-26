@@ -5,15 +5,23 @@
   <link>https://ni-conseils-managements.netlify.app/actualites.html</link>
   <description>Actualités officielles, transferts, signatures et performances des joueurs suivis par l'agence N.I. CONSEILS-MANAGEMENTS.</description>
   <language>fr-FR</language>
-  <lastBuildDate>Sun, 26 Jul 2026 14:00:00 GMT</lastBuildDate>
+  <lastBuildDate>Sun, 26 Jul 2026 15:00:00 GMT</lastBuildDate>
   <atom:link href="https://ni-conseils-managements.netlify.app/feed.xml" rel="self" type="application/rss+xml" />
 
   <item>
-    <title>Football – Mercato : L’agence burkinabè N.I Conseils Managements bouscule le marché européen avec la signature de pépites à Dijon FCO</title>
-    <link>https://ni-conseils-managements.netlify.app/actualites.html?id=mercato-signature-dijon-fco-bayala-kelvin</link>
-    <guid>https://ni-conseils-managements.netlify.app/actualites.html?id=mercato-signature-dijon-fco-bayala-kelvin</guid>
+    <title>Mercato : Le milieu burkinabè Bayala Joël s’engage officiellement au Dijon FCO grâce à N.I Conseils Managements</title>
+    <link>https://ni-conseils-managements.netlify.app/actualites.html?id=joel-bayala-transfert-dijon-fco</link>
+    <guid>https://ni-conseils-managements.netlify.app/actualites.html?id=joel-bayala-transfert-dijon-fco</guid>
     <pubDate>Thu, 23 Jul 2026 22:47:00 GMT</pubDate>
-    <description>L’agence burkinabè N.I Conseils Managements officialise les signatures de deux jeunes espoirs, Bayala Joël et Kelvin Kwasi Adamtay, au sein du Dijon FCO en France.</description>
+    <description>À 19 ans, le prodige du milieu de terrain burkinabè Bayala Joël quitte le Sporting Club de Tenakourou pour signer son contrat avec le Dijon FCO sous l'égide d'Ibrahim Niang.</description>
+  </item>
+
+  <item>
+    <title>Premier contrat pro au Dijon FCO pour l’attaquant Kelvin Kwasi Adamtay supervisé par Ibrahim Niang</title>
+    <link>https://ni-conseils-managements.netlify.app/actualites.html?id=kelvin-kwasi-adamtay-premier-contrat-pro-dijon</link>
+    <guid>https://ni-conseils-managements.netlify.app/actualites.html?id=kelvin-kwasi-adamtay-premier-contrat-pro-dijon</guid>
+    <pubDate>Thu, 23 Jul 2026 22:47:00 GMT</pubDate>
+    <description>Formé à l’Académie Afca Burkina, le jeune avant-centre polyvalent de 18 ans Kelvin Kwasi Adamtay signe son premier contrat professionnel au Dijon FCO via N.I Conseils Managements.</description>
   </item>
 
   <item>
@@ -22,14 +30,6 @@
     <guid>https://ni-conseils-managements.netlify.app/actualites.html?id=cyriaque-irie-transfert-fribourg</guid>
     <pubDate>Mon, 20 Jul 2026 10:00:00 GMT</pubDate>
     <description>Après une saison étincelante à Dijon puis Troyes, le jeune ailier international burkinabé s'engage avec le SC Fribourg en Bundesliga.</description>
-  </item>
-
-  <item>
-    <title>N.I. CONSEILS renforce son réseau de partenariats en Europe</title>
-    <link>https://ni-conseils-managements.netlify.app/actualites.html?id=developpement-reseau-recrutement-europe</link>
-    <guid>https://ni-conseils-managements.netlify.app/actualites.html?id=developpement-reseau-recrutement-europe</guid>
-    <pubDate>Wed, 15 Jul 2026 09:00:00 GMT</pubDate>
-    <description>L'agence étend ses connexions avec de nouveaux clubs partenaires en Ligue 1, Ligue 2 et Bundesliga pour offrir de meilleures opportunités à ses joueurs.</description>
   </item>
 </channel>
 </rss>
