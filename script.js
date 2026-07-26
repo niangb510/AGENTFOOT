@@ -308,8 +308,42 @@ ${message}`;
 
         // Ouverture de la modale article & mise à jour SEO Schema.org
         const openArticleModal = (article) => {
-            document.getElementById('modal-img').src = article.image;
-            document.getElementById('modal-img').alt = article.title;
+            const mainImg = document.getElementById('modal-img');
+            const gallerySec = document.getElementById('modal-gallery-sec');
+            
+            const photoList = (article.images && article.images.length > 0) ? article.images : (article.image ? [article.image] : []);
+            if (photoList.length > 0) {
+                mainImg.src = photoList[0];
+                mainImg.alt = article.title;
+                mainImg.style.display = 'block';
+            } else {
+                mainImg.style.display = 'none';
+            }
+
+            // Galerie multi-photos miniatures
+            if (gallerySec) {
+                if (photoList.length > 1) {
+                    let thumbsHtml = `<div style="font-size:0.85rem; font-weight:700; color:var(--primary-color); margin-bottom:8px;"><i class="fa-solid fa-images"></i> Galerie (${photoList.length} photos) - Cliquez pour changer :</div><div style="display:flex; gap:10px; overflow-x:auto; padding-bottom:5px;">`;
+                    photoList.forEach((src, index) => {
+                        thumbsHtml += `<img src="${src}" class="modal-thumb-item" data-index="${index}" style="width:80px; height:60px; object-fit:cover; border-radius:6px; cursor:pointer; border:2px solid ${index === 0 ? 'var(--secondary-color)' : '#cbd5e1'}; transition:var(--transition);">`;
+                    });
+                    thumbsHtml += `</div>`;
+                    gallerySec.innerHTML = thumbsHtml;
+                    gallerySec.style.display = 'block';
+
+                    gallerySec.querySelectorAll('.modal-thumb-item').forEach(thumb => {
+                        thumb.addEventListener('click', (e) => {
+                            gallerySec.querySelectorAll('.modal-thumb-item').forEach(t => t.style.borderColor = '#cbd5e1');
+                            e.target.style.borderColor = 'var(--secondary-color)';
+                            mainImg.src = e.target.src;
+                        });
+                    });
+                } else {
+                    gallerySec.innerHTML = '';
+                    gallerySec.style.display = 'none';
+                }
+            }
+
             document.getElementById('modal-title').innerText = article.title;
             document.getElementById('modal-date').innerHTML = `<i class="fa-regular fa-calendar"></i> ${article.dateFormatted || article.date}`;
             document.getElementById('modal-author').innerHTML = `<i class="fa-solid fa-user"></i> ${article.author || 'N.I. CONSEILS'}`;

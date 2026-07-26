@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>N.I. CONSEILS | Panneau d'Administration & Gestion des Articles</title>
+    <title>N.I. CONSEILS | Panneau d'Administration & Galerie Multi-Photos</title>
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -68,32 +68,45 @@
             border-color: var(--secondary-color);
             background: rgba(217, 119, 6, 0.05);
         }
-        .media-preview-box {
-            margin-top: 15px;
-            max-height: 200px;
-            overflow: hidden;
-            border-radius: 10px;
-            display: none;
-            text-align: center;
+        
+        /* Multi-Photo Grid Card Item */
+        .photo-card-item {
             position: relative;
-        }
-        .media-preview-box img, .media-preview-box video {
-            max-height: 200px;
-            width: auto;
+            height: 120px;
             border-radius: 10px;
+            overflow: hidden;
+            border: 2px solid #cbd5e1;
+            background: #000;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
         }
-        .delete-media-btn {
+        .photo-card-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .photo-delete-single-btn {
             position: absolute;
-            top: 10px;
-            right: 10px;
+            top: 5px;
+            right: 5px;
             background: #ef4444;
             color: white;
             border: none;
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-weight: bold;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.85rem;
             cursor: pointer;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+            transition: var(--transition);
         }
+        .photo-delete-single-btn:hover {
+            background: #dc2626;
+            transform: scale(1.1);
+        }
+
         .article-admin-item {
             display: flex;
             align-items: center;
@@ -138,7 +151,7 @@
     <header class="admin-header">
         <div class="container">
             <h1>Panneau de Gestion <span>WordPress / CMS</span></h1>
-            <p>Rédigez, modifiez, supprimez des articles ou personnalisez le design de votre site.</p>
+            <p>Gérez vos articles, téléversez plusieurs photos (gestion photo par photo) et vidéos.</p>
 
             <div class="admin-tabs" id="tab-controls" style="display: none;">
                 <button class="tab-btn active" data-tab="tab-articles"><i class="fa-solid fa-newspaper"></i> Gérer & Publier les Articles</button>
@@ -170,7 +183,7 @@
                 <!-- LIST OF EXISTING ARTICLES TO EDIT/DELETE -->
                 <div style="margin-bottom: 40px; background: #f8fafc; padding: 25px; border-radius: 16px; border: 1px solid #e2e8f0;">
                     <h3 style="color: var(--primary-color); margin-bottom: 15px;"><i class="fa-solid fa-list-check" style="color: var(--secondary-color);"></i> Articles en Ligne (Modifier ou Supprimer)</h3>
-                    <p style="font-size: 0.9rem; color: #64748b; margin-bottom: 20px;">Cliquez sur <strong>Modifier</strong> pour changer le texte, la photo ou la vidéo d'un article, ou sur <strong>Supprimer</strong> pour le retirer du site.</p>
+                    <p style="font-size: 0.9rem; color: #64748b; margin-bottom: 20px;">Cliquez sur <strong>Modifier</strong> pour gérer les photos 1 par 1 ou le texte, ou sur <strong>Supprimer</strong> pour retirer définitivement l'article.</p>
                     
                     <div id="admin-articles-list">
                         <!-- Articles dynamically listed here -->
@@ -205,25 +218,30 @@
                         </div>
                     </div>
 
-                    <!-- Photo Upload Zone -->
+                    <!-- Multi-Photo Upload & 1-by-1 Delete Zone -->
                     <div class="form-group">
-                        <label><i class="fa-solid fa-image"></i> Photo de l'article *</label>
-                        <div class="upload-zone" onclick="document.getElementById('art-img-file').click();">
-                            <i class="fa-solid fa-cloud-arrow-up" style="font-size: 2rem; color: var(--secondary-color);"></i>
-                            <p style="margin: 5px 0 0; font-size: 0.95rem; font-weight: 600;">Cliquez ici pour Choisir/Changer la Photo (Galerie / Fichier)</p>
-                            <input type="file" id="art-img-file" accept="image/*" style="display: none;">
+                        <label><i class="fa-solid fa-images" style="color: var(--secondary-color);"></i> Photos de l'article (Ajoutez 1 ou plusieurs photos) *</label>
+                        <div class="upload-zone" onclick="document.getElementById('art-img-files').click();">
+                            <i class="fa-solid fa-cloud-arrow-up" style="font-size: 2.2rem; color: var(--secondary-color);"></i>
+                            <p style="margin: 5px 0 0; font-size: 0.95rem; font-weight: 600;">Cliquez ici pour Téléverser des Photos (Sélectionnez 1 ou plusieurs fichiers)</p>
+                            <span style="font-size: 0.8rem; color: #64748b;">Formats acceptés : JPG, PNG, WEBP. Vous pouvez supprimer chaque photo une par une ci-dessous.</span>
+                            <input type="file" id="art-img-files" accept="image/*" multiple style="display: none;">
                         </div>
-                        <input type="text" id="art-img-url" placeholder="Ou entrez un chemin/URL d'image..." style="margin-top: 5px;">
                         
-                        <div class="media-preview-box" id="article-img-preview-box">
-                            <button type="button" class="delete-media-btn" id="remove-img-btn"><i class="fa-solid fa-trash"></i> Supprimer la Photo</button>
-                            <img id="article-img-preview" src="" alt="Aperçu Photo">
+                        <div style="display: flex; gap: 10px; margin-top: 8px;">
+                            <input type="text" id="art-img-url-add" placeholder="Ou entrez l'URL d'une photo à ajouter..." style="flex: 1;">
+                            <button type="button" id="add-url-img-btn" class="btn" style="background: var(--primary-color); color: white; padding: 0 18px; font-weight: 600;"><i class="fa-solid fa-plus"></i> Ajouter cette Photo</button>
+                        </div>
+                        
+                        <!-- Multi-Photo Thumbnails Grid with 1-by-1 delete buttons -->
+                        <div id="photos-gallery-container" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 12px; margin-top: 15px;">
+                            <!-- Individual photo cards rendered dynamically -->
                         </div>
                     </div>
 
                     <!-- Video Upload Zone -->
                     <div class="form-group">
-                        <label><i class="fa-solid fa-video"></i> Vidéo de l'article (Optionnel)</label>
+                        <label><i class="fa-solid fa-video" style="color: var(--secondary-color);"></i> Vidéo de l'article (Optionnel)</label>
                         <div class="upload-zone" onclick="document.getElementById('art-video-file').click();">
                             <i class="fa-solid fa-file-video" style="font-size: 2rem; color: var(--secondary-color);"></i>
                             <p style="margin: 5px 0 0; font-size: 0.95rem; font-weight: 600;">Cliquez ici pour Choisir/Changer la Vidéo (MP4 / Galerie)</p>
@@ -231,9 +249,9 @@
                         </div>
                         <input type="text" id="art-video-url" placeholder="Ou collez un lien YouTube..." style="margin-top: 5px;">
                         
-                        <div class="media-preview-box" id="article-video-preview-box">
-                            <button type="button" class="delete-media-btn" id="remove-video-btn"><i class="fa-solid fa-trash"></i> Supprimer la Vidéo</button>
-                            <video id="article-video-preview" controls src=""></video>
+                        <div class="media-preview-box" id="article-video-preview-box" style="margin-top: 12px; display: none; position: relative;">
+                            <button type="button" class="photo-delete-single-btn" id="remove-video-btn" title="Supprimer la vidéo" style="top: 10px; right: 10px; width: 35px; height: 35px; border-radius: 8px;"><i class="fa-solid fa-trash"></i></button>
+                            <video id="article-video-preview" controls src="" style="width: 100%; max-height: 250px; border-radius: 10px;"></video>
                         </div>
                     </div>
 
@@ -288,18 +306,6 @@
                         </div>
                     </div>
 
-                    <div style="background: #f8fafc; padding: 25px; border-radius: 15px; margin-bottom: 30px; border: 1px solid #e2e8f0;">
-                        <h3 style="color: var(--primary-color); font-size: 1.2rem; margin-bottom: 15px;"><i class="fa-solid fa-font" style="color: var(--secondary-color);"></i> 2. Police d'écriture</h3>
-                        <div class="form-group">
-                            <select id="cfg-font-select" style="font-size: 1.1rem; padding: 12px;">
-                                <option value="'Outfit', sans-serif">Outfit (Design Moderne & Épuré)</option>
-                                <option value="'Poppins', sans-serif">Poppins (Dynamique & Sport)</option>
-                                <option value="'Montserrat', sans-serif">Montserrat (Puissant & Premium)</option>
-                                <option value="'Inter', sans-serif">Inter (Clean & Précision)</option>
-                            </select>
-                        </div>
-                    </div>
-
                     <button type="submit" class="btn btn-primary" style="width: 100%; padding: 16px; font-size: 1.15rem;"><i class="fa-solid fa-floppy-disk"></i> Enregistrer le Design</button>
                 </form>
             </div>
@@ -350,7 +356,71 @@
                 });
             });
 
-            // GESTION DES ARTICLES (LISTER, ÉDITER, SUPPRIMER)
+            // GESTION DU TABLEAU DES PHOTOS (MULTI-PHOTOS & GESTION 1 PAR 1)
+            let currentArticlePhotos = [];
+            let currentArtVideoData = '';
+
+            const galleryContainer = document.getElementById('photos-gallery-container');
+
+            function renderPhotosGallery() {
+                galleryContainer.innerHTML = '';
+
+                if (currentArticlePhotos.length === 0) {
+                    galleryContainer.innerHTML = `<p style="grid-column: 1/-1; font-size: 0.85rem; color: #64748b; font-style: italic;">Aucune photo ajoutée pour le moment. Téléversez une ou plusieurs photos ci-dessus.</p>`;
+                    return;
+                }
+
+                currentArticlePhotos.forEach((imgSrc, idx) => {
+                    const card = document.createElement('div');
+                    card.className = 'photo-card-item';
+                    card.innerHTML = `
+                        <img src="${imgSrc}" alt="Photo ${idx + 1}">
+                        <button type="button" class="photo-delete-single-btn" data-index="${idx}" title="Supprimer uniquement cette photo"><i class="fa-solid fa-trash"></i></button>
+                    `;
+
+                    // Supprimer CETTE photo spécifique sans tout supprimer
+                    card.querySelector('.photo-delete-single-btn').addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        currentArticlePhotos.splice(idx, 1);
+                        renderPhotosGallery();
+                    });
+
+                    galleryContainer.appendChild(card);
+                });
+            }
+
+            // Ajout de fichiers photos (sélection multiple)
+            const imgFilesInput = document.getElementById('art-img-files');
+            imgFilesInput.addEventListener('change', (e) => {
+                const files = Array.from(e.target.files);
+                if (files.length > 0) {
+                    let loadedCount = 0;
+                    files.forEach(file => {
+                        const reader = new FileReader();
+                        reader.onload = (evt) => {
+                            currentArticlePhotos.push(evt.target.result);
+                            loadedCount++;
+                            if (loadedCount === files.length) {
+                                renderPhotosGallery();
+                            }
+                        };
+                        reader.readAsDataURL(file);
+                    });
+                }
+            });
+
+            // Ajout d'image par URL
+            document.getElementById('add-url-img-btn').addEventListener('click', () => {
+                const urlInput = document.getElementById('art-img-url-add');
+                const val = urlInput.value.trim();
+                if (val !== '') {
+                    currentArticlePhotos.push(val);
+                    urlInput.value = '';
+                    renderPhotosGallery();
+                }
+            });
+
+            // GESTION DE LA LISTE DES ARTICLES EXISTANTS (Lister, Éditer, Supprimer)
             window.loadAdminArticlesList = function() {
                 const listContainer = document.getElementById('admin-articles-list');
                 if (!listContainer) return;
@@ -363,7 +433,7 @@
                         "dateFormatted": "23 Juillet 2026",
                         "category": "Transfert",
                         "player": "Bayala Joël",
-                        "image": "assets/images/mercato_dijon_1.webp",
+                        "images": ["assets/images/mercato_dijon_1.webp"],
                         "summary": "À 19 ans, le prodige du milieu de terrain burkinabè Bayala Joël quitte le Sporting Club de Tenakourou pour signer son contrat avec le Dijon FCO.",
                         "content": "<p>C'est une grande étape pour le football burkinabè. Le jeune milieu de terrain de 19 ans, <strong>Bayala Joël</strong>, s'est officiellement engagé en faveur du club français du <strong>Dijon FCO</strong>.</p>"
                     },
@@ -374,7 +444,7 @@
                         "dateFormatted": "23 Juillet 2026",
                         "category": "Transfert",
                         "player": "Kelvin Kwasi Adamtay",
-                        "image": "assets/images/dijon.png",
+                        "images": ["assets/images/dijon.png"],
                         "summary": "Formé à l’Académie Afca Burkina, le jeune avant-centre polyvalent de 18 ans Kelvin Kwasi Adamtay signe son premier contrat professionnel au Dijon FCO.",
                         "content": "<p>Le marché des transferts s'emballe pour l'agence <strong>N.I Conseils Managements</strong> ! L'avant-centre de 18 ans <strong>Kelvin Kwasi Adamtay</strong> signe son premier contrat pro.</p>"
                     },
@@ -385,7 +455,7 @@
                         "dateFormatted": "20 Juillet 2026",
                         "category": "Transfert",
                         "player": "Cyriaque Irié",
-                        "image": "assets/images/cyriaque.png",
+                        "images": ["assets/images/cyriaque.png"],
                         "summary": "Après une saison étincelante à Dijon puis Troyes, le jeune ailier international burkinabé s'engage avec le SC Fribourg en Bundesliga.",
                         "content": "<p>N.I. CONSEILS-MANAGEMENTS annonce la signature officielle de <strong>Cyriaque Irié</strong> au <strong>SC Fribourg</strong>.</p>"
                     }
@@ -394,10 +464,13 @@
                 const deletedIds = JSON.parse(localStorage.getItem('deleted_news_ids') || '[]');
                 const localArticles = JSON.parse(localStorage.getItem('custom_news_articles') || '[]');
 
-                // Fusionner
                 const map = new Map();
                 [...localArticles, ...defaultArticles].forEach(item => {
                     if (!deletedIds.includes(item.id) && !map.has(item.id)) {
+                        // Rétro-compatibilité image/images
+                        if (!item.images || item.images.length === 0) {
+                            item.images = item.image ? [item.image] : ['assets/images/logo.png'];
+                        }
                         map.set(item.id, item);
                     }
                 });
@@ -413,12 +486,15 @@
                 articles.forEach(art => {
                     const item = document.createElement('div');
                     item.className = 'article-admin-item';
+                    const mainImg = (art.images && art.images.length > 0) ? art.images[0] : (art.image || 'assets/images/logo.png');
+                    const photoCount = art.images ? art.images.length : 1;
+
                     item.innerHTML = `
                         <div class="article-admin-info">
-                            <img src="${art.image || 'assets/images/logo.png'}" class="article-admin-thumb" alt="">
+                            <img src="${mainImg}" class="article-admin-thumb" alt="">
                             <div>
                                 <h4 style="margin:0; color:var(--primary-color); font-size:1.05rem;">${art.title}</h4>
-                                <span style="font-size:0.8rem; color:#64748b;">📅 ${art.dateFormatted || art.date} | 🏷️ ${art.category} | 👤 ${art.player}</span>
+                                <span style="font-size:0.8rem; color:#64748b;">📅 ${art.dateFormatted || art.date} | 🏷️ ${art.category} | 🖼️ ${photoCount} photo(s)</span>
                             </div>
                         </div>
                         <div style="display:flex; gap:10px;">
@@ -427,12 +503,10 @@
                         </div>
                     `;
 
-                    // Bouton Éditer
                     item.querySelector('.edit-art-btn').addEventListener('click', () => {
                         editArticle(art);
                     });
 
-                    // Bouton Supprimer
                     item.querySelector('.del-art-btn').addEventListener('click', () => {
                         deleteArticle(art.id, art.title);
                     });
@@ -441,17 +515,14 @@
                 });
             };
 
-            // SUPPRIMER UN ARTICLE DEFINITIVEMENT
             function deleteArticle(id, title) {
                 if (confirm(`Êtes-vous sûr de vouloir SUPPRIMER DÉFINITIVEMENT l'article :\n"${title}" ?`)) {
-                    // Ajouter aux IDs supprimés
                     let deletedIds = JSON.parse(localStorage.getItem('deleted_news_ids') || '[]');
                     if (!deletedIds.includes(id)) {
                         deletedIds.push(id);
                         localStorage.setItem('deleted_news_ids', JSON.stringify(deletedIds));
                     }
 
-                    // Retirer de custom_news_articles si présent
                     let customArticles = JSON.parse(localStorage.getItem('custom_news_articles') || '[]');
                     customArticles = customArticles.filter(a => a.id !== id);
                     localStorage.setItem('custom_news_articles', JSON.stringify(customArticles));
@@ -461,34 +532,34 @@
                 }
             }
 
-            // ÉDITER UN ARTICLE
-            let currentArtImageData = '';
-            let currentArtVideoData = '';
-
             function editArticle(art) {
                 document.getElementById('editing-article-id').value = art.id;
                 document.getElementById('art-title').value = art.title;
                 document.getElementById('art-category').value = art.category;
                 document.getElementById('art-player').value = art.player || '';
                 document.getElementById('art-summary').value = art.summary || '';
-                
-                // Convertir <p> en texte brut pour édition facile
+
                 const tempDiv = document.createElement('div');
                 tempDiv.innerHTML = art.content || '';
                 document.getElementById('art-content').value = tempDiv.innerText || art.content;
 
-                // Photo
-                currentArtImageData = art.image || '';
-                if (currentArtImageData) {
-                    document.getElementById('article-img-preview').src = currentArtImageData;
-                    document.getElementById('article-img-preview-box').style.display = 'block';
+                // Charger la galerie de photos de cet article
+                if (art.images && art.images.length > 0) {
+                    currentArticlePhotos = [...art.images];
+                } else if (art.image) {
+                    currentArticlePhotos = [art.image];
+                } else {
+                    currentArticlePhotos = [];
                 }
+                renderPhotosGallery();
 
                 // Vidéo
                 currentArtVideoData = art.video || '';
                 if (currentArtVideoData) {
                     document.getElementById('article-video-preview').src = currentArtVideoData;
                     document.getElementById('article-video-preview-box').style.display = 'block';
+                } else {
+                    document.getElementById('article-video-preview-box').style.display = 'none';
                 }
 
                 document.getElementById('form-mode-title').innerHTML = `<i class="fa-solid fa-pen-to-square" style="color:var(--secondary-color);"></i> Modification de l'article`;
@@ -498,53 +569,7 @@
                 window.scrollTo({ top: document.getElementById('publish-form').offsetTop - 100, behavior: 'smooth' });
             }
 
-            // Supprimer la photo dans le formulaire
-            document.getElementById('remove-img-btn').addEventListener('click', () => {
-                currentArtImageData = '';
-                document.getElementById('art-img-file').value = '';
-                document.getElementById('art-img-url').value = '';
-                document.getElementById('article-img-preview-box').style.display = 'none';
-            });
-
-            // Supprimer la vidéo dans le formulaire
-            document.getElementById('remove-video-btn').addEventListener('click', () => {
-                currentArtVideoData = '';
-                document.getElementById('art-video-file').value = '';
-                document.getElementById('art-video-url').value = '';
-                document.getElementById('article-video-preview-box').style.display = 'none';
-            });
-
-            // Annuler l'édition
-            document.getElementById('cancel-edit-btn').addEventListener('click', () => {
-                resetForm();
-            });
-
-            function resetForm() {
-                document.getElementById('editing-article-id').value = '';
-                document.getElementById('publish-form').reset();
-                currentArtImageData = '';
-                currentArtVideoData = '';
-                document.getElementById('article-img-preview-box').style.display = 'none';
-                document.getElementById('article-video-preview-box').style.display = 'none';
-                document.getElementById('form-mode-title').innerHTML = `<i class="fa-solid fa-pen-to-square" style="color:var(--secondary-color);"></i> Publier un Nouvel Article`;
-                document.getElementById('submit-art-btn').innerHTML = `<i class="fa-solid fa-paper-plane"></i> Enregistrer & Publier l'Article`;
-                document.getElementById('cancel-edit-btn').style.display = 'none';
-            }
-
-            // Gestion Fichiers Media
-            document.getElementById('art-img-file').addEventListener('change', (e) => {
-                const file = e.target.files[0];
-                if (file) {
-                    const r = new FileReader();
-                    r.onload = (evt) => {
-                        currentArtImageData = evt.target.result;
-                        document.getElementById('article-img-preview').src = currentArtImageData;
-                        document.getElementById('article-img-preview-box').style.display = 'block';
-                    };
-                    r.readAsDataURL(file);
-                }
-            });
-
+            // Vidéo
             document.getElementById('art-video-file').addEventListener('change', (e) => {
                 const file = e.target.files[0];
                 if (file) {
@@ -558,9 +583,37 @@
                 }
             });
 
-            // Soumission du Formulaire Article (Créer ou Modifier)
+            document.getElementById('remove-video-btn').addEventListener('click', () => {
+                currentArtVideoData = '';
+                document.getElementById('art-video-file').value = '';
+                document.getElementById('art-video-url').value = '';
+                document.getElementById('article-video-preview-box').style.display = 'none';
+            });
+
+            document.getElementById('cancel-edit-btn').addEventListener('click', () => {
+                resetForm();
+            });
+
+            function resetForm() {
+                document.getElementById('editing-article-id').value = '';
+                document.getElementById('publish-form').reset();
+                currentArticlePhotos = [];
+                currentArtVideoData = '';
+                renderPhotosGallery();
+                document.getElementById('article-video-preview-box').style.display = 'none';
+                document.getElementById('form-mode-title').innerHTML = `<i class="fa-solid fa-pen-to-square" style="color:var(--secondary-color);"></i> Publier un Nouvel Article`;
+                document.getElementById('submit-art-btn').innerHTML = `<i class="fa-solid fa-paper-plane"></i> Enregistrer & Publier l'Article`;
+                document.getElementById('cancel-edit-btn').style.display = 'none';
+            }
+
+            // Enregistrer ou modifier l'article
             document.getElementById('publish-form').addEventListener('submit', (e) => {
                 e.preventDefault();
+
+                if (currentArticlePhotos.length === 0) {
+                    alert('Veuillez ajouter au moins une photo pour cet article.');
+                    return;
+                }
 
                 const editId = document.getElementById('editing-article-id').value;
                 const title = document.getElementById('art-title').value.trim();
@@ -569,15 +622,12 @@
                 const summary = document.getElementById('art-summary').value.trim();
                 const rawContent = document.getElementById('art-content').value.trim();
 
-                const finalImg = currentArtImageData || document.getElementById('art-img-url').value.trim() || 'assets/images/logo.png';
                 const finalVid = currentArtVideoData || document.getElementById('art-video-url').value.trim() || '';
-
                 const contentHtml = rawContent.includes('<p>') ? rawContent : rawContent.split('\n\n').map(p => `<p>${p.replace(/\n/g, '<br>')}</p>`).join('');
                 
                 const today = new Date();
                 const dateIso = today.toISOString().split('T')[0];
                 const dateFr = today.toLocaleDateString('fr-FR', { day: '2-digit', month: 'long', year: 'numeric' });
-                
                 const idSlug = editId ? editId : title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '') + '-' + Date.now().toString().slice(-4);
 
                 const articleObj = {
@@ -588,7 +638,8 @@
                     category: category,
                     author: "Ibrahim Niang",
                     player: player,
-                    image: finalImg,
+                    image: currentArticlePhotos[0], // Image principale
+                    images: [...currentArticlePhotos], // Galerie multi-photos
                     video: finalVid,
                     summary: summary,
                     content: contentHtml,
@@ -598,7 +649,6 @@
                 let customArticles = JSON.parse(localStorage.getItem('custom_news_articles') || '[]');
                 
                 if (editId) {
-                    // Mode Modification : mettre à jour
                     const index = customArticles.findIndex(a => a.id === editId);
                     if (index !== -1) {
                         customArticles[index] = articleObj;
@@ -606,13 +656,12 @@
                         customArticles.unshift(articleObj);
                     }
                 } else {
-                    // Mode Création : ajouter au début
                     customArticles.unshift(articleObj);
                 }
 
                 localStorage.setItem('custom_news_articles', JSON.stringify(customArticles));
 
-                alert(editId ? '🎉 Article modifié avec succès !' : '🎉 Nouvel article publié avec succès !');
+                alert(editId ? '🎉 Article et galerie de photos modifiés avec succès !' : '🎉 Nouvel article publié avec sa galerie de photos !');
                 resetForm();
                 loadAdminArticlesList();
             });
