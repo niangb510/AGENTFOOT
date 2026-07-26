@@ -886,8 +886,10 @@ footer {
 
 .modal-banner {
     width: 100%;
-    height: 320px;
-    object-fit: cover;
+    max-height: 480px;
+    object-fit: contain;
+    background-color: #0f172a;
+    border-radius: 16px 16px 0 0;
 }
 
 .modal-body {
@@ -895,10 +897,30 @@ footer {
 }
 
 .modal-title {
-    font-size: 1.8rem;
+    font-size: 1.85rem;
     color: var(--primary-color);
-    margin-bottom: 15px;
-    line-height: 1.3;
+    margin-bottom: 18px;
+    line-height: 1.35;
+    font-weight: 800;
+}
+
+.modal-article-text {
+    font-size: 1.05rem;
+    line-height: 1.85;
+    color: #334155;
+}
+
+.modal-article-text p {
+    margin-bottom: 18px;
+}
+
+.modal-article-text h3 {
+    color: var(--primary-color);
+    margin: 28px 0 14px;
+    font-size: 1.3rem;
+    font-weight: 700;
+    border-left: 4px solid var(--secondary-color);
+    padding-left: 12px;
 }
 
 .modal-meta {

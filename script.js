@@ -320,18 +320,21 @@ ${message}`;
                 mainImg.src = photoList[0];
                 mainImg.alt = article.title;
                 mainImg.style.display = 'block';
+                mainImg.style.maxHeight = '480px';
+                mainImg.style.objectFit = 'contain';
+                mainImg.style.backgroundColor = '#0f172a';
                 if (gallerySec) gallerySec.style.display = 'none';
             } else {
-                // 2 ou plusieurs photos : affichage SIMULTANÉ côte à côte en grille
+                // 2 ou plusieurs photos : affichage SIMULTANÉ côte à côte intégral (sans rognage des têtes)
                 mainImg.style.display = 'none';
                 if (gallerySec) {
                     let gridCols = photoList.length === 2 ? 'grid-template-columns: repeat(2, 1fr);' : 'grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));';
-                    let galleryHtml = `<div style="display: grid; ${gridCols} gap: 15px; margin-bottom: 15px;">`;
+                    let galleryHtml = `<div style="display: grid; ${gridCols} gap: 15px; margin-bottom: 20px;">`;
                     
                     photoList.forEach((src, index) => {
                         galleryHtml += `
-                            <div style="border-radius: 12px; overflow: hidden; box-shadow: 0 8px 20px rgba(0,0,0,0.12); height: 260px; background: #0f172a; position: relative;">
-                                <img src="${src}" alt="${article.title} - Photo ${index + 1}" style="width: 100%; height: 100%; object-fit: cover; cursor: pointer; transition: transform 0.3s ease;" onclick="window.open('${src}', '_blank')">
+                            <div style="border-radius: 12px; overflow: hidden; box-shadow: 0 8px 20px rgba(0,0,0,0.15); height: 320px; background: #0f172a; position: relative;">
+                                <img src="${src}" alt="${article.title} - Photo ${index + 1}" style="width: 100%; height: 100%; object-fit: contain; cursor: pointer; padding: 5px; transition: transform 0.3s ease;" onclick="window.open('${src}', '_blank')">
                             </div>
                         `;
                     });
