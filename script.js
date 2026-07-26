@@ -181,11 +181,16 @@ ${message}`;
                 card.setAttribute('itemscope', '');
                 card.setAttribute('itemtype', 'https://schema.org/NewsArticle');
 
+                const videoBadge = (article.video && article.video.trim() !== '') ? `<span style="background:#ef4444; color:white; padding:2px 8px; border-radius:10px; font-size:0.7rem; font-weight:700; margin-left:6px;"><i class="fa-solid fa-circle-play"></i> VIDÉO</span>` : '';
+
                 card.innerHTML = `
                     <img src="${article.image}" alt="${article.title}" class="news-card-img" itemprop="image">
                     <div class="news-card-body">
                         <div class="news-card-meta">
-                            <span class="news-tag" itemprop="articleSection">${article.category}</span>
+                            <div>
+                                <span class="news-tag" itemprop="articleSection">${article.category}</span>
+                                ${videoBadge}
+                            </div>
                             <span itemprop="datePublished" content="${article.date}"><i class="fa-regular fa-calendar"></i> ${article.dateFormatted || article.date}</span>
                         </div>
                         <h3 class="news-card-title" itemprop="headline">${article.title}</h3>
@@ -248,6 +253,29 @@ ${message}`;
             document.getElementById('modal-author').innerHTML = `<i class="fa-solid fa-user"></i> ${article.author || 'N.I. CONSEILS'}`;
             document.getElementById('modal-category').innerText = article.category;
             document.getElementById('modal-content').innerHTML = article.content;
+
+            // Rendu Vidéo si présente
+            const videoSec = document.getElementById('modal-video-sec');
+            if (videoSec) {
+                if (article.video && article.video.trim() !== '') {
+                    const videoUrl = article.video.trim();
+                    if (videoUrl.includes('youtube.com') || videoUrl.includes('youtu.be')) {
+                        let ytId = '';
+                        if (videoUrl.includes('youtu.be/')) {
+                            ytId = videoUrl.split('youtu.be/')[1].split('?')[0];
+                        } else if (videoUrl.includes('v=')) {
+                            ytId = videoUrl.split('v=')[1].split('&')[0];
+                        }
+                        videoSec.innerHTML = `<iframe width="100%" height="380" src="https://www.youtube.com/embed/${ytId}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen style="border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.15);"></iframe>`;
+                    } else {
+                        videoSec.innerHTML = `<video controls width="100%" style="max-height: 400px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.15); width: 100%;" src="${videoUrl}"></video>`;
+                    }
+                    videoSec.style.display = 'block';
+                } else {
+                    videoSec.innerHTML = '';
+                    videoSec.style.display = 'none';
+                }
+            }
 
             // Liens de partage
             const currentUrl = window.location.origin + window.location.pathname + '?id=' + article.id;
