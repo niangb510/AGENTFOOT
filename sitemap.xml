@@ -2,37 +2,37 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
         xmlns:news="http://www.google.com/schemas/sitemap-news/0.9">
   <url>
-    <loc>https://niconseils-managements.com/</loc>
+    <loc>https://ni-conseils-managements.netlify.app/</loc>
     <lastmod>2026-07-27</lastmod>
     <priority>1.0</priority>
     <changefreq>weekly</changefreq>
   </url>
   <url>
-    <loc>https://niconseils-managements.com/agent.html</loc>
+    <loc>https://ni-conseils-managements.netlify.app/agent.html</loc>
     <lastmod>2026-07-27</lastmod>
     <priority>0.8</priority>
     <changefreq>monthly</changefreq>
   </url>
   <url>
-    <loc>https://niconseils-managements.com/players.html</loc>
+    <loc>https://ni-conseils-managements.netlify.app/players.html</loc>
     <lastmod>2026-07-27</lastmod>
     <priority>0.9</priority>
     <changefreq>weekly</changefreq>
   </url>
   <url>
-    <loc>https://niconseils-managements.com/actualites.html</loc>
+    <loc>https://ni-conseils-managements.netlify.app/actualites.html</loc>
     <lastmod>2026-07-27</lastmod>
     <priority>0.95</priority>
     <changefreq>daily</changefreq>
   </url>
   <url>
-    <loc>https://niconseils-managements.com/services.html</loc>
+    <loc>https://ni-conseils-managements.netlify.app/services.html</loc>
     <lastmod>2026-07-27</lastmod>
     <priority>0.7</priority>
     <changefreq>monthly</changefreq>
   </url>
   <url>
-    <loc>https://niconseils-managements.com/contact.html</loc>
+    <loc>https://ni-conseils-managements.netlify.app/contact.html</loc>
     <lastmod>2026-07-27</lastmod>
     <priority>0.8</priority>
     <changefreq>monthly</changefreq>
