@@ -2,5 +2,5 @@ User-agent: *
 Allow: /
 Disallow: /admin.html
 
-Sitemap: https://ni-conseils-managements.netlify.app/sitemap.xml
-Sitemap: https://ni-conseils-managements.netlify.app/feed.xml
+Sitemap: https://niconseils-managements.com/sitemap.xml
+Sitemap: https://niconseils-managements.com/feed.xml

@@ -9,7 +9,7 @@
         content="Actualités officielles, signatures, transferts et performances des joueurs gérés par N.I. CONSEILS-MANAGEMENTS. Suivez l'actualité de nos talents.">
     <!-- Security & Resource Headers -->
     <meta http-equiv="Content-Security-Policy"
-        content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://fonts.googleapis.com; font-src 'self' https://cdnjs.cloudflare.com https://fonts.gstatic.com; img-src 'self' data: https://ni-conseils-managements.netlify.app; connect-src 'self'; frame-src 'self' https://www.youtube.com https://www.youtube-nocookie.com;">
+        content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://fonts.googleapis.com; font-src 'self' https://cdnjs.cloudflare.com https://fonts.gstatic.com; img-src 'self' data: https://niconseils-managements.com; connect-src 'self'; frame-src 'self' https://www.youtube.com https://www.youtube-nocookie.com;">
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -18,12 +18,12 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
         integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
         crossorigin="anonymous" referrerpolicy="no-referrer">
-    <link rel="canonical" href="https://ni-conseils-managements.netlify.app/actualites.html">
+    <link rel="canonical" href="https://niconseils-managements.com/actualites.html">
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://ni-conseils-managements.netlify.app/actualites.html">
+    <meta property="og:url" content="https://niconseils-managements.com/actualites.html">
     <meta property="og:title" content="N.I. CONSEILS-MANAGEMENTS | Actualités & Fil Info">
     <meta property="og:description" content="Actualités officielles, signatures, transferts et performances des joueurs gérés par N.I. CONSEILS-MANAGEMENTS.">
-    <meta property="og:image" content="https://ni-conseils-managements.netlify.app/assets/images/logo.png">
+    <meta property="og:image" content="https://niconseils-managements.com/assets/images/logo.png">
     <!-- DOMPurify for article content sanitization -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.6/purify.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <!-- RSS Feed Link for Google News -->
@@ -45,7 +45,7 @@
         "@type": "NewsArticle",
         "mainEntityOfPage": {
             "@type": "WebPage",
-            "@id": "https://ni-conseils-managements.netlify.app/actualites.html"
+            "@id": "https://niconseils-managements.com/actualites.html"
         },
         "headline": "N.I. CONSEILS-MANAGEMENTS | Fil d'actualités des joueurs",
         "description": "Suivez les signatures, transferts et performances officielles des joueurs gérés par N.I. CONSEILS-MANAGEMENTS.",
@@ -54,7 +54,7 @@
             "name": "N.I. CONSEILS-MANAGEMENTS",
             "logo": {
                 "@type": "ImageObject",
-                "url": "https://ni-conseils-managements.netlify.app/assets/images/logo.png"
+                "url": "https://niconseils-managements.com/assets/images/logo.png"
             }
         }
     }
@@ -67,7 +67,7 @@
     <nav class="navbar">
         <div class="container">
             <a href="index.html" class="logo">
-                <img src="assets/images/logo.png" alt="N.I. CONSEILS">
+                <img src="assets/images/logo.png" alt="Logo N.I. CONSEILS-MANAGEMENTS">
             </a>
             <ul class="nav-links">
                 <li><a href="index.html">Accueil</a></li>
@@ -119,32 +119,51 @@
         </div>
     </section>
 
-    <!-- Modal Detail Article -->
-    <div class="modal-overlay" id="article-modal" style="display: none;">
-        <div class="modal-content">
+    <!-- Modal Detail Article (Style Editorial DFCO) -->
+    <div class="modal-overlay" id="article-modal" style="display: none;" aria-modal="true" role="dialog" aria-labelledby="modal-title">
+        <div class="modal-content editorial-style">
             <button class="modal-close" id="modal-close-btn" aria-label="Fermer la modale"><i class="fa-solid fa-xmark"></i></button>
-            <img src="" alt="" class="modal-banner" id="modal-img" loading="lazy" decoding="async">
-            <div id="modal-img-loader" style="display:none; text-align:center; padding:20px; color:#64748b;"><i class="fa-solid fa-spinner fa-spin"></i> Chargement de l'image...</div>
-            <div id="modal-gallery-sec" style="display:none; padding: 15px 35px 0;"></div>
+
             <div class="modal-body">
-                <div class="modal-meta">
-                    <span id="modal-date"><i class="fa-regular fa-calendar"></i> --</span>
-                    <span id="modal-author"><i class="fa-solid fa-user"></i> N.I. CONSEILS</span>
-                    <span class="news-tag" id="modal-category">Transfert</span>
+                <!-- En-tête de l'article -->
+                <header class="post-header">
+                    <span class="post-date" id="modal-date">--</span>
+                    <h1 class="post-title" id="modal-title" tabindex="-1">Titre de l'article</h1>
+                    <ul class="post-categories">
+                        <li id="modal-category">Catégorie</li>
+                    </ul>
+                </header>
+
+                <!-- Média principal -->
+                <div class="post-media">
+                    <img src="" alt="" id="modal-img" loading="lazy" decoding="async">
+                    <div id="modal-img-loader" style="display:none; text-align:center; padding:20px; color:#64748b;"><i class="fa-solid fa-spinner fa-spin"></i> Chargement de l'image...</div>
+                    <div id="modal-gallery-sec" style="display:none;"></div>
+                    <div id="modal-video-sec" style="display:none;"></div>
                 </div>
-                <h2 class="modal-title" id="modal-title">Titre de l'article</h2>
-                <div id="modal-video-sec" style="display:none; margin-bottom: 25px;"></div>
-                <div class="modal-article-text" id="modal-content">
+
+                <!-- Contenu de l'article -->
+                <div class="post-content wysiwyg" id="modal-content">
                     <!-- HTML Content -->
                 </div>
-                <div class="modal-share-bar">
-                    <div style="font-weight: 600; color: var(--primary-color);">Partager cet article :</div>
+
+                <!-- Section Partage -->
+                <div class="post-share">
+                    <span class="share-label">Partager cet article</span>
                     <div class="social-links">
-                        <a href="#" id="share-whatsapp" target="_blank" class="social-btn"><i class="fa-brands fa-whatsapp"></i></a>
-                        <a href="#" id="share-facebook" target="_blank" class="social-btn"><i class="fa-brands fa-facebook-f"></i></a>
-                        <button id="copy-link-btn" class="social-btn" style="border:none; cursor:pointer;" title="Copier le lien"><i class="fa-solid fa-link"></i></button>
+                        <a href="#" id="share-facebook" target="_blank" class="social-btn facebook" aria-label="Partager sur Facebook"><i class="fa-brands fa-facebook-f"></i></a>
+                        <a href="#" id="share-whatsapp" target="_blank" class="social-btn whatsapp" aria-label="Partager sur WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
+                        <button id="copy-link-btn" class="social-btn link" title="Copier le lien" aria-label="Copier le lien"><i class="fa-solid fa-link"></i></button>
                     </div>
                 </div>
+
+                <!-- Section À lire aussi -->
+                <aside class="post-related" id="modal-related-sec">
+                    <h3>À lire aussi</h3>
+                    <div class="related-grid" id="modal-related-articles">
+                        <!-- Généré dynamiquement en JS -->
+                    </div>
+                </aside>
             </div>
         </div>
     </div>

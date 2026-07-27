@@ -1,4 +1,4 @@
-const CACHE_NAME = 'ni-conseils-v2';
+const CACHE_NAME = 'ni-conseils-v3';
 const ASSETS = [
     '/',
     '/index.html',

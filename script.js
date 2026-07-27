@@ -336,14 +336,30 @@ ${message}`;
         }
 
         // Ouverture de la modale article & mise à jour SEO Schema.org
+        // Sauvegarde du titre original de la page
+        const originalPageTitle = document.title;
+
+        // Nettoyage des styles inline du contenu pour respecter le design éditorial
+        const prepareArticleContent = (html) => {
+            const wrapper = document.createElement('div');
+            wrapper.innerHTML = html;
+            wrapper.querySelectorAll('p, h3, h4, h5, h6, blockquote').forEach(el => {
+                el.removeAttribute('style');
+            });
+            return wrapper.innerHTML;
+        };
+
         const openArticleModal = (article) => {
             const mainImg = document.getElementById('modal-img');
             const gallerySec = document.getElementById('modal-gallery-sec');
             const imgLoader = document.getElementById('modal-img-loader');
-            
+            const modalContent = document.getElementById('modal-content');
+
             const photoList = (article.images && article.images.length > 0) ? article.images : (article.image ? [article.image] : []);
 
             if (imgLoader) imgLoader.style.display = 'none';
+
+            // Gestion des médias
             if (photoList.length === 0) {
                 mainImg.style.display = 'none';
                 if (gallerySec) gallerySec.style.display = 'none';
@@ -365,16 +381,15 @@ ${message}`;
                 mainImg.style.backgroundColor = '#0f172a';
                 if (gallerySec) gallerySec.style.display = 'none';
             } else {
-                // 2 ou plusieurs photos : affichage SIMULTANÉ côte à côte intégral (sans rognage des têtes)
+                // 2 ou plusieurs photos : galerie responsive
                 mainImg.style.display = 'none';
                 if (gallerySec) {
-                    let gridCols = photoList.length === 2 ? 'grid-template-columns: repeat(2, 1fr);' : 'grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));';
-                    let galleryHtml = `<div style="display: grid; ${gridCols} gap: 15px; margin-bottom: 20px;">`;
-                    
+                    let galleryHtml = `<div class="gallery-grid">`;
+
                     photoList.forEach((src, index) => {
                         galleryHtml += `
-                            <div style="border-radius: 12px; overflow: hidden; box-shadow: 0 8px 20px rgba(0,0,0,0.15); height: 320px; background: #0f172a; position: relative;">
-                                <img src="${src}" alt="${article.title} - Photo ${index + 1}" style="width: 100%; height: 100%; object-fit: contain; cursor: pointer; padding: 5px; transition: transform 0.3s ease;" onclick="window.open('${src}', '_blank')">
+                            <div class="gallery-item">
+                                <img src="${src}" alt="${article.title} - Photo ${index + 1}" onclick="window.open('${src}', '_blank')">
                             </div>
                         `;
                     });
@@ -384,16 +399,14 @@ ${message}`;
                 }
             }
 
+            // Métadonnées éditoriales
             document.getElementById('modal-title').innerText = article.title;
-            document.getElementById('modal-date').innerHTML = `<i class="fa-regular fa-calendar"></i> ${article.dateFormatted || article.date}`;
-            document.getElementById('modal-author').innerHTML = `<i class="fa-solid fa-user"></i> ${article.author || 'N.I. CONSEILS'}`;
+            document.getElementById('modal-date').innerText = article.dateFormatted || article.date;
             document.getElementById('modal-category').innerText = article.category;
-            const modalContent = document.getElementById('modal-content');
-            if (window.DOMPurify) {
-                modalContent.innerHTML = DOMPurify.sanitize(article.content, { USE_PROFILES: { html: true } });
-            } else {
-                modalContent.textContent = article.content;
-            }
+
+            // Contenu de l'article
+            const rawContent = window.DOMPurify ? DOMPurify.sanitize(article.content, { USE_PROFILES: { html: true } }) : article.content;
+            modalContent.innerHTML = prepareArticleContent(rawContent);
 
             // Rendu Vidéo si présente
             const videoSec = document.getElementById('modal-video-sec');
@@ -408,12 +421,12 @@ ${message}`;
                             ytId = match[1];
                         }
                         if (ytId) {
-                            videoSec.innerHTML = `<iframe width="100%" height="380" src="https://www.youtube.com/embed/${ytId}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen style="border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.15);"></iframe>`;
+                            videoSec.innerHTML = `<iframe src="https://www.youtube.com/embed/${ytId}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
                         } else {
                             videoSec.innerHTML = `<p style="color:#64748b;"><i class="fa-brands fa-youtube"></i> <a href="${videoUrl}" target="_blank" rel="noopener noreferrer">Voir la vidéo sur YouTube</a></p>`;
                         }
                     } else {
-                        videoSec.innerHTML = `<video controls width="100%" style="max-height: 400px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.15); width: 100%;" src="${videoUrl}"></video>`;
+                        videoSec.innerHTML = `<video controls src="${videoUrl}"></video>`;
                     }
                     videoSec.style.display = 'block';
                 } else {
@@ -424,14 +437,59 @@ ${message}`;
 
             // Liens de partage
             const currentUrl = window.location.origin + window.location.pathname + '?id=' + article.id;
-            document.getElementById('share-whatsapp').href = `https://wa.me/?text=${encodeURIComponent(article.title + ' : ' + currentUrl)}`;
-            document.getElementById('share-facebook').href = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(currentUrl)}`;
-            
+            const shareFacebook = document.getElementById('share-facebook');
+            const shareWhatsapp = document.getElementById('share-whatsapp');
+
+            if (shareFacebook) shareFacebook.href = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(currentUrl)}`;
+            if (shareWhatsapp) shareWhatsapp.href = `https://wa.me/?text=${encodeURIComponent(article.title + ' : ' + currentUrl)}`;
+
             const copyBtn = document.getElementById('copy-link-btn');
-            copyBtn.onclick = () => {
-                navigator.clipboard.writeText(currentUrl);
-                alert('Lien de l\'article copié !');
-            };
+            if (copyBtn) {
+                copyBtn.onclick = () => {
+                    navigator.clipboard.writeText(currentUrl);
+                    alert('Lien de l\'article copié !');
+                };
+            }
+
+            // Section "À lire aussi"
+            const relatedContainer = document.getElementById('modal-related-articles');
+            const relatedSec = document.getElementById('modal-related-sec');
+            if (relatedContainer && relatedSec) {
+                relatedContainer.innerHTML = '';
+                // Articles de la même catégorie, sinon les plus récents
+                let related = allArticles.filter(a => a.id !== article.id && a.category === article.category);
+                if (related.length < 2) {
+                    related = [...related, ...allArticles.filter(a => a.id !== article.id && !related.find(r => r.id === a.id))];
+                }
+
+                if (related.length === 0) {
+                    relatedSec.style.display = 'none';
+                } else {
+                    related.slice(0, 2).forEach(relArticle => {
+                        const relUrl = '?id=' + encodeURIComponent(relArticle.id);
+                        const relCard = document.createElement('a');
+                        relCard.className = 'related-card';
+                        relCard.href = relUrl;
+                        relCard.setAttribute('aria-label', `Lire l'article : ${relArticle.title}`);
+                        relCard.innerHTML = `
+                            <img src="${relArticle.image}" alt="" loading="lazy" decoding="async">
+                            <div class="related-body">
+                                <span class="related-tag">${relArticle.category}</span>
+                                <h4>${relArticle.title}</h4>
+                                <span class="related-date"><i class="fa-regular fa-calendar"></i> ${relArticle.dateFormatted || relArticle.date}</span>
+                            </div>
+                        `;
+                        relCard.addEventListener('click', (e) => {
+                            e.preventDefault();
+                            const modalContentEl = document.querySelector('.modal-content');
+                            if (modalContentEl) modalContentEl.scrollTop = 0;
+                            openArticleModal(relArticle);
+                        });
+                        relatedContainer.appendChild(relCard);
+                    });
+                    relatedSec.style.display = 'block';
+                }
+            }
 
             // Injection dynamique du Schema.org NewsArticle pour Google News
             const schemaTag = document.getElementById('seo-news-schema');
@@ -466,24 +524,65 @@ ${message}`;
             articleModal.style.display = 'flex';
             articleModal.classList.add('active');
             document.body.style.overflow = 'hidden';
+
+            // Mise à jour de l'URL et du titre de page
+            const articleUrl = '?id=' + encodeURIComponent(article.id);
+            if (window.location.search !== articleUrl) {
+                window.history.pushState({ articleId: article.id }, article.title, articleUrl);
+            }
+            document.title = article.title + ' | N.I. CONSEILS-MANAGEMENTS';
+
+            // Focus sur le titre de l'article pour l'accessibilité
+            const modalTitle = document.getElementById('modal-title');
+            if (modalTitle) {
+                modalTitle.setAttribute('tabindex', '-1');
+                modalTitle.focus();
+            }
         };
 
         // Fermeture de la modale
+        const closeArticleModal = () => {
+            articleModal.style.display = 'none';
+            articleModal.classList.remove('active');
+            document.body.style.overflow = 'auto';
+            // Restaurer le titre original de la page
+            if (originalPageTitle) {
+                document.title = originalPageTitle;
+            }
+        };
+
         if (modalCloseBtn) {
-            modalCloseBtn.addEventListener('click', () => {
-                articleModal.style.display = 'none';
-                articleModal.classList.remove('active');
-                document.body.style.overflow = 'auto';
-            });
+            modalCloseBtn.addEventListener('click', closeArticleModal);
 
             articleModal.addEventListener('click', (e) => {
                 if (e.target === articleModal) {
-                    articleModal.style.display = 'none';
-                    articleModal.classList.remove('active');
-                    document.body.style.overflow = 'auto';
+                    closeArticleModal();
                 }
             });
         }
+
+        // Gestion du bouton retour du navigateur
+        window.addEventListener('popstate', () => {
+            if (articleModal.classList.contains('active')) {
+                closeArticleModal();
+            }
+        });
+
+        // Focus trap basique dans la modale
+        articleModal.addEventListener('keydown', (e) => {
+            if (e.key !== 'Tab') return;
+            const focusable = articleModal.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+            if (focusable.length === 0) return;
+            const first = focusable[0];
+            const last = focusable[focusable.length - 1];
+            if (e.shiftKey && document.activeElement === first) {
+                e.preventDefault();
+                last.focus();
+            } else if (!e.shiftKey && document.activeElement === last) {
+                e.preventDefault();
+                first.focus();
+            }
+        });
 
         // Vérification si un ID d'article est présent dans l'URL (?id=...)
         const checkUrlParamArticle = () => {

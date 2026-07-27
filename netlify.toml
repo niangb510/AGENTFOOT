@@ -1,0 +1,8 @@
+# Netlify configuration for N.I. CONSEILS-MANAGEMENTS
+# This file ensures the old Netlify subdomain redirects to the new custom domain.
+
+[[redirects]]
+  from = "https://ni-conseils-managements.netlify.app/*"
+  to = "https://niconseils-managements.com/:splat"
+  status = 301
+  force = true
