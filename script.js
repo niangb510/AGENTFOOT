@@ -366,15 +366,23 @@ ${message}`;
             } else if (photoList.length === 1) {
                 mainImg.style.display = 'none';
                 if (imgLoader) imgLoader.style.display = 'block';
-                mainImg.onload = () => {
+                
+                const showImage = () => {
                     if (imgLoader) imgLoader.style.display = 'none';
                     mainImg.style.display = 'block';
                 };
+                
+                mainImg.onload = showImage;
                 mainImg.onerror = () => {
                     if (imgLoader) imgLoader.style.display = 'none';
                     mainImg.style.display = 'none';
                 };
                 mainImg.src = photoList[0];
+                
+                if (mainImg.complete) {
+                    showImage();
+                }
+                
                 mainImg.alt = article.title;
                 mainImg.style.maxHeight = '480px';
                 mainImg.style.objectFit = 'contain';
