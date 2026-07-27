@@ -9,22 +9,43 @@ document.addEventListener('DOMContentLoaded', () => {
     const hamburger = document.querySelector('.hamburger');
     const navLinks = document.querySelector('.nav-links');
 
+    function setMenuOpen(isOpen) {
+        if (!hamburger || !navLinks) return;
+        hamburger.classList.toggle('active', isOpen);
+        hamburger.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+        navLinks.classList.toggle('active', isOpen);
+        document.body.style.overflow = isOpen ? 'hidden' : '';
+    }
+
     if (hamburger) {
+        hamburger.setAttribute('aria-label', 'Menu principal');
+        hamburger.setAttribute('aria-expanded', 'false');
+        hamburger.setAttribute('aria-controls', 'main-nav-links');
         hamburger.addEventListener('click', () => {
-            hamburger.classList.toggle('active');
-            navLinks.classList.toggle('active');
-            document.body.style.overflow = hamburger.classList.contains('active') ? 'hidden' : 'auto';
+            const isOpen = !hamburger.classList.contains('active');
+            setMenuOpen(isOpen);
         });
     }
 
     // Close menu when clicking a link
     if (navLinks) {
-        document.querySelectorAll('.nav-links a').forEach(n => n.addEventListener('click', () => {
-            hamburger.classList.remove('active');
-            navLinks.classList.remove('active');
-            document.body.style.overflow = 'auto';
-        }));
+        navLinks.id = 'main-nav-links';
+        document.querySelectorAll('.nav-links a').forEach(n => n.addEventListener('click', () => setMenuOpen(false)));
     }
+
+    // Close menu on Escape key
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && hamburger && hamburger.classList.contains('active')) {
+            setMenuOpen(false);
+        }
+    });
+
+    // Reset menu on resize to desktop
+    window.addEventListener('resize', () => {
+        if (window.innerWidth > 768 && hamburger && hamburger.classList.contains('active')) {
+            setMenuOpen(false);
+        }
+    });
 
     // Scroll animation for elements (Scroll Reveal)
     const revealElements = () => {
@@ -274,20 +295,34 @@ ${message}`;
             });
         };
 
-        // Filtres par catégorie
+        // Filtres par catégorie et recherche combinés
         const filterBtns = document.querySelectorAll('.filter-btn');
+        let activeCategory = 'all';
+        let activeQuery = '';
+
+        function filterArticles() {
+            let filtered = allArticles;
+            if (activeCategory !== 'all') {
+                filtered = filtered.filter(a => a.category === activeCategory);
+            }
+            if (activeQuery) {
+                const q = activeQuery;
+                filtered = filtered.filter(a =>
+                    a.title.toLowerCase().includes(q) ||
+                    a.summary.toLowerCase().includes(q) ||
+                    (a.player && a.player.toLowerCase().includes(q)) ||
+                    (a.category && a.category.toLowerCase().includes(q))
+                );
+            }
+            renderNewsGrid(filtered);
+        }
+
         filterBtns.forEach(btn => {
             btn.addEventListener('click', () => {
                 filterBtns.forEach(b => b.classList.remove('active'));
                 btn.classList.add('active');
-
-                const category = btn.dataset.category;
-                if (category === 'all') {
-                    renderNewsGrid(allArticles);
-                } else {
-                    const filtered = allArticles.filter(a => a.category === category);
-                    renderNewsGrid(filtered);
-                }
+                activeCategory = btn.dataset.category;
+                filterArticles();
             });
         });
 
@@ -295,14 +330,8 @@ ${message}`;
         const searchInput = document.getElementById('news-search-input');
         if (searchInput) {
             searchInput.addEventListener('input', (e) => {
-                const query = e.target.value.toLowerCase().trim();
-                const filtered = allArticles.filter(a => 
-                    a.title.toLowerCase().includes(query) ||
-                    a.summary.toLowerCase().includes(query) ||
-                    (a.player && a.player.toLowerCase().includes(query)) ||
-                    (a.category && a.category.toLowerCase().includes(query))
-                );
-                renderNewsGrid(filtered);
+                activeQuery = e.target.value.toLowerCase().trim();
+                filterArticles();
             });
         }
 
@@ -310,16 +339,27 @@ ${message}`;
         const openArticleModal = (article) => {
             const mainImg = document.getElementById('modal-img');
             const gallerySec = document.getElementById('modal-gallery-sec');
+            const imgLoader = document.getElementById('modal-img-loader');
             
             const photoList = (article.images && article.images.length > 0) ? article.images : (article.image ? [article.image] : []);
 
+            if (imgLoader) imgLoader.style.display = 'none';
             if (photoList.length === 0) {
                 mainImg.style.display = 'none';
                 if (gallerySec) gallerySec.style.display = 'none';
             } else if (photoList.length === 1) {
+                mainImg.style.display = 'none';
+                if (imgLoader) imgLoader.style.display = 'block';
+                mainImg.onload = () => {
+                    if (imgLoader) imgLoader.style.display = 'none';
+                    mainImg.style.display = 'block';
+                };
+                mainImg.onerror = () => {
+                    if (imgLoader) imgLoader.style.display = 'none';
+                    mainImg.style.display = 'none';
+                };
                 mainImg.src = photoList[0];
                 mainImg.alt = article.title;
-                mainImg.style.display = 'block';
                 mainImg.style.maxHeight = '480px';
                 mainImg.style.objectFit = 'contain';
                 mainImg.style.backgroundColor = '#0f172a';
@@ -348,7 +388,12 @@ ${message}`;
             document.getElementById('modal-date').innerHTML = `<i class="fa-regular fa-calendar"></i> ${article.dateFormatted || article.date}`;
             document.getElementById('modal-author').innerHTML = `<i class="fa-solid fa-user"></i> ${article.author || 'N.I. CONSEILS'}`;
             document.getElementById('modal-category').innerText = article.category;
-            document.getElementById('modal-content').innerHTML = article.content;
+            const modalContent = document.getElementById('modal-content');
+            if (window.DOMPurify) {
+                modalContent.innerHTML = DOMPurify.sanitize(article.content, { USE_PROFILES: { html: true } });
+            } else {
+                modalContent.textContent = article.content;
+            }
 
             // Rendu Vidéo si présente
             const videoSec = document.getElementById('modal-video-sec');
@@ -357,12 +402,16 @@ ${message}`;
                     const videoUrl = article.video.trim();
                     if (videoUrl.includes('youtube.com') || videoUrl.includes('youtu.be')) {
                         let ytId = '';
-                        if (videoUrl.includes('youtu.be/')) {
-                            ytId = videoUrl.split('youtu.be/')[1].split('?')[0];
-                        } else if (videoUrl.includes('v=')) {
-                            ytId = videoUrl.split('v=')[1].split('&')[0];
+                        const ytRegex = /(?:youtube\.com\/(?:[^\/]+\/[^\/]+\/|[^\/]+\/|(?:v|embed|shorts)\/|.*[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
+                        const match = videoUrl.match(ytRegex);
+                        if (match && match[1]) {
+                            ytId = match[1];
                         }
-                        videoSec.innerHTML = `<iframe width="100%" height="380" src="https://www.youtube.com/embed/${ytId}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen style="border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.15);"></iframe>`;
+                        if (ytId) {
+                            videoSec.innerHTML = `<iframe width="100%" height="380" src="https://www.youtube.com/embed/${ytId}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen style="border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.15);"></iframe>`;
+                        } else {
+                            videoSec.innerHTML = `<p style="color:#64748b;"><i class="fa-brands fa-youtube"></i> <a href="${videoUrl}" target="_blank" rel="noopener noreferrer">Voir la vidéo sur YouTube</a></p>`;
+                        }
                     } else {
                         videoSec.innerHTML = `<video controls width="100%" style="max-height: 400px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.15); width: 100%;" src="${videoUrl}"></video>`;
                     }

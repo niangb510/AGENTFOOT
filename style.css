@@ -153,7 +153,7 @@ p {
 }
 
 .logo img {
-    height: 80px;
+    height: 60px;
     width: auto;
     object-fit: contain;
     transition: var(--transition);
@@ -162,7 +162,7 @@ p {
 
 @media (min-width: 1024px) {
     .logo img {
-        height: 120px;
+        height: 80px;
     }
 }
 
@@ -454,15 +454,15 @@ footer {
         z-index: 1001;
     }
 
-    .hamburger.active .bar:nth-child(2) {
+        .hamburger[aria-expanded="true"] .bar:nth-child(2) {
         opacity: 0;
     }
 
-    .hamburger.active .bar:nth-child(1) {
+    .hamburger[aria-expanded="true"] .bar:nth-child(1) {
         transform: translateY(8px) rotate(45deg);
     }
 
-    .hamburger.active .bar:nth-child(3) {
+    .hamburger[aria-expanded="true"] .bar:nth-child(3) {
         transform: translateY(-8px) rotate(-45deg);
     }
 
@@ -599,11 +599,22 @@ footer {
 @media (max-width: 768px) {
     .whatsapp-float {
         width: 50px;
-    height: 50px;
-        bottom: 20px;
-        right: 20px;
+        height: 50px;
+        bottom: 24px;
+        right: 24px;
         font-size: 25px;
     }
+}
+
+/* Hamburger button reset */
+.hamburger {
+    display: none;
+    cursor: pointer;
+    background: none;
+    border: none;
+    padding: 0;
+    margin: 0;
+    color: inherit;
 }
 
 /* iOS PWA Install Prompt */
@@ -689,7 +700,7 @@ footer {
 .filter-btn {
     padding: 8px 18px;
     background: #f1f5f9;
-    color: var(--text-color);
+    color: var(--text-dark);
     border: 1px solid #cbd5e1;
     border-radius: 20px;
     font-weight: 500;
@@ -908,10 +919,6 @@ footer {
     font-size: 1.05rem;
     line-height: 1.85;
     color: #334155;
-}
-
-.modal-article-text p {
-    margin-bottom: 18px;
 }
 
 .modal-article-text h3 {

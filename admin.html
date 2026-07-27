@@ -5,6 +5,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>N.I. CONSEILS | Panneau d'Administration & Galerie Multi-Photos</title>
+    <meta name="description" content="Panneau d'administration sécurisé de N.I. CONSEILS-MANAGEMENTS pour la gestion des articles et la personnalisation du site.">
+    <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://fonts.googleapis.com; font-src 'self' https://cdnjs.cloudflare.com https://fonts.gstatic.com; img-src 'self' data: blob:; connect-src 'self';">
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -151,11 +154,10 @@
     <header class="admin-header">
         <div class="container">
             <h1>Panneau de Gestion <span>WordPress / CMS</span></h1>
-            <p>Gérez vos articles, téléversez plusieurs photos (gestion photo par photo) et vidéos.</p>
-
-            <div class="admin-tabs" id="tab-controls" style="display: none;">
+            <p>Gérez vos articles, téléversez plusieurs photos (gestion photo par photo) et vidéos.</p>            <div class="admin-tabs" id="tab-controls" style="display: none;">
                 <button class="tab-btn active" data-tab="tab-articles"><i class="fa-solid fa-newspaper"></i> Gérer & Publier les Articles</button>
                 <button class="tab-btn" data-tab="tab-customization"><i class="fa-solid fa-palette"></i> Personnaliser l'Apparence (Design)</button>
+                <button class="tab-btn" id="admin-logout-btn" type="button"><i class="fa-solid fa-right-from-bracket"></i> Déconnexion</button>
             </div>
         </div>
     </header>
@@ -347,6 +349,7 @@
             const tabBtns = document.querySelectorAll('.tab-btn');
             tabBtns.forEach(btn => {
                 btn.addEventListener('click', () => {
+                    if (!btn.dataset.tab) return;
                     tabBtns.forEach(b => b.classList.remove('active'));
                     btn.classList.add('active');
 
@@ -355,6 +358,17 @@
                     document.getElementById('tab-customization').style.display = targetTab === 'tab-customization' ? 'block' : 'none';
                 });
             });
+
+            // Déconnexion
+            const logoutBtn = document.getElementById('admin-logout-btn');
+            if (logoutBtn) {
+                logoutBtn.addEventListener('click', () => {
+                    if (confirm('Voulez-vous vraiment vous déconnecter du panneau d\'administration ?')) {
+                        sessionStorage.removeItem('admin_logged');
+                        window.location.reload();
+                    }
+                });
+            }
 
             // GESTION DU TABLEAU DES PHOTOS (MULTI-PHOTOS & GESTION 1 PAR 1)
             let currentArticlePhotos = [];

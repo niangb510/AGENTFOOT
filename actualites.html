@@ -9,7 +9,7 @@
         content="Actualités officielles, signatures, transferts et performances des joueurs gérés par N.I. CONSEILS-MANAGEMENTS. Suivez l'actualité de nos talents.">
     <!-- Security & Resource Headers -->
     <meta http-equiv="Content-Security-Policy"
-        content="default-src 'self' 'unsafe-inline' https:; script-src 'self' 'unsafe-inline' https:; style-src 'self' 'unsafe-inline' https:; font-src 'self' https: data:; img-src 'self' data: https:;">
+        content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://fonts.googleapis.com; font-src 'self' https://cdnjs.cloudflare.com https://fonts.gstatic.com; img-src 'self' data: https://ni-conseils-managements.netlify.app; connect-src 'self'; frame-src 'self' https://www.youtube.com https://www.youtube-nocookie.com;">
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -18,6 +18,14 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
         integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
         crossorigin="anonymous" referrerpolicy="no-referrer">
+    <link rel="canonical" href="https://ni-conseils-managements.netlify.app/actualites.html">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://ni-conseils-managements.netlify.app/actualites.html">
+    <meta property="og:title" content="N.I. CONSEILS-MANAGEMENTS | Actualités & Fil Info">
+    <meta property="og:description" content="Actualités officielles, signatures, transferts et performances des joueurs gérés par N.I. CONSEILS-MANAGEMENTS.">
+    <meta property="og:image" content="https://ni-conseils-managements.netlify.app/assets/images/logo.png">
+    <!-- DOMPurify for article content sanitization -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.6/purify.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <!-- RSS Feed Link for Google News -->
     <link rel="alternate" type="application/rss+xml" title="N.I. CONSEILS-MANAGEMENTS RSS Feed" href="feed.xml">
     <!-- Custom CSS with Cache-Busting -->
@@ -69,11 +77,11 @@
                 <li><a href="services.html">Services</a></li>
                 <li><a href="contact.html">Contact</a></li>
             </ul>
-            <div class="hamburger">
+            <button class="hamburger" type="button" aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="main-nav-links">
                 <span class="bar"></span>
                 <span class="bar"></span>
                 <span class="bar"></span>
-            </div>
+            </button>
         </div>
     </nav>
 
@@ -114,8 +122,9 @@
     <!-- Modal Detail Article -->
     <div class="modal-overlay" id="article-modal" style="display: none;">
         <div class="modal-content">
-            <button class="modal-close" id="modal-close-btn"><i class="fa-solid fa-xmark"></i></button>
-            <img src="" alt="" class="modal-banner" id="modal-img">
+            <button class="modal-close" id="modal-close-btn" aria-label="Fermer la modale"><i class="fa-solid fa-xmark"></i></button>
+            <img src="" alt="" class="modal-banner" id="modal-img" loading="lazy" decoding="async">
+            <div id="modal-img-loader" style="display:none; text-align:center; padding:20px; color:#64748b;"><i class="fa-solid fa-spinner fa-spin"></i> Chargement de l'image...</div>
             <div id="modal-gallery-sec" style="display:none; padding: 15px 35px 0;"></div>
             <div class="modal-body">
                 <div class="modal-meta">
@@ -174,7 +183,7 @@
     </footer>
 
     <a href="https://wa.me/22674806022?text=Bonjour%20Ibrahim,%20je%20vous%20contacte%20depuis%20votre%20site%20pour%20avoir%20des%20renseignements."
-        class="whatsapp-float" target="_blank" rel="noopener noreferrer">
+        class="whatsapp-float" target="_blank" rel="noopener noreferrer" aria-label="Contacter par WhatsApp">
         <i class="fa-brands fa-whatsapp"></i>
     </a>
 
