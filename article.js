@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     };
 
     const renderMedia = (article) => {
-        if (article.hideHeaderImage) {
+        if (article.hideHeaderImage || article.videoAsThumbnail) {
             return '';
         }
 
