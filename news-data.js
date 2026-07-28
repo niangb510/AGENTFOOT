@@ -7,6 +7,22 @@
 
     const defaultBackupArticles = [
         {
+            "id": "cyriaque-irie-but-fribourg",
+            "title": "Performance : But décisif pour Cyriaque Irié lors du match amical du SC Fribourg",
+            "date": "2026-07-28",
+            "dateFormatted": "28 Juillet 2026",
+            "category": "Performance",
+            "author": "Ibrahim Niang",
+            "player": "Cyriaque Irié",
+            "image": "assets/images/cyriaque.png",
+            "images": ["assets/images/cyriaque.png"],
+            "video": "assets/videos/cyriaque-but.mp4",
+            "hideHeaderImage": true,
+            "summary": "Lors du match de préparation face à Derby County, le jeune attaquant burkinabè Cyriaque Irié a ouvert le score pour le SC Fribourg, confirmant sa montée en puissance en ce début de saison.",
+            "content": "<p>C'est un début de préparation idéal pour le jeune international burkinabè. Aligné d'entrée par le staff du <strong>SC Fribourg</strong> lors de la rencontre amicale contre <strong>Derby County</strong> le 24 juillet 2026, l'attaquant de 21 ans a grandement contribué à la victoire de son équipe (3-1) en ouvrant le score dès la première période.</p><p>Cyriaque Irié continue de valider les espoirs placés en lui après son transfert retentissant en Bundesliga. Sa percussion et son sens du but ont été encensés par le staff technique allemand après la rencontre.</p><h3>Un but plein de sang-froid</h3><p>L'action s'est déroulée à la suite d'un pressing haut des joueurs de Fribourg. Servi dans la surface de réparation adverse, Cyriaque Irié a éliminé son vis-à-vis d'un crochet déstabilisant avant de tromper le gardien adverse d'une frappe précise à ras de terre. Une réalisation de grande classe qui montre toute l'étendue de ses qualités athlétiques et techniques.</p><h3>Une saison 2026-2027 pleine de promesses</h3><p>Après une première saison d'adaptation au football allemand, Cyriaque Irié semble avoir trouvé ses marques. Son coach a souligné son attitude exemplaire et son travail acharné à l'entraînement durant le stage de préparation. Avec cette prestation aboutie, le natif du Burkina Faso envoie un signal fort à la concurrence à l'aube de la nouvelle saison de Bundesliga.</p><p><em>« Cyriaque franchit les étapes les unes après les autres. Ce but valide tout le travail de l'ombre effectué ces derniers mois. Nous sommes convaincus qu'il va réaliser une grande saison en Bundesliga »</em>, rappelle l'équipe de N.I Conseils Managements.</p>",
+            "tags": ["Cyriaque Irié", "SC Fribourg", "Performance", "Bundesliga", "Ibrahim Niang"]
+        },
+        {
             "id": "joel-bayala-transfert-dijon-fco",
             "title": "Mercato : Le milieu burkinabè Bayala Joël s’engage officiellement au Dijon FCO grâce à N.I Conseils Managements",
             "date": "2026-07-23",

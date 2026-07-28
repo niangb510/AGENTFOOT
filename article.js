@@ -12,6 +12,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     };
 
     const renderMedia = (article) => {
+        if (article.hideHeaderImage) {
+            return '';
+        }
+
         const photoList = (article.images && article.images.length > 0)
             ? article.images
             : (article.image ? [article.image] : []);
@@ -62,8 +66,29 @@ document.addEventListener('DOMContentLoaded', async () => {
             } else {
                 videoHtml += `<p style="color:#64748b;"><i class="fa-brands fa-youtube"></i> <a href="${videoUrl}" target="_blank" rel="noopener noreferrer">Voir la vidéo sur YouTube</a></p>`;
             }
+        } else if (videoUrl.includes('facebook.com') || videoUrl.includes('fb.watch')) {
+            const isReel = videoUrl.includes('/reel/');
+            if (isReel) {
+                videoHtml += `
+                    <div class="fb-video-container" style="position:relative; padding-bottom:177.78%; height:0; overflow:hidden; max-width:400px; margin:0 auto; border-radius:12px; box-shadow: 0 10px 25px rgba(0,0,0,0.12);">
+                        <iframe src="https://www.facebook.com/plugins/video.php?href=${encodeURIComponent(videoUrl)}&show_text=0&width=400" 
+                            style="position:absolute; top:0; left:0; width:100% !important; height:100% !important; aspect-ratio:auto !important; border:none; overflow:hidden;" 
+                            scrolling="no" frameborder="0" allowfullscreen="true" 
+                            allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share">
+                        </iframe>
+                    </div>`;
+            } else {
+                videoHtml += `
+                    <div class="fb-video-container" style="position:relative; padding-bottom:56.25%; height:0; overflow:hidden; width:100%; border-radius:12px; box-shadow: 0 10px 25px rgba(0,0,0,0.12);">
+                        <iframe src="https://www.facebook.com/plugins/video.php?href=${encodeURIComponent(videoUrl)}&show_text=0" 
+                            style="position:absolute; top:0; left:0; width:100% !important; height:100% !important; aspect-ratio:auto !important; border:none; overflow:hidden;" 
+                            scrolling="no" frameborder="0" allowfullscreen="true" 
+                            allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share">
+                        </iframe>
+                    </div>`;
+            }
         } else {
-            videoHtml += `<video controls src="${videoUrl}"></video>`;
+            videoHtml += `<video controls src="${videoUrl}" style="max-height: 80vh; width: auto; max-width: 100%; margin: 0 auto; display: block; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.12);"></video>`;
         }
 
         videoHtml += '</div>';
