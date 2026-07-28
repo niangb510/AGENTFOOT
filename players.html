@@ -22,6 +22,7 @@
         integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
         crossorigin="anonymous" referrerpolicy="no-referrer">
     <link rel="stylesheet" href="style.css?v=2.0">
+    <link rel="stylesheet" href="animations.css?v=1.0">
     <script src="site-config.js"></script>
     <!-- PWA Settings -->
     <link rel="manifest" href="manifest.json">
@@ -130,16 +131,16 @@
 
     <header class="players-header">
         <div class="container">
-            <h1>Nos Talents</h1>
-            <p>Découvrez les joueurs qui nous font confiance.</p>
+            <h1 class="js-reveal">Nos Talents</h1>
+            <p class="js-reveal stagger-1">Découvrez les joueurs qui nous font confiance.</p>
         </div>
     </header>
 
     <div class="container">
         <div class="player-grid">
             <!-- Player 1: Cyriaque Irié -->
-            <div class="player-card reveal">
-                <div class="player-badge">INTERNATIONAL</div>
+            <div class="player-card reveal tilt-card shine-card js-reveal">
+                <div class="player-badge pulse-badge">INTERNATIONAL</div>
                 <div class="player-img-container">
                     <img src="assets/images/cyriaque.png" alt="Cyriaque Irié" class="player-img"
                         onerror="this.src='assets/images/player1.png'" loading="lazy" decoding="async">
@@ -154,17 +155,17 @@
                         <img src="assets/images/troyes.png" alt="ESTAC" class="club-logo-mini">
                         SC Fribourg (Bundesliga)
                     </div>
-                    <div style="margin-top: 10px; font-size: 0.85rem; color: #64748b;">
+                    <div class="js-reveal stagger-1" style="margin-top: 10px; font-size: 0.85rem; color: #64748b;">
                         <p><i class="fa-solid fa-flag"></i> International Burkinabé</p>
                         <p><i class="fa-solid fa-shoe-prints"></i> Pied Gauche</p>
                     </div>
-                    <p style="font-size: 0.9rem; margin-top: 10px;">Explosif et percutant. Révélation à Dijon, confirmé
+                    <p class="js-reveal stagger-2" style="font-size: 0.9rem; margin-top: 10px;">Explosif et percutant. Révélation à Dijon, confirmé
                         à Troyes, désormais en Bundesliga.</p>
-                    <div
+                    <div class="js-reveal stagger-3"
                         style="background: #f8fafc; padding: 10px; border-radius: 8px; margin-top: 10px; font-size: 0.8rem;">
                         <strong>Stats Clés :</strong><br>
-                        Dijon (N1) : 26 matchs, 7 buts<br>
-                        Troyes (L2) : 14 matchs, 2 buts
+                        Dijon (N1) : <span class="stat-counter" data-target="26">0</span> matchs, <span class="stat-counter" data-target="7">0</span> buts<br>
+                        Troyes (L2) : <span class="stat-counter" data-target="14">0</span> matchs, <span class="stat-counter" data-target="2">0</span> buts
                     </div>
                     <a href="https://www.youtube.com/results?search_query=Cyriaque+Iri%C3%A9+highlights" target="_blank"
                         rel="noopener noreferrer" class="video-btn"><i class="fa-brands fa-youtube"></i> Voir
@@ -209,6 +210,7 @@
         </div>
     </footer>
     <script src="script.js"></script>
+    <script src="animations.js?v=1.0"></script>
 </body>
 
 </html>

@@ -22,6 +22,7 @@
         integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
         crossorigin="anonymous" referrerpolicy="no-referrer">
     <link rel="stylesheet" href="style.css?v=2.0">
+    <link rel="stylesheet" href="animations.css?v=1.0">
     <script src="site-config.js"></script>
     <!-- PWA Settings -->
     <link rel="manifest" href="manifest.json">
@@ -166,8 +167,8 @@
 
     <header class="contact-header">
         <div class="container">
-            <h1>Contactez-nous</h1>
-            <p>Prêt à passer au niveau supérieur ?</p>
+            <h1 class="js-reveal">Contactez-nous</h1>
+            <p class="js-reveal stagger-1">Prêt à passer au niveau supérieur ?</p>
         </div>
     </header>
 
@@ -175,7 +176,7 @@
         <div class="container">
             <div class="contact-container">
 
-                <div class="contact-info">
+                <div class="contact-info js-reveal-left">
                     <h3>Nos Coordonnées</h3>
                     <p style="margin-bottom: 30px; opacity: 0.8;">Nous sommes disponibles pour discuter de votre avenir.
                     </p>
@@ -225,32 +226,32 @@
                     </div>
                 </div>
 
-                <div class="contact-form-wrapper">
+                <div class="contact-form-wrapper js-reveal-right">
                     <h3>Envoyez-nous un message</h3>
                     <form id="contact-form">
                         <div class="form-group">
-                            <label for="name">Nom complet</label>
-                            <input type="text" id="name" name="user_name" class="form-control" placeholder="Votre nom"
+                            <input type="text" id="name" name="user_name" class="form-control" placeholder=" "
                                 required>
+                            <label for="name">Nom complet</label>
                         </div>
                         <div class="form-group">
-                            <label for="email">Email</label>
                             <input type="email" id="email" name="user_email" class="form-control"
-                                placeholder="votre@email.com" required>
+                                placeholder=" " required>
+                            <label for="email">Email</label>
                         </div>
                         <div class="form-group">
+                            <input type="text" id="club" name="club" class="form-control" placeholder=" ">
                             <label for="club">Club actuel</label>
-                            <input type="text" id="club" name="club" class="form-control" placeholder="Nom du club">
                         </div>
                         <div class="form-group">
-                            <label for="video">Lien Vidéo (YouTube/Hudl)</label>
                             <input type="url" id="video" name="video_link" class="form-control"
-                                placeholder="https://...">
+                                placeholder=" ">
+                            <label for="video">Lien Vidéo (YouTube/Hudl)</label>
                         </div>
                         <div class="form-group">
-                            <label for="message">Message</label>
                             <textarea id="message" name="message" class="form-control"
-                                placeholder="Parlez-nous de vous..." required></textarea>
+                                placeholder=" " required></textarea>
+                            <label for="message">Message</label>
                         </div>
                         <button type="submit" class="btn btn-primary">Envoyer</button>
                     </form>
@@ -294,6 +295,7 @@
         </div>
     </footer>
     <script src="script.js"></script>
+    <script src="animations.js?v=1.0"></script>
 </body>
 
 </html>

@@ -278,44 +278,181 @@
                  TAB 2: PERSONNALISATION DU SITE (DESIGN)
                  ========================================== -->
             <div id="tab-customization" class="admin-card" style="display: none;">
-                <h2 style="color: var(--primary-color); margin-bottom: 10px;"><i class="fa-solid fa-paint-roller" style="color: var(--secondary-color);"></i> Personnalisation du Style & Identité Visuelle</h2>
-                <p style="color: #64748b; margin-bottom: 30px;">Modifiez le logo, la couverture, les polices et les couleurs en direct.</p>
+                <h2 style="color: var(--primary-color); margin-bottom: 10px;"><i class="fa-solid fa-paint-roller" style="color: var(--secondary-color);"></i> Personnalisation du Site (CMS)</h2>
+                <p style="color: #64748b; margin-bottom: 30px;">Modifiez le contenu et l'identité visuelle du site sans toucher au code source. Les modifications sont sauvegardées dans ce navigateur (localStorage). Utilisez Exporter/Importer pour transférer vos réglages.</p>
 
                 <form id="config-form" class="admin-form">
+
+                    <!-- Section 1: Identité visuelle -->
                     <div style="background: #f8fafc; padding: 25px; border-radius: 15px; margin-bottom: 30px; border: 1px solid #e2e8f0;">
-                        <h3 style="color: var(--primary-color); font-size: 1.2rem; margin-bottom: 15px;"><i class="fa-solid fa-image" style="color: var(--secondary-color);"></i> 1. Logo & Photo de Couverture</h3>
-                        
-                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
+                        <h3 style="color: var(--primary-color); font-size: 1.2rem; margin-bottom: 15px;"><i class="fa-solid fa-image" style="color: var(--secondary-color);"></i> Identité Visuelle</h3>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;">
                             <div class="form-group">
-                                <label><i class="fa-solid fa-circle-user"></i> Logo de l'Agence (Photo de Profil)</label>
+                                <label for="cfg-agencyName">Nom de l'agence</label>
+                                <input type="text" id="cfg-agencyName" placeholder="N.I. CONSEILS-MANAGEMENTS">
+                            </div>
+                            <div class="form-group">
+                                <label for="cfg-agencyNameShort">Nom court (footer, PWA)</label>
+                                <input type="text" id="cfg-agencyNameShort" placeholder="N.I. CONSEILS">
+                            </div>
+                            <div class="form-group">
+                                <label for="cfg-footerText">Texte du footer</label>
+                                <input type="text" id="cfg-footerText" placeholder="Votre partenaire de confiance...">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Section 2: Images -->
+                    <div style="background: #f8fafc; padding: 25px; border-radius: 15px; margin-bottom: 30px; border: 1px solid #e2e8f0;">
+                        <h3 style="color: var(--primary-color); font-size: 1.2rem; margin-bottom: 15px;"><i class="fa-solid fa-images" style="color: var(--secondary-color);"></i> Images</h3>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;">
+                            <div class="form-group">
+                                <label><i class="fa-solid fa-circle-user"></i> Logo</label>
                                 <div class="upload-zone" onclick="document.getElementById('cfg-logo-file').click();">
                                     <i class="fa-solid fa-cloud-arrow-up" style="font-size: 1.8rem; color: var(--secondary-color);"></i>
                                     <p style="margin: 5px 0 0; font-size: 0.9rem; font-weight: 600;">Changer le Logo</p>
                                     <input type="file" id="cfg-logo-file" accept="image/*" style="display: none;">
                                 </div>
-                                <input type="text" id="cfg-logo-url" placeholder="Ou chemin de l'image..." style="margin-top: 8px;">
+                                <input type="text" id="cfg-logo-url" placeholder="Ou URL/chemin de l'image..." style="margin-top: 8px;">
                             </div>
 
                             <div class="form-group">
-                                <label><i class="fa-solid fa-mountain-sun"></i> Photo de Couverture (Bannière Hero)</label>
+                                <label><i class="fa-solid fa-mountain-sun"></i> Bannière Accueil</label>
                                 <div class="upload-zone" onclick="document.getElementById('cfg-cover-file').click();">
                                     <i class="fa-solid fa-images" style="font-size: 1.8rem; color: var(--secondary-color);"></i>
                                     <p style="margin: 5px 0 0; font-size: 0.9rem; font-weight: 600;">Changer la Couverture</p>
                                     <input type="file" id="cfg-cover-file" accept="image/*" style="display: none;">
                                 </div>
-                                <input type="text" id="cfg-cover-url" placeholder="Ou chemin de l'image..." style="margin-top: 8px;">
+                                <input type="text" id="cfg-cover-url" placeholder="Ou URL/chemin de l'image..." style="margin-top: 8px;">
+                            </div>
+
+                            <div class="form-group">
+                                <label><i class="fa-solid fa-mountain-sun"></i> Bannière Page Agence</label>
+                                <div class="upload-zone" onclick="document.getElementById('cfg-agent-cover-file').click();">
+                                    <i class="fa-solid fa-images" style="font-size: 1.8rem; color: var(--secondary-color);"></i>
+                                    <p style="margin: 5px 0 0; font-size: 0.9rem; font-weight: 600;">Changer la Couverture</p>
+                                    <input type="file" id="cfg-agent-cover-file" accept="image/*" style="display: none;">
+                                </div>
+                                <input type="text" id="cfg-agentCover-url" placeholder="Ou URL/chemin de l'image..." style="margin-top: 8px;">
                             </div>
                         </div>
                     </div>
 
-                    <button type="submit" class="btn btn-primary" style="width: 100%; padding: 16px; font-size: 1.15rem;"><i class="fa-solid fa-floppy-disk"></i> Enregistrer le Design</button>
+                    <!-- Section 3: Couleurs & Polices -->
+                    <div style="background: #f8fafc; padding: 25px; border-radius: 15px; margin-bottom: 30px; border: 1px solid #e2e8f0;">
+                        <h3 style="color: var(--primary-color); font-size: 1.2rem; margin-bottom: 15px;"><i class="fa-solid fa-palette" style="color: var(--secondary-color);"></i> Couleurs & Typographie</h3>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;">
+                            <div class="form-group">
+                                <label for="cfg-primaryColor">Couleur principale</label>
+                                <input type="color" id="cfg-primaryColor" style="height: 45px; cursor: pointer;">
+                            </div>
+                            <div class="form-group">
+                                <label for="cfg-secondaryColor">Couleur secondaire</label>
+                                <input type="color" id="cfg-secondaryColor" style="height: 45px; cursor: pointer;">
+                            </div>
+                            <div class="form-group">
+                                <label for="cfg-fontFamily">Police (CSS font-family)</label>
+                                <input type="text" id="cfg-fontFamily" placeholder="'Outfit', sans-serif">
+                            </div>
+                            <div class="form-group">
+                                <label for="cfg-fontUrl">URL Google Fonts</label>
+                                <input type="text" id="cfg-fontUrl" placeholder="https://fonts.googleapis.com/css2?family=...">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Section 4: Hero accueil -->
+                    <div style="background: #f8fafc; padding: 25px; border-radius: 15px; margin-bottom: 30px; border: 1px solid #e2e8f0;">
+                        <h3 style="color: var(--primary-color); font-size: 1.2rem; margin-bottom: 15px;"><i class="fa-solid fa-heading" style="color: var(--secondary-color);"></i> Page d'Accueil - Hero</h3>
+                        <div class="form-group">
+                            <label for="cfg-heroTitle">Titre principal</label>
+                            <input type="text" id="cfg-heroTitle">
+                        </div>
+                        <div class="form-group">
+                            <label for="cfg-heroSubtitle">Sous-titre</label>
+                            <input type="text" id="cfg-heroSubtitle">
+                        </div>
+                        <div class="form-group">
+                            <label for="cfg-heroDescription">Description</label>
+                            <textarea id="cfg-heroDescription" rows="3"></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Section 5: Contact -->
+                    <div style="background: #f8fafc; padding: 25px; border-radius: 15px; margin-bottom: 30px; border: 1px solid #e2e8f0;">
+                        <h3 style="color: var(--primary-color); font-size: 1.2rem; margin-bottom: 15px;"><i class="fa-solid fa-address-card" style="color: var(--secondary-color);"></i> Informations de Contact</h3>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;">
+                            <div class="form-group">
+                                <label for="cfg-phone">Téléphone 1</label>
+                                <input type="text" id="cfg-phone">
+                            </div>
+                            <div class="form-group">
+                                <label for="cfg-phone2">Téléphone 2</label>
+                                <input type="text" id="cfg-phone2">
+                            </div>
+                            <div class="form-group">
+                                <label for="cfg-whatsapp">Numéro WhatsApp</label>
+                                <input type="text" id="cfg-whatsapp">
+                            </div>
+                            <div class="form-group">
+                                <label for="cfg-email">Email</label>
+                                <input type="text" id="cfg-email">
+                            </div>
+                        </div>
+                        <div class="form-group" style="margin-top: 15px;">
+                            <label for="cfg-address">Adresse complète</label>
+                            <textarea id="cfg-address" rows="3"></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Section 6: Réseaux sociaux -->
+                    <div style="background: #f8fafc; padding: 25px; border-radius: 15px; margin-bottom: 30px; border: 1px solid #e2e8f0;">
+                        <h3 style="color: var(--primary-color); font-size: 1.2rem; margin-bottom: 15px;"><i class="fa-brands fa-share-nodes" style="color: var(--secondary-color);"></i> Réseaux Sociaux</h3>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;">
+                            <div class="form-group">
+                                <label for="cfg-facebook">Facebook</label>
+                                <input type="text" id="cfg-facebook">
+                            </div>
+                            <div class="form-group">
+                                <label for="cfg-instagram">Instagram</label>
+                                <input type="text" id="cfg-instagram">
+                            </div>
+                            <div class="form-group">
+                                <label for="cfg-twitter">Twitter (X)</label>
+                                <input type="text" id="cfg-twitter">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Section 7: Meta description -->
+                    <div style="background: #f8fafc; padding: 25px; border-radius: 15px; margin-bottom: 30px; border: 1px solid #e2e8f0;">
+                        <h3 style="color: var(--primary-color); font-size: 1.2rem; margin-bottom: 15px;"><i class="fa-solid fa-magnifying-glass" style="color: var(--secondary-color);"></i> SEO / Meta</h3>
+                        <div class="form-group">
+                            <label for="cfg-metaDescription">Description meta (Google)</label>
+                            <textarea id="cfg-metaDescription" rows="2"></textarea>
+                        </div>
+                    </div>
+
+                    <div style="display: flex; gap: 15px; flex-wrap: wrap;">
+                        <button type="submit" class="btn btn-primary" style="flex: 1; padding: 16px; font-size: 1.15rem;"><i class="fa-solid fa-floppy-disk"></i> Enregistrer les Modifications</button>
+                        <button type="button" id="cms-export-btn" class="btn" style="padding: 16px; background: var(--primary-color); color: white;"><i class="fa-solid fa-download"></i> Exporter</button>
+                        <button type="button" id="cms-reset-btn" class="btn" style="padding: 16px; background: #64748b; color: white;"><i class="fa-solid fa-rotate-left"></i> Réinitialiser</button>
+                    </div>
                 </form>
+
+                <div style="margin-top: 40px; padding: 25px; border-radius: 15px; border: 2px dashed #cbd5e1; background: #ffffff; text-align: center;">
+                    <h4 style="margin-bottom: 15px; color: var(--primary-color);"><i class="fa-solid fa-file-import" style="color: var(--secondary-color);"></i> Importer une configuration</h4>
+                    <p style="font-size: 0.9rem; color: #64748b; margin-bottom: 15px;">Sélectionnez un fichier JSON précédemment exporté pour restaurer vos paramètres.</p>
+                    <input type="file" id="cms-import-file" accept=".json,application/json" style="display: none;">
+                    <button type="button" id="cms-import-btn" class="btn" style="background: var(--secondary-color); color: white; padding: 12px 24px;"><i class="fa-solid fa-upload"></i> Choisir un fichier JSON</button>
+                </div>
             </div>
 
         </div>
 
     </div>
 
+    <script src="site-config.js?v=2.0"></script>
     <script src="script.js?v=2.1"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
@@ -646,6 +783,158 @@
                 document.getElementById('submit-art-btn').innerHTML = `<i class="fa-solid fa-paper-plane"></i> Enregistrer & Publier l'Article`;
                 document.getElementById('cancel-edit-btn').style.display = 'none';
             }
+
+            // ==================== CONFIG CMS ====================
+            function initConfigForm() {
+                const cfg = (typeof niCmsConfig !== 'undefined') ? niCmsConfig.config : {};
+                const fields = [
+                    'agencyName','agencyNameShort','footerText','logo','heroCover','agentCover',
+                    'primaryColor','secondaryColor','fontFamily','fontUrl',
+                    'heroTitle','heroSubtitle','heroDescription',
+                    'phone','phone2','whatsapp','email','address',
+                    'facebook','instagram','twitter','metaDescription'
+                ];
+
+                fields.forEach(key => {
+                    const el = document.getElementById('cfg-' + key);
+                    if (el && cfg[key] !== undefined) {
+                        el.value = cfg[key];
+                    }
+                });
+
+                // Pre-fill URL fields from config
+                const logoUrlInput = document.getElementById('cfg-logo-url');
+                const coverUrlInput = document.getElementById('cfg-cover-url');
+                const agentCoverInput = document.getElementById('cfg-agentCover-url');
+                if (logoUrlInput && cfg.logo) logoUrlInput.value = cfg.logo;
+                if (coverUrlInput && cfg.heroCover) coverUrlInput.value = cfg.heroCover;
+                if (agentCoverInput && cfg.agentCover) agentCoverInput.value = cfg.agentCover;
+            }
+
+            initConfigForm();
+
+            // Handle image file uploads -> Data URL
+            function handleFileUpload(inputId, targetUrlInputId, callback) {
+                const input = document.getElementById(inputId);
+                if (!input) return;
+                input.addEventListener('change', (e) => {
+                    const file = e.target.files[0];
+                    if (!file) return;
+                    if (file.size > 1024 * 1024 * 1.5) {
+                        alert('Image trop lourde. Choisissez une image < 1.5 Mo pour éviter de remplir le stockage du navigateur.');
+                        input.value = '';
+                        return;
+                    }
+                    const reader = new FileReader();
+                    reader.onload = (evt) => {
+                        const urlInput = document.getElementById(targetUrlInputId);
+                        if (urlInput) urlInput.value = evt.target.result;
+                        if (callback) callback(evt.target.result);
+                    };
+                    reader.readAsDataURL(file);
+                });
+            }
+
+            handleFileUpload('cfg-logo-file', 'cfg-logo-url');
+            handleFileUpload('cfg-cover-file', 'cfg-cover-url');
+            handleFileUpload('cfg-agent-cover-file', 'cfg-agentCover-url');
+
+            // Save config
+            document.getElementById('config-form').addEventListener('submit', (e) => {
+                e.preventDefault();
+
+                const getVal = id => {
+                    const el = document.getElementById(id);
+                    return el ? el.value.trim() : '';
+                };
+
+                const newConfig = {
+                    agencyName: getVal('cfg-agencyName'),
+                    agencyNameShort: getVal('cfg-agencyNameShort'),
+                    footerText: getVal('cfg-footerText'),
+                    logo: getVal('cfg-logo-url') || getVal('cfg-logo'),
+                    heroCover: getVal('cfg-cover-url') || getVal('cfg-cover'),
+                    agentCover: getVal('cfg-agentCover-url') || getVal('cfg-agentCover'),
+                    fontFamily: getVal('cfg-fontFamily'),
+                    fontUrl: getVal('cfg-fontUrl'),
+                    primaryColor: getVal('cfg-primaryColor'),
+                    secondaryColor: getVal('cfg-secondaryColor'),
+                    heroTitle: getVal('cfg-heroTitle'),
+                    heroSubtitle: getVal('cfg-heroSubtitle'),
+                    heroDescription: getVal('cfg-heroDescription'),
+                    phone: getVal('cfg-phone'),
+                    phone2: getVal('cfg-phone2'),
+                    whatsapp: getVal('cfg-whatsapp'),
+                    email: getVal('cfg-email'),
+                    address: getVal('cfg-address'),
+                    facebook: getVal('cfg-facebook'),
+                    instagram: getVal('cfg-instagram'),
+                    twitter: getVal('cfg-twitter'),
+                    metaDescription: getVal('cfg-metaDescription')
+                };
+
+                // Clean empty values so defaults remain
+                Object.keys(newConfig).forEach(key => {
+                    if (newConfig[key] === '') {
+                        newConfig[key] = null;
+                    }
+                });
+
+                // Merge with existing config to preserve fields not in form
+                const merged = { ...(typeof niCmsConfig !== 'undefined' ? niCmsConfig.config : {}), ...newConfig };
+                localStorage.setItem('ni_site_custom_config', JSON.stringify(merged));
+
+                if (typeof niCmsConfig !== 'undefined') {
+                    niCmsConfig.config = merged;
+                    niCmsConfig.applySiteConfig(merged);
+                }
+
+                alert('Configuration enregistrée et appliquée sur ce navigateur !');
+            });
+
+            // Export config
+            document.getElementById('cms-export-btn').addEventListener('click', () => {
+                const cfg = JSON.parse(localStorage.getItem('ni_site_custom_config') || '{}');
+                const blob = new Blob([JSON.stringify(cfg, null, 2)], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'ni-cms-config.json';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            });
+
+            // Import config
+            document.getElementById('cms-import-btn').addEventListener('click', () => {
+                document.getElementById('cms-import-file').click();
+            });
+
+            document.getElementById('cms-import-file').addEventListener('change', (e) => {
+                const file = e.target.files[0];
+                if (!file) return;
+                const reader = new FileReader();
+                reader.onload = (evt) => {
+                    try {
+                        const parsed = JSON.parse(evt.target.result);
+                        localStorage.setItem('ni_site_custom_config', JSON.stringify(parsed));
+                        alert('Configuration importée avec succès. La page va se recharger.');
+                        window.location.reload();
+                    } catch (err) {
+                        alert('Fichier JSON invalide : ' + err.message);
+                    }
+                };
+                reader.readAsText(file);
+            });
+
+            // Reset config
+            document.getElementById('cms-reset-btn').addEventListener('click', () => {
+                if (confirm('Réinitialiser toute la personnalisation et revenir aux valeurs par défaut ?')) {
+                    localStorage.removeItem('ni_site_custom_config');
+                    window.location.reload();
+                }
+            });
 
             // Enregistrer ou modifier l'article
             document.getElementById('publish-form').addEventListener('submit', (e) => {

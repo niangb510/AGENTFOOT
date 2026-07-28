@@ -22,6 +22,7 @@
         integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
         crossorigin="anonymous" referrerpolicy="no-referrer">
     <link rel="stylesheet" href="style.css?v=2.0">
+    <link rel="stylesheet" href="animations.css?v=1.0">
     <script src="site-config.js"></script>
     <!-- PWA Settings -->
     <link rel="manifest" href="manifest.json">
@@ -128,8 +129,8 @@
 
     <header class="services-header">
         <div class="container">
-            <h1>Nos Services</h1>
-            <p>Un accompagnement à 360° pour votre carrière.</p>
+            <h1 class="js-reveal">Nos Services</h1>
+            <p class="js-reveal stagger-1">Un accompagnement à 360° pour votre carrière.</p>
         </div>
     </header>
 
@@ -137,7 +138,7 @@
         <div class="container">
 
             <!-- Service 1 -->
-            <div class="service-row">
+            <div class="service-row js-reveal-left">
                 <div class="service-text">
                     <h2>Gestion de Carrière</h2>
                     <p>Nous définissons ensemble un plan de carrière clair et ambitieux. Chaque choix est stratégique
@@ -154,7 +155,7 @@
             </div>
 
             <!-- Service 2 -->
-            <div class="service-row">
+            <div class="service-row js-reveal-right">
                 <div class="service-text">
                     <h2>Transferts & Négociation</h2>
                     <p>Notre expertise juridique et notre réseau nous permettent de négocier les meilleurs contrats pour
@@ -171,7 +172,7 @@
             </div>
 
             <!-- Service 3 -->
-            <div class="service-row">
+            <div class="service-row js-reveal-left">
                 <div class="service-text">
                     <h2>Marketing & Sponsoring</h2>
                     <p>Votre image est un atout précieux. Nous vous aidons à la développer et à la monétiser auprès de
@@ -188,7 +189,7 @@
             </div>
 
             <!-- Service 4 -->
-            <div class="service-row">
+            <div class="service-row js-reveal-right">
                 <div class="service-text">
                     <h2>Accompagnement Vie Privée</h2>
                     <p>Pour que vous puissiez vous concentrer à 100% sur le terrain, nous vous assistons dans la gestion
@@ -238,6 +239,7 @@
         </div>
     </footer>
     <script src="script.js"></script>
+    <script src="animations.js?v=1.0"></script>
 </body>
 
 </html>

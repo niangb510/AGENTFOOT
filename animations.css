@@ -1,0 +1,770 @@
+/* ==========================================
+   ANIMATIONS.CSS — Effets d'animation globaux
+   N.I. CONSEILS-MANAGEMENTS
+   ========================================== */
+
+/* ----------------------------------------------------------------
+   1. Accessibilité : respect des préférences de mouvement réduit
+   ---------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ----------------------------------------------------------------
+   2. Variables d'animation
+   ---------------------------------------------------------------- */
+:root {
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-out-back: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --transition-slow: 0.8s var(--ease-out-expo);
+  --transition-medium: 0.5s var(--ease-out-expo);
+  --transition-fast: 0.3s var(--ease-out-expo);
+}
+
+/* ----------------------------------------------------------------
+   3. Keyframes réutilisables
+   ---------------------------------------------------------------- */
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes fadeInRight {
+  from {
+    opacity: 0;
+    transform: translateX(50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulseGlow {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(217, 119, 6, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 0 15px rgba(217, 119, 6, 0);
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes typing {
+  from { width: 0; }
+  to { width: 100%; }
+}
+
+@keyframes blinkCaret {
+  0%, 100% { border-color: transparent; }
+  50% { border-color: var(--secondary-color); }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes drawLine {
+  from {
+    transform: scaleY(0);
+  }
+  to {
+    transform: scaleY(1);
+  }
+}
+
+@keyframes popIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+  80% {
+    transform: scale(1.05);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes marquee {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+/* ----------------------------------------------------------------
+   4. Classes utilitaires d'apparition (IntersectionObserver)
+   ---------------------------------------------------------------- */
+.js-reveal {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.8s var(--ease-out-expo), transform 0.8s var(--ease-out-expo);
+  will-change: opacity, transform;
+}
+
+.js-reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.js-reveal-left {
+  opacity: 0;
+  transform: translateX(-60px);
+  transition: opacity 0.8s var(--ease-out-expo), transform 0.8s var(--ease-out-expo);
+  will-change: opacity, transform;
+}
+
+.js-reveal-left.is-visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.js-reveal-right {
+  opacity: 0;
+  transform: translateX(60px);
+  transition: opacity 0.8s var(--ease-out-expo), transform 0.8s var(--ease-out-expo);
+  will-change: opacity, transform;
+}
+
+.js-reveal-right.is-visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.js-scale-in {
+  opacity: 0;
+  transform: scale(0.9);
+  transition: opacity 0.7s var(--ease-out-expo), transform 0.7s var(--ease-out-expo);
+  will-change: opacity, transform;
+}
+
+.js-scale-in.is-visible {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* Délai de cascade (stagger) */
+.stagger-1 { transition-delay: 0.1s; }
+.stagger-2 { transition-delay: 0.2s; }
+.stagger-3 { transition-delay: 0.3s; }
+.stagger-4 { transition-delay: 0.4s; }
+.stagger-5 { transition-delay: 0.5s; }
+
+/* ----------------------------------------------------------------
+   5. Barre de progression de scroll
+   ---------------------------------------------------------------- */
+.scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--secondary-color), var(--accent-color));
+  z-index: 9999;
+  transition: width 0.1s linear;
+}
+
+/* ----------------------------------------------------------------
+   6. Bouton retour en haut
+   ---------------------------------------------------------------- */
+.back-to-top {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: var(--secondary-color);
+  color: white;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  box-shadow: 0 8px 25px rgba(217, 119, 6, 0.4);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(20px);
+  transition: opacity 0.4s, visibility 0.4s, transform 0.4s var(--ease-out-expo), background 0.3s;
+  z-index: 998;
+}
+
+.back-to-top.is-visible {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.back-to-top:hover {
+  background: var(--primary-color);
+  transform: translateY(-3px);
+}
+
+@media (max-width: 768px) {
+  .back-to-top {
+    width: 44px;
+    height: 44px;
+    bottom: 20px;
+    right: 20px;
+    font-size: 1rem;
+  }
+}
+
+/* ----------------------------------------------------------------
+   7. Navigation : hide/show au scroll + underline slide
+   ---------------------------------------------------------------- */
+.navbar {
+  transition: transform 0.4s var(--ease-out-expo), background 0.3s, box-shadow 0.3s;
+}
+
+.navbar.nav-hidden {
+  transform: translateY(-100%);
+}
+
+.nav-links a::after {
+  transition: width 0.3s var(--ease-out-expo);
+}
+
+/* ----------------------------------------------------------------
+   8. Hero : effets du titre et parallax
+   ---------------------------------------------------------------- */
+.hero-content h1,
+.hero-content .hero-subtitle,
+.hero-content p:not(.hero-subtitle),
+.hero-btns {
+  opacity: 0;
+}
+
+.hero-content.animate-in h1 {
+  animation: fadeInUp 0.8s var(--ease-out-expo) 0.2s forwards;
+}
+
+.hero-content.animate-in .hero-subtitle {
+  animation: fadeInUp 0.8s var(--ease-out-expo) 0.4s forwards;
+}
+
+.hero-content.animate-in p:not(.hero-subtitle) {
+  animation: fadeInUp 0.8s var(--ease-out-expo) 0.6s forwards;
+}
+
+.hero-content.animate-in .hero-btns {
+  animation: fadeInUp 0.8s var(--ease-out-expo) 0.8s forwards;
+}
+
+/* Typing effect wrapper */
+.typing-text {
+  display: inline-block;
+  overflow: hidden;
+  white-space: nowrap;
+  border-right: 3px solid var(--secondary-color);
+  animation: typing 2.5s steps(40, end) forwards, blinkCaret 0.8s step-end 6;
+  max-width: 100%;
+}
+
+@media (max-width: 768px) {
+  .typing-text {
+    white-space: normal;
+    border-right: none;
+    animation: none;
+  }
+}
+
+/* ----------------------------------------------------------------
+   9. Boutons : ripple effect
+   ---------------------------------------------------------------- */
+.btn {
+  position: relative;
+  overflow: hidden;
+  transform: translateZ(0);
+}
+
+.btn-ripple {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.4);
+  transform: scale(0);
+  animation: ripple 0.6s linear;
+  pointer-events: none;
+}
+
+@keyframes ripple {
+  to {
+    transform: scale(4);
+    opacity: 0;
+  }
+}
+
+/* ----------------------------------------------------------------
+   10. Cartes features : 3D tilt, shine, bounce icon
+   ---------------------------------------------------------------- */
+.tilt-card {
+  transform-style: preserve-3d;
+  transition: transform 0.3s var(--ease-out-expo), box-shadow 0.3s;
+}
+
+.feature-card.tilt-card:hover {
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
+}
+
+.feature-card.tilt-card .feature-icon {
+  transition: transform 0.4s var(--ease-out-back);
+}
+
+.feature-card.tilt-card:hover .feature-icon {
+  transform: translateY(-8px);
+}
+
+/* Shine effect */
+.shine-card {
+  position: relative;
+  overflow: hidden;
+}
+
+.shine-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.3),
+    transparent
+  );
+  transform: skewX(-25deg);
+  transition: left 0.7s;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.shine-card:hover::before {
+  left: 150%;
+}
+
+/* ----------------------------------------------------------------
+   11. Section partenaires : marquee infinie
+   ---------------------------------------------------------------- */
+.partners-track {
+  display: flex;
+  width: max-content;
+  animation: marquee 20s linear infinite;
+}
+
+.partners-track:hover {
+  animation-play-state: paused;
+}
+
+.partners-wrapper {
+  overflow: hidden;
+  mask-image: linear-gradient(90deg, transparent, black 10%, black 90%, transparent);
+  -webkit-mask-image: linear-gradient(90deg, transparent, black 10%, black 90%, transparent);
+}
+
+/* ----------------------------------------------------------------
+   12. Joueurs : badge pulse, image zoom
+   ---------------------------------------------------------------- */
+.pulse-badge {
+  animation: pulseGlow 2s infinite;
+}
+
+.player-img-container {
+  overflow: hidden;
+}
+
+.player-card:hover .player-img {
+  transform: scale(1.1);
+}
+
+/* ----------------------------------------------------------------
+   13. Timeline : ligne qui se dessine
+   ---------------------------------------------------------------- */
+.timeline-progress {
+  position: absolute;
+  width: 4px;
+  background: var(--secondary-color);
+  top: 0;
+  left: 50%;
+  margin-left: -2px;
+  transform-origin: top center;
+  transform: scaleY(0);
+  transition: transform 1.5s var(--ease-out-expo);
+  z-index: 2;
+}
+
+.timeline-progress.is-visible {
+  transform: scaleY(1);
+}
+
+.timeline-item {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.7s var(--ease-out-expo), transform 0.7s var(--ease-out-expo);
+}
+
+.timeline-item.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ----------------------------------------------------------------
+   14. Page services : slide alterné
+   ---------------------------------------------------------------- */
+.service-row {
+  opacity: 0;
+  transform: translateY(50px);
+  transition: opacity 0.8s var(--ease-out-expo), transform 0.8s var(--ease-out-expo);
+}
+
+.service-row.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.service-icon-large {
+  transition: transform 0.5s var(--ease-out-expo), opacity 0.5s;
+}
+
+.service-row:hover .service-icon-large {
+  transform: scale(1.1) rotate(5deg);
+}
+
+.service-list li {
+  opacity: 0;
+  transform: translateX(-20px);
+  transition: opacity 0.4s var(--ease-out-expo), transform 0.4s var(--ease-out-expo);
+}
+
+.service-row.is-visible .service-list li {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* ----------------------------------------------------------------
+   15. Contact : labels flottants et focus glow
+   ---------------------------------------------------------------- */
+.form-group.floating {
+  position: relative;
+}
+
+.form-group.floating label {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: white;
+  padding: 0 5px;
+  color: #64748b;
+  transition: all 0.2s var(--ease-out-expo);
+  pointer-events: none;
+}
+
+.form-group.floating textarea + label,
+.form-group.floating input:focus + label,
+.form-group.floating input:not(:placeholder-shown) + label,
+.form-group.floating textarea:focus + label,
+.form-group.floating textarea:not(:placeholder-shown) + label {
+  top: 0;
+  font-size: 0.8rem;
+  color: var(--secondary-color);
+}
+
+.form-group.floating textarea + label {
+  top: 20px;
+}
+
+.form-group.floating .form-control {
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.form-group.floating .form-control:focus {
+  border-color: var(--secondary-color);
+  box-shadow: 0 0 0 4px rgba(217, 119, 6, 0.1);
+}
+
+/* ----------------------------------------------------------------
+   16. Actualités / Articles : hover lift, shimmer image
+   ---------------------------------------------------------------- */
+.news-card {
+  transition: transform 0.4s var(--ease-out-expo), box-shadow 0.4s;
+}
+
+.news-card:hover {
+  transform: translateY(-12px) scale(1.01);
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.12);
+}
+
+.news-card-img {
+  position: relative;
+  overflow: hidden;
+}
+
+.news-card-img::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+  transition: left 0.6s;
+}
+
+.news-card:hover .news-card-img::after {
+  left: 100%;
+}
+
+/* Modal */
+.modal-overlay {
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s, visibility 0.3s;
+}
+
+.modal-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.modal-content {
+  transform: scale(0.95);
+  transition: transform 0.4s var(--ease-out-expo);
+}
+
+.modal-overlay.active .modal-content {
+  transform: scale(1);
+}
+
+/* ----------------------------------------------------------------
+   17. Loader / Skeleton
+   ---------------------------------------------------------------- */
+.skeleton {
+  background: linear-gradient(90deg, #e2e8f0 25%, #f1f5f9 50%, #e2e8f0 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: 8px;
+}
+
+/* ----------------------------------------------------------------
+   18. Stat counters
+   ---------------------------------------------------------------- */
+.stat-counter {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.6s, transform 0.6s;
+}
+
+.stat-counter.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ----------------------------------------------------------------
+   19. Lightbox
+   ---------------------------------------------------------------- */
+.lightbox-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(15, 23, 42, 0.95);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10002;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s, visibility 0.3s;
+  padding: 20px;
+}
+
+.lightbox-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.lightbox-overlay img {
+  max-width: 90%;
+  max-height: 90vh;
+  border-radius: 12px;
+  transform: scale(0.95);
+  transition: transform 0.4s var(--ease-out-expo);
+}
+
+.lightbox-overlay.active img {
+  transform: scale(1);
+}
+
+.lightbox-close {
+  position: absolute;
+  top: 20px;
+  right: 30px;
+  color: white;
+  font-size: 2rem;
+  cursor: pointer;
+  background: none;
+  border: none;
+}
+
+/* ----------------------------------------------------------------
+   20. Floating image effect
+   ---------------------------------------------------------------- */
+.float-image {
+  animation: float 4s ease-in-out infinite;
+}
+
+/* ----------------------------------------------------------------
+   21. Formulaire : états du bouton submit
+   ---------------------------------------------------------------- */
+.btn-submit-loading {
+  position: relative;
+  color: transparent !important;
+  pointer-events: none;
+}
+
+.btn-submit-loading::after {
+  content: '';
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  top: 50%;
+  left: 50%;
+  margin-top: -10px;
+  margin-left: -10px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+.btn-submit-success {
+  background: #10b981 !important;
+  pointer-events: none;
+}
+
+/* ----------------------------------------------------------------
+   22. Transitions de page
+   ---------------------------------------------------------------- */
+body.page-transition {
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+/* ----------------------------------------------------------------
+   23. Fallback reveal legacy (script.js compatibility)
+   ---------------------------------------------------------------- */
+.reveal.is-visible,
+.reveal-left.is-visible,
+.reveal-right.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.reveal-left.is-visible {
+  transform: translateX(0);
+}
+
+.reveal-right.is-visible {
+  transform: translateX(0);
+}
+
+/* ----------------------------------------------------------------
+   24. Shake animation on form error
+   ---------------------------------------------------------------- */
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+  20%, 40%, 60%, 80% { transform: translateX(5px); }
+}
+
+.shake {
+  animation: shake 0.4s var(--ease-out-expo);
+}
+
+/* ----------------------------------------------------------------
+   25. Responsive : désactiver certains effets sur mobile
+   ---------------------------------------------------------------- */
+@media (max-width: 768px) {
+  .tilt-card {
+    transform: none !important;
+  }
+
+  .typing-text {
+    white-space: normal;
+    border-right: none;
+  }
+}

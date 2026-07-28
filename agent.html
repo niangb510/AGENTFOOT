@@ -22,6 +22,7 @@
         integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
         crossorigin="anonymous" referrerpolicy="no-referrer">
     <link rel="stylesheet" href="style.css?v=2.0">
+    <link rel="stylesheet" href="animations.css?v=1.0">
     <script src="site-config.js"></script>
     <!-- PWA Settings -->
     <link rel="manifest" href="manifest.json">
@@ -227,7 +228,7 @@
     <section class="section-padding">
         <div class="container">
             <div class="agent-content">
-                <div class="agent-img reveal">
+                <div class="agent-img reveal float-image js-reveal">
                     <img src="assets/images/agent/unnamed.jpg" alt="Ibrahim Niang - Agent FIFA"
                         style="width: 100%; height: auto; border-radius: 20px; display: block;" loading="lazy" decoding="async">
                 </div>
@@ -245,11 +246,11 @@
                         au service des talents de demain.</p>
 
                     <div class="stat-grid">
-                        <div class="stat-box">
-                            <div class="stat-number">10+</div>
+                        <div class="stat-box js-reveal stagger-1">
+                            <div class="stat-number"><span class="stat-counter" data-target="10" data-suffix="+">10+</span></div>
                             <div>Clubs fréquentés</div>
                         </div>
-                        <div class="stat-box">
+                        <div class="stat-box js-reveal stagger-2">
                             <div class="stat-number">FIFA</div>
                             <div>Agent Licencié</div>
                         </div>
@@ -266,7 +267,7 @@
                 </div>
 
                 <div class="timeline">
-                    <div class="timeline-item left">
+                    <div class="timeline-item left js-reveal-left stagger-1">
                         <div class="timeline-content">
                             <span>Origines</span>
                             <h3>De Niangoloko à l'International</h3>
@@ -275,7 +276,7 @@
                         </div>
                     </div>
 
-                    <div class="timeline-item right">
+                    <div class="timeline-item right js-reveal-right stagger-2">
                         <div class="timeline-content">
                             <span>2014 - 2023</span>
                             <h3>L'Ancrage en France</h3>
@@ -285,7 +286,7 @@
                         </div>
                     </div>
 
-                    <div class="timeline-item left">
+                    <div class="timeline-item left js-reveal-left stagger-3">
                         <div class="timeline-content">
                             <span>Formation</span>
                             <h3>La Transition</h3>
@@ -294,7 +295,7 @@
                         </div>
                     </div>
 
-                    <div class="timeline-item right">
+                    <div class="timeline-item right js-reveal-right stagger-4">
                         <div class="timeline-content">
                             <span>Aujourd'hui</span>
                             <h3>Agent Licencié FIFA</h3>
@@ -315,33 +316,33 @@
                         milieu du football.</p>
                 </div>
                 <div class="features-grid">
-                    <div class="feature-card" style="padding: 10px; overflow: hidden;">
+                    <div class="feature-card js-reveal stagger-1" style="padding: 10px; overflow: hidden;">
                         <img src="assets/images/agent/481247977_9177634898940919_2701165290340722272_n.jpg"
-                            alt="Ibrahim Niang" style="width: 100%; height: auto; border-radius: 10px;" loading="lazy" decoding="async">
+                            alt="Ibrahim Niang" class="agent-gallery-img" style="width: 100%; height: auto; border-radius: 10px;" loading="lazy" decoding="async">
                     </div>
-                    <div class="feature-card" style="padding: 10px; overflow: hidden;">
+                    <div class="feature-card js-reveal stagger-2" style="padding: 10px; overflow: hidden;">
                         <img src="assets/images/agent/486574011_9306001556104252_7275843342198295934_n.jpg"
-                            alt="Ibrahim Niang" style="width: 100%; height: auto; border-radius: 10px;" loading="lazy" decoding="async">
+                            alt="Ibrahim Niang" class="agent-gallery-img" style="width: 100%; height: auto; border-radius: 10px;" loading="lazy" decoding="async">
                     </div>
-                    <div class="feature-card" style="padding: 10px; overflow: hidden;">
+                    <div class="feature-card js-reveal stagger-3" style="padding: 10px; overflow: hidden;">
                         <img src="assets/images/agent/506443391_9893369584034110_5142201735972524058_n.jpg"
-                            alt="Ibrahim Niang" style="width: 100%; height: auto; border-radius: 10px;" loading="lazy" decoding="async">
+                            alt="Ibrahim Niang" class="agent-gallery-img" style="width: 100%; height: auto; border-radius: 10px;" loading="lazy" decoding="async">
                     </div>
-                    <div class="feature-card" style="padding: 10px; overflow: hidden;">
+                    <div class="feature-card js-reveal stagger-4" style="padding: 10px; overflow: hidden;">
                         <img src="assets/images/agent/463658277_8403962779641472_2898967800483370328_n.jpg"
-                            alt="Ibrahim Niang" style="width: 100%; height: auto; border-radius: 10px;" loading="lazy" decoding="async">
+                            alt="Ibrahim Niang" class="agent-gallery-img" style="width: 100%; height: auto; border-radius: 10px;" loading="lazy" decoding="async">
                     </div>
-                    <div class="feature-card" style="padding: 10px; overflow: hidden;">
+                    <div class="feature-card js-reveal stagger-1" style="padding: 10px; overflow: hidden;">
                         <img src="assets/images/agent/492537016_9517619501609122_2719008199893929919_n.jpg"
-                            alt="Ibrahim Niang" style="width: 100%; height: auto; border-radius: 10px;" loading="lazy" decoding="async">
+                            alt="Ibrahim Niang" class="agent-gallery-img" style="width: 100%; height: auto; border-radius: 10px;" loading="lazy" decoding="async">
                     </div>
-                    <div class="feature-card" style="padding: 10px; overflow: hidden;">
+                    <div class="feature-card js-reveal stagger-2" style="padding: 10px; overflow: hidden;">
                         <img src="assets/images/agent/492547691_9523694034335002_961695162708248134_n.jpg"
-                            alt="Ibrahim Niang" style="width: 100%; height: auto; border-radius: 10px;" loading="lazy" decoding="async">
+                            alt="Ibrahim Niang" class="agent-gallery-img" style="width: 100%; height: auto; border-radius: 10px;" loading="lazy" decoding="async">
                     </div>
-                    <div class="feature-card" style="padding: 10px; overflow: hidden;">
+                    <div class="feature-card js-reveal stagger-3" style="padding: 10px; overflow: hidden;">
                         <img src="assets/images/agent/597570804_1983761392480548_4239413806129994270_n.jpg"
-                            alt="Ibrahim Niang" style="width: 100%; height: auto; border-radius: 10px;" loading="lazy" decoding="async">
+                            alt="Ibrahim Niang" class="agent-gallery-img" style="width: 100%; height: auto; border-radius: 10px;" loading="lazy" decoding="async">
                     </div>
                 </div>
             </div>
@@ -390,6 +391,7 @@
             </div>
         </footer>
         <script src="script.js"></script>
+    <script src="animations.js?v=1.0"></script>
 </body>
 
 </html>
