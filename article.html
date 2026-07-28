@@ -4,9 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>N.I. CONSEILS-MANAGEMENTS | Actualités & Fil Info</title>
-    <meta name="description"
-        content="Actualités officielles, signatures, transferts et performances des joueurs gérés par N.I. CONSEILS-MANAGEMENTS. Suivez l'actualité de nos talents.">
+    <title>Article | N.I. CONSEILS-MANAGEMENTS</title>
+    <meta name="description" content="Lire l'article sur N.I. CONSEILS-MANAGEMENTS.">
     <!-- Security & Resource Headers -->
     <meta http-equiv="Content-Security-Policy"
         content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://fonts.googleapis.com; font-src 'self' https://cdnjs.cloudflare.com https://fonts.gstatic.com; img-src 'self' data: blob: https:; connect-src 'self'; frame-src 'self' https://www.youtube.com https://www.youtube-nocookie.com;">
@@ -18,20 +17,18 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
         integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
         crossorigin="anonymous" referrerpolicy="no-referrer">
-    <link rel="canonical" href="https://ni-conseils-managements.netlify.app/actualites.html">
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://ni-conseils-managements.netlify.app/actualites.html">
-    <meta property="og:title" content="N.I. CONSEILS-MANAGEMENTS | Actualités & Fil Info">
-    <meta property="og:description" content="Actualités officielles, signatures, transferts et performances des joueurs gérés par N.I. CONSEILS-MANAGEMENTS.">
+    <link rel="canonical" href="https://ni-conseils-managements.netlify.app/article.html">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://ni-conseils-managements.netlify.app/article.html">
+    <meta property="og:title" content="Article | N.I. CONSEILS-MANAGEMENTS">
+    <meta property="og:description" content="Lire l'article sur N.I. CONSEILS-MANAGEMENTS.">
     <meta property="og:image" content="https://ni-conseils-managements.netlify.app/assets/images/logo.png">
-    <!-- DOMPurify for article content sanitization -->
+    <!-- DOMPurify -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.6/purify.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <!-- Shared news data loader -->
     <script src="news-data.js"></script>
-    <!-- RSS Feed Link for Google News -->
-    <link rel="alternate" type="application/rss+xml" title="N.I. CONSEILS-MANAGEMENTS RSS Feed" href="feed.xml">
-    <!-- Custom CSS with Cache-Busting -->
-    <link rel="stylesheet" href="style.css?v=2.0">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="style.css?v=2.1">
     <script src="site-config.js"></script>
     <!-- PWA Settings -->
     <link rel="manifest" href="manifest.json">
@@ -40,17 +37,17 @@
     <meta name="apple-mobile-web-app-title" content="N.I. CONSEILS">
     <link rel="apple-touch-icon" href="assets/images/logo.png">
 
-    <!-- Schema.org NewsArticle Container dynamically populated for Google News -->
+    <!-- Schema.org NewsArticle populated dynamically -->
     <script id="seo-news-schema" type="application/ld+json">
     {
         "@context": "https://schema.org",
         "@type": "NewsArticle",
         "mainEntityOfPage": {
             "@type": "WebPage",
-            "@id": "https://ni-conseils-managements.netlify.app/actualites.html"
+            "@id": "https://ni-conseils-managements.netlify.app/article.html"
         },
-        "headline": "N.I. CONSEILS-MANAGEMENTS | Fil d'actualités des joueurs",
-        "description": "Suivez les signatures, transferts et performances officielles des joueurs gérés par N.I. CONSEILS-MANAGEMENTS.",
+        "headline": "N.I. CONSEILS-MANAGEMENTS | Article",
+        "description": "Lire l'article sur N.I. CONSEILS-MANAGEMENTS.",
         "publisher": {
             "@type": "Organization",
             "name": "N.I. CONSEILS-MANAGEMENTS",
@@ -95,29 +92,19 @@
         </div>
     </header>
 
-    <!-- Main News Container -->
-    <section class="section-padding" style="background-color: #f8fafc;">
+    <!-- Article Container -->
+    <section class="section-padding article-page-section" style="background-color: #f8fafc;">
         <div class="container">
-
-            <!-- Controls: Filters & Search -->
-            <div class="news-controls">
-                <div class="news-filter-btns">
-                    <button class="filter-btn active" data-category="all">Tous</button>
-                    <button class="filter-btn" data-category="Transfert">Transferts & Mercato</button>
-                    <button class="filter-btn" data-category="Agence">Agence</button>
-                    <button class="filter-btn" data-category="Performance">Performances</button>
-                </div>
-                <div class="news-search-box">
-                    <input type="text" id="news-search-input" placeholder="Rechercher un joueur, club...">
-                    <i class="fa-solid fa-magnifying-glass"></i>
-                </div>
+            <div class="article-back-link">
+                <a href="actualites.html" class="back-to-news"><i class="fa-solid fa-arrow-left"></i> Retour aux actualités</a>
             </div>
 
-            <!-- News Grid -->
-            <div class="news-grid" id="news-container">
-                <!-- Articles dynamically inserted by script.js -->
-            </div>
-
+            <article class="article-page editorial-style" id="article-container">
+                <div id="article-loader" style="text-align:center; padding:60px 20px; color:#64748b; font-size:1.1rem;">
+                    <i class="fa-solid fa-spinner fa-spin" style="font-size:2rem; margin-bottom:15px; display:block;"></i>
+                    Chargement de l'article...
+                </div>
+            </article>
         </div>
     </section>
 
@@ -153,7 +140,8 @@
             </div>
         </div>
     </footer>
-    <script src="script.js?v=2.4"></script>
+    <script src="script.js?v=2.5"></script>
+    <script src="article.js?v=1.0"></script>
 </body>
 
 </html>

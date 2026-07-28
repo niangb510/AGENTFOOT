@@ -73,7 +73,7 @@
             document.querySelectorAll('.phone-number').forEach(el => el.innerText = cfg.phone);
         }
         if (cfg.whatsapp) {
-            document.querySelectorAll('.whatsapp-float, a[href*="wa.me"]').forEach(el => {
+            document.querySelectorAll('a[href*="wa.me"]').forEach(el => {
                 el.href = `https://wa.me/${cfg.whatsapp}?text=Bonjour%20Ibrahim,%20je%20vous%20contacte%20depuis%20votre%20site.`;
             });
         }

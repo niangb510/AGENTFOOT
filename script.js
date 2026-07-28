@@ -157,8 +157,6 @@ ${message}`;
        ========================================== */
 
     const newsContainer = document.getElementById('news-container');
-    const articleModal = document.getElementById('article-modal');
-    const modalCloseBtn = document.getElementById('modal-close-btn');
 
     if (newsContainer) {
         let allArticles = [];
@@ -207,41 +205,43 @@ ${message}`;
 
         // Charger articles depuis news.json et localStorage avec fallback instantané
         const loadArticles = async () => {
-            let jsonArticles = [];
-            try {
-                const response = await fetch('./news.json?t=' + Date.now(), { cache: 'no-store' });
-                if (response.ok) {
-                    jsonArticles = await response.json();
+            // Utiliser le module partagé si disponible
+            if (window.NewsData && typeof window.NewsData.loadArticles === 'function') {
+                allArticles = await window.NewsData.loadArticles();
+            } else {
+                // Fallback si news-data.js n'est pas chargé
+                let jsonArticles = [];
+                try {
+                    const response = await fetch('./news.json?t=' + Date.now(), { cache: 'no-store' });
+                    if (response.ok) {
+                        jsonArticles = await response.json();
+                    }
+                } catch (err) {
+                    console.log('Erreur fetch news.json, utilisation des données de secours:', err);
                 }
-            } catch (err) {
-                console.log('Erreur fetch news.json, utilisation des données de secours:', err);
+
+                if (!jsonArticles || jsonArticles.length === 0) {
+                    jsonArticles = defaultBackupArticles;
+                }
+
+                const deletedIds = JSON.parse(localStorage.getItem('deleted_news_ids') || '[]');
+                const localArticles = JSON.parse(localStorage.getItem('custom_news_articles') || '[]');
+
+                const articleMap = new Map();
+                localArticles.forEach(item => {
+                    if (!deletedIds.includes(item.id)) {
+                        articleMap.set(item.id, item);
+                    }
+                });
+                jsonArticles.forEach(item => {
+                    if (!deletedIds.includes(item.id) && !articleMap.has(item.id)) {
+                        articleMap.set(item.id, item);
+                    }
+                });
+
+                allArticles = Array.from(articleMap.values());
+                allArticles.sort((a, b) => new Date(b.date) - new Date(a.date));
             }
-
-            if (!jsonArticles || jsonArticles.length === 0) {
-                jsonArticles = defaultBackupArticles;
-            }
-
-            const deletedIds = JSON.parse(localStorage.getItem('deleted_news_ids') || '[]');
-            const localArticles = JSON.parse(localStorage.getItem('custom_news_articles') || '[]');
-            
-            const articleMap = new Map();
-            // Les articles modifiés/créés localement sont prioritaires
-            localArticles.forEach(item => {
-                if (!deletedIds.includes(item.id)) {
-                    articleMap.set(item.id, item);
-                }
-            });
-            // Les articles de news.json s'ajoutent s'ils ne sont ni supprimés ni modifiés
-            jsonArticles.forEach(item => {
-                if (!deletedIds.includes(item.id) && !articleMap.has(item.id)) {
-                    articleMap.set(item.id, item);
-                }
-            });
-
-            allArticles = Array.from(articleMap.values());
-
-            // Tri par date décroissante
-            allArticles.sort((a, b) => new Date(b.date) - new Date(a.date));
 
             renderNewsGrid(allArticles);
             checkUrlParamArticle();
@@ -288,7 +288,7 @@ ${message}`;
                 `;
 
                 card.querySelector('.news-read-btn').addEventListener('click', () => {
-                    openArticleModal(article);
+                    window.location.href = 'article.html?id=' + encodeURIComponent(article.id);
                 });
 
                 newsContainer.appendChild(card);
@@ -335,276 +335,16 @@ ${message}`;
             });
         }
 
-        // Ouverture de la modale article & mise à jour SEO Schema.org
-        // Sauvegarde du titre original de la page
-        const originalPageTitle = document.title;
-
-        // Nettoyage des styles inline du contenu pour respecter le design éditorial
-        const prepareArticleContent = (html) => {
-            const wrapper = document.createElement('div');
-            wrapper.innerHTML = html;
-            wrapper.querySelectorAll('p, h3, h4, h5, h6, blockquote').forEach(el => {
-                el.removeAttribute('style');
-            });
-            return wrapper.innerHTML;
-        };
-
-        const openArticleModal = (article) => {
-            const mainImg = document.getElementById('modal-img');
-            const gallerySec = document.getElementById('modal-gallery-sec');
-            const imgLoader = document.getElementById('modal-img-loader');
-            const modalContent = document.getElementById('modal-content');
-
-            const photoList = (article.images && article.images.length > 0) ? article.images : (article.image ? [article.image] : []);
-
-            if (imgLoader) imgLoader.style.display = 'none';
-
-            // Gestion des médias
-            if (photoList.length === 0) {
-                mainImg.style.display = 'none';
-                if (gallerySec) gallerySec.style.display = 'none';
-            } else if (photoList.length === 1) {
-                mainImg.style.display = 'none';
-                if (imgLoader) imgLoader.style.display = 'block';
-                
-                const showImage = () => {
-                    if (imgLoader) imgLoader.style.display = 'none';
-                    mainImg.style.display = 'block';
-                };
-                
-                mainImg.onload = showImage;
-                mainImg.onerror = () => {
-                    if (imgLoader) imgLoader.style.display = 'none';
-                    mainImg.style.display = 'none';
-                };
-                mainImg.src = photoList[0];
-                
-                if (mainImg.complete) {
-                    showImage();
-                }
-                
-                mainImg.alt = article.title;
-                mainImg.style.maxHeight = '480px';
-                mainImg.style.objectFit = 'contain';
-                mainImg.style.backgroundColor = '#0f172a';
-                if (gallerySec) gallerySec.style.display = 'none';
-            } else {
-                // 2 ou plusieurs photos : galerie responsive
-                mainImg.style.display = 'none';
-                if (gallerySec) {
-                    let galleryHtml = `<div class="gallery-grid">`;
-
-                    photoList.forEach((src, index) => {
-                        galleryHtml += `
-                            <div class="gallery-item">
-                                <img src="${src}" alt="${article.title} - Photo ${index + 1}" onclick="window.open('${src}', '_blank')">
-                            </div>
-                        `;
-                    });
-                    galleryHtml += `</div>`;
-                    gallerySec.innerHTML = galleryHtml;
-                    gallerySec.style.display = 'block';
-                }
-            }
-
-            // Métadonnées éditoriales
-            document.getElementById('modal-title').innerText = article.title;
-            document.getElementById('modal-date').innerText = article.dateFormatted || article.date;
-            document.getElementById('modal-category').innerText = article.category;
-
-            // Contenu de l'article
-            const rawContent = window.DOMPurify ? DOMPurify.sanitize(article.content, { USE_PROFILES: { html: true } }) : article.content;
-            modalContent.innerHTML = prepareArticleContent(rawContent);
-
-            // Rendu Vidéo si présente
-            const videoSec = document.getElementById('modal-video-sec');
-            if (videoSec) {
-                if (article.video && article.video.trim() !== '') {
-                    const videoUrl = article.video.trim();
-                    if (videoUrl.includes('youtube.com') || videoUrl.includes('youtu.be')) {
-                        let ytId = '';
-                        const ytRegex = /(?:youtube\.com\/(?:[^\/]+\/[^\/]+\/|[^\/]+\/|(?:v|embed|shorts)\/|.*[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
-                        const match = videoUrl.match(ytRegex);
-                        if (match && match[1]) {
-                            ytId = match[1];
-                        }
-                        if (ytId) {
-                            videoSec.innerHTML = `<iframe src="https://www.youtube.com/embed/${ytId}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
-                        } else {
-                            videoSec.innerHTML = `<p style="color:#64748b;"><i class="fa-brands fa-youtube"></i> <a href="${videoUrl}" target="_blank" rel="noopener noreferrer">Voir la vidéo sur YouTube</a></p>`;
-                        }
-                    } else {
-                        videoSec.innerHTML = `<video controls src="${videoUrl}"></video>`;
-                    }
-                    videoSec.style.display = 'block';
-                } else {
-                    videoSec.innerHTML = '';
-                    videoSec.style.display = 'none';
-                }
-            }
-
-            // Liens de partage
-            const currentUrl = window.location.origin + window.location.pathname + '?id=' + article.id;
-            const shareFacebook = document.getElementById('share-facebook');
-            const shareWhatsapp = document.getElementById('share-whatsapp');
-
-            if (shareFacebook) shareFacebook.href = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(currentUrl)}`;
-            if (shareWhatsapp) shareWhatsapp.href = `https://wa.me/?text=${encodeURIComponent(article.title + ' : ' + currentUrl)}`;
-
-            const copyBtn = document.getElementById('copy-link-btn');
-            if (copyBtn) {
-                copyBtn.onclick = () => {
-                    navigator.clipboard.writeText(currentUrl);
-                    alert('Lien de l\'article copié !');
-                };
-            }
-
-            // Section "À lire aussi"
-            const relatedContainer = document.getElementById('modal-related-articles');
-            const relatedSec = document.getElementById('modal-related-sec');
-            if (relatedContainer && relatedSec) {
-                relatedContainer.innerHTML = '';
-                // Articles de la même catégorie, sinon les plus récents
-                let related = allArticles.filter(a => a.id !== article.id && a.category === article.category);
-                if (related.length < 2) {
-                    related = [...related, ...allArticles.filter(a => a.id !== article.id && !related.find(r => r.id === a.id))];
-                }
-
-                if (related.length === 0) {
-                    relatedSec.style.display = 'none';
-                } else {
-                    related.slice(0, 2).forEach(relArticle => {
-                        const relUrl = '?id=' + encodeURIComponent(relArticle.id);
-                        const relCard = document.createElement('a');
-                        relCard.className = 'related-card';
-                        relCard.href = relUrl;
-                        relCard.setAttribute('aria-label', `Lire l'article : ${relArticle.title}`);
-                        relCard.innerHTML = `
-                            <img src="${relArticle.image}" alt="" loading="lazy" decoding="async">
-                            <div class="related-body">
-                                <span class="related-tag">${relArticle.category}</span>
-                                <h4>${relArticle.title}</h4>
-                                <span class="related-date"><i class="fa-regular fa-calendar"></i> ${relArticle.dateFormatted || relArticle.date}</span>
-                            </div>
-                        `;
-                        relCard.addEventListener('click', (e) => {
-                            e.preventDefault();
-                            const modalContentEl = document.querySelector('.modal-content');
-                            if (modalContentEl) modalContentEl.scrollTop = 0;
-                            openArticleModal(relArticle);
-                        });
-                        relatedContainer.appendChild(relCard);
-                    });
-                    relatedSec.style.display = 'block';
-                }
-            }
-
-            // Injection dynamique du Schema.org NewsArticle pour Google News
-            const schemaTag = document.getElementById('seo-news-schema');
-            if (schemaTag) {
-                schemaTag.textContent = JSON.stringify({
-                    "@context": "https://schema.org",
-                    "@type": "NewsArticle",
-                    "mainEntityOfPage": {
-                        "@type": "WebPage",
-                        "@id": currentUrl
-                    },
-                    "headline": article.title,
-                    "image": [ window.location.origin + '/' + article.image ],
-                    "datePublished": article.date,
-                    "dateModified": article.date,
-                    "author": {
-                        "@type": "Organization",
-                        "name": article.author || "N.I. CONSEILS-MANAGEMENTS"
-                    },
-                    "publisher": {
-                        "@type": "Organization",
-                        "name": "N.I. CONSEILS-MANAGEMENTS",
-                        "logo": {
-                            "@type": "ImageObject",
-                            "url": window.location.origin + "/assets/images/logo.png"
-                        }
-                    },
-                    "description": article.summary
-                }, null, 2);
-            }
-
-            articleModal.style.display = 'flex';
-            articleModal.classList.add('active');
-            document.body.style.overflow = 'hidden';
-
-            // Mise à jour de l'URL et du titre de page
-            const articleUrl = '?id=' + encodeURIComponent(article.id);
-            if (window.location.search !== articleUrl) {
-                window.history.pushState({ articleId: article.id }, article.title, articleUrl);
-            }
-            document.title = article.title + ' | N.I. CONSEILS-MANAGEMENTS';
-
-            // Focus sur le titre de l'article pour l'accessibilité
-            const modalTitle = document.getElementById('modal-title');
-            if (modalTitle) {
-                modalTitle.setAttribute('tabindex', '-1');
-                modalTitle.focus();
-            }
-        };
-
-        // Fermeture de la modale
-        const closeArticleModal = () => {
-            articleModal.style.display = 'none';
-            articleModal.classList.remove('active');
-            document.body.style.overflow = 'auto';
-            // Restaurer le titre original de la page
-            if (originalPageTitle) {
-                document.title = originalPageTitle;
-            }
-        };
-
-        if (modalCloseBtn) {
-            modalCloseBtn.addEventListener('click', closeArticleModal);
-
-            articleModal.addEventListener('click', (e) => {
-                if (e.target === articleModal) {
-                    closeArticleModal();
-                }
-            });
-        }
-
-        // Gestion du bouton retour du navigateur
-        window.addEventListener('popstate', () => {
-            if (articleModal.classList.contains('active')) {
-                closeArticleModal();
-            }
-        });
-
-        // Focus trap basique dans la modale
-        articleModal.addEventListener('keydown', (e) => {
-            if (e.key !== 'Tab') return;
-            const focusable = articleModal.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
-            if (focusable.length === 0) return;
-            const first = focusable[0];
-            const last = focusable[focusable.length - 1];
-            if (e.shiftKey && document.activeElement === first) {
-                e.preventDefault();
-                last.focus();
-            } else if (!e.shiftKey && document.activeElement === last) {
-                e.preventDefault();
-                first.focus();
-            }
-        });
-
         // Vérification si un ID d'article est présent dans l'URL (?id=...)
         const checkUrlParamArticle = () => {
             const urlParams = new URLSearchParams(window.location.search);
             const articleId = urlParams.get('id');
             if (articleId) {
-                const targetArticle = allArticles.find(a => a.id === articleId);
-                if (targetArticle) {
-                    openArticleModal(targetArticle);
-                }
+                // Redirection vers la page article dédiée pour une expérience pleine page
+                window.location.replace('article.html?id=' + encodeURIComponent(articleId));
             }
         };
 
         loadArticles();
     }
 });
-
