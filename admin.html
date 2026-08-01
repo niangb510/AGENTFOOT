@@ -155,8 +155,12 @@
         <div class="container">
             <h1>Panneau de Gestion <span>WordPress / CMS</span></h1>
             <p>Gérez vos articles, téléversez plusieurs photos (gestion photo par photo) et vidéos.</p>            <div class="admin-tabs" id="tab-controls" style="display: none;">
-                <button class="tab-btn active" data-tab="tab-articles"><i class="fa-solid fa-newspaper"></i> Gérer & Publier les Articles</button>
-                <button class="tab-btn" data-tab="tab-customization"><i class="fa-solid fa-palette"></i> Personnaliser l'Apparence (Design)</button>
+                <button class="tab-btn active" data-tab="tab-articles"><i class="fa-solid fa-newspaper"></i> Articles</button>
+                <button class="tab-btn" data-tab="tab-players"><i class="fa-solid fa-users"></i> Joueurs</button>
+                <button class="tab-btn" data-tab="tab-services"><i class="fa-solid fa-briefcase"></i> Services</button>
+                <button class="tab-btn" data-tab="tab-agent"><i class="fa-solid fa-user-tie"></i> Page Agence</button>
+                <button class="tab-btn" data-tab="tab-customization"><i class="fa-solid fa-palette"></i> Design & Config</button>
+                <button class="tab-btn" data-tab="tab-backup"><i class="fa-solid fa-database"></i> Sauvegarde Globale</button>
                 <button class="tab-btn" id="admin-logout-btn" type="button"><i class="fa-solid fa-right-from-bracket"></i> Déconnexion</button>
             </div>
         </div>
@@ -217,6 +221,21 @@
                         <div class="form-group">
                             <label for="art-player">Joueur concerné</label>
                             <input type="text" id="art-player" placeholder="Ex: Bayala Joël & Kelvin Kwasi">
+                        </div>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 20px;">
+                        <div class="form-group">
+                            <label for="art-date">Date de publication</label>
+                            <input type="date" id="art-date">
+                        </div>
+                        <div class="form-group">
+                            <label for="art-author">Auteur</label>
+                            <input type="text" id="art-author" placeholder="Ibrahim Niang">
+                        </div>
+                        <div class="form-group">
+                            <label for="art-tags">Tags (séparés par des virgules)</label>
+                            <input type="text" id="art-tags" placeholder="Cyriaque Irié, Bundesliga, Transfert">
                         </div>
                     </div>
 
@@ -335,6 +354,11 @@
                                 </div>
                                 <input type="text" id="cfg-agentCover-url" placeholder="Ou URL/chemin de l'image..." style="margin-top: 8px;">
                             </div>
+
+                            <div class="form-group">
+                                <label><i class="fa-solid fa-star"></i> Favicon</label>
+                                <input type="text" id="cfg-favicon" placeholder="assets/images/logo.png">
+                            </div>
                         </div>
                     </div>
 
@@ -349,6 +373,10 @@
                             <div class="form-group">
                                 <label for="cfg-secondaryColor">Couleur secondaire</label>
                                 <input type="color" id="cfg-secondaryColor" style="height: 45px; cursor: pointer;">
+                            </div>
+                            <div class="form-group">
+                                <label for="cfg-accentColor">Couleur d'accent</label>
+                                <input type="color" id="cfg-accentColor" style="height: 45px; cursor: pointer;">
                             </div>
                             <div class="form-group">
                                 <label for="cfg-fontFamily">Police (CSS font-family)</label>
@@ -433,6 +461,68 @@
                         </div>
                     </div>
 
+                    <!-- Section 8: Titres des pages -->
+                    <div style="background: #f8fafc; padding: 25px; border-radius: 15px; margin-bottom: 30px; border: 1px solid #e2e8f0;">
+                        <h3 style="color: var(--primary-color); font-size: 1.2rem; margin-bottom: 15px;"><i class="fa-solid fa-heading" style="color: var(--secondary-color);"></i> Titres des Pages</h3>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;">
+                            <div class="form-group">
+                                <label for="cfg-playersHeaderTitle">Titre page Joueurs</label>
+                                <input type="text" id="cfg-playersHeaderTitle">
+                            </div>
+                            <div class="form-group">
+                                <label for="cfg-playersHeaderSubtitle">Sous-titre page Joueurs</label>
+                                <input type="text" id="cfg-playersHeaderSubtitle">
+                            </div>
+                            <div class="form-group">
+                                <label for="cfg-servicesHeaderTitle">Titre page Services</label>
+                                <input type="text" id="cfg-servicesHeaderTitle">
+                            </div>
+                            <div class="form-group">
+                                <label for="cfg-servicesHeaderSubtitle">Sous-titre page Services</label>
+                                <input type="text" id="cfg-servicesHeaderSubtitle">
+                            </div>
+                            <div class="form-group">
+                                <label for="cfg-contactHeaderTitle">Titre page Contact</label>
+                                <input type="text" id="cfg-contactHeaderTitle">
+                            </div>
+                            <div class="form-group">
+                                <label for="cfg-contactHeaderSubtitle">Sous-titre page Contact</label>
+                                <input type="text" id="cfg-contactHeaderSubtitle">
+                            </div>
+                            <div class="form-group">
+                                <label for="cfg-newsHeaderTitle">Titre page Actualités</label>
+                                <input type="text" id="cfg-newsHeaderTitle">
+                            </div>
+                            <div class="form-group">
+                                <label for="cfg-newsHeaderSubtitle">Sous-titre page Actualités</label>
+                                <input type="text" id="cfg-newsHeaderSubtitle">
+                            </div>
+                            <div class="form-group">
+                                <label for="cfg-agentHeaderTitle">Titre page Agence</label>
+                                <input type="text" id="cfg-agentHeaderTitle">
+                            </div>
+                            <div class="form-group">
+                                <label for="cfg-agentHeaderSubtitle">Sous-titre page Agence</label>
+                                <input type="text" id="cfg-agentHeaderSubtitle">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Section 9: Informations légales -->
+                    <div style="background: #f8fafc; padding: 25px; border-radius: 15px; margin-bottom: 30px; border: 1px solid #e2e8f0;">
+                        <h3 style="color: var(--primary-color); font-size: 1.2rem; margin-bottom: 15px;"><i class="fa-solid fa-file-contract" style="color: var(--secondary-color);"></i> Informations Légales</h3>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;">
+                            <div class="form-group">
+                                <label for="cfg-rccm">RCCM</label>
+                                <input type="text" id="cfg-rccm">
+                            </div>
+                            <div class="form-group">
+                                <label for="cfg-ifu">IFU</label>
+                                <input type="text" id="cfg-ifu">
+                            </div>
+                        </div>
+                    </div>
+
                     <div style="display: flex; gap: 15px; flex-wrap: wrap;">
                         <button type="submit" class="btn btn-primary" style="flex: 1; padding: 16px; font-size: 1.15rem;"><i class="fa-solid fa-floppy-disk"></i> Enregistrer les Modifications</button>
                         <button type="button" id="cms-export-btn" class="btn" style="padding: 16px; background: var(--primary-color); color: white;"><i class="fa-solid fa-download"></i> Exporter</button>
@@ -448,15 +538,288 @@
                 </div>
             </div>
 
+            <!-- ==========================================
+                 TAB 3: GESTION DES JOUEURS
+                 ========================================== -->
+            <div id="tab-players" class="admin-card" style="display: none;">
+                <h2 style="color: var(--primary-color); margin-bottom: 10px;"><i class="fa-solid fa-users" style="color: var(--secondary-color);"></i> Gestion des Joueurs</h2>
+                <p style="color: #64748b; margin-bottom: 25px;">Ajoutez, modifiez ou supprimez les profils affichés sur la page Joueurs du site.</p>
+
+                <!-- Liste des joueurs -->
+                <div style="margin-bottom: 40px; background: #f8fafc; padding: 25px; border-radius: 16px; border: 1px solid #e2e8f0;">
+                    <h3 style="color: var(--primary-color); margin-bottom: 15px;"><i class="fa-solid fa-list-check" style="color: var(--secondary-color);"></i> Joueurs en ligne</h3>
+                    <div id="admin-players-list"></div>
+                </div>
+
+                <hr style="margin: 30px 0; border-color: #e2e8f0;">
+
+                <!-- Formulaire joueur -->
+                <h2 id="player-form-title" style="color: var(--primary-color); margin-bottom: 25px;"><i class="fa-solid fa-user-plus" style="color: var(--secondary-color);"></i> Ajouter un Joueur</h2>
+                <form id="player-form" class="admin-form">
+                    <input type="hidden" id="editing-player-id" value="">
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                        <div class="form-group">
+                            <label for="pl-name">Nom complet *</label>
+                            <input type="text" id="pl-name" placeholder="Ex: Cyriaque Irié" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="pl-position">Poste</label>
+                            <input type="text" id="pl-position" placeholder="Ex: Ailier / Attaquant">
+                        </div>
+                        <div class="form-group">
+                            <label for="pl-age">Âge</label>
+                            <input type="text" id="pl-age" placeholder="Ex: 21 ans">
+                        </div>
+                        <div class="form-group">
+                            <label for="pl-club">Club actuel</label>
+                            <input type="text" id="pl-club" placeholder="Ex: SC Fribourg (Bundesliga)">
+                        </div>
+                        <div class="form-group">
+                            <label for="pl-badge">Badge (ex: INTERNATIONAL, NOUVEAU)</label>
+                            <input type="text" id="pl-badge" placeholder="Ex: INTERNATIONAL">
+                        </div>
+                        <div class="form-group">
+                            <label for="pl-badge-color">Couleur du badge</label>
+                            <input type="color" id="pl-badge-color" style="height: 45px; cursor: pointer;">
+                        </div>
+                        <div class="form-group">
+                            <label for="pl-nationality">Nationalité / Origine</label>
+                            <input type="text" id="pl-nationality" placeholder="Ex: International Burkinabé">
+                        </div>
+                        <div class="form-group">
+                            <label for="pl-video-url">Lien vidéo Highlights</label>
+                            <input type="text" id="pl-video-url" placeholder="https://www.youtube.com/...">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label><i class="fa-solid fa-image"></i> Photo du joueur</label>
+                        <div class="upload-zone" onclick="document.getElementById('pl-img-file').click();">
+                            <i class="fa-solid fa-cloud-arrow-up" style="font-size: 1.8rem; color: var(--secondary-color);"></i>
+                            <p style="margin: 5px 0 0; font-size: 0.9rem; font-weight: 600;">Choisir la photo</p>
+                            <input type="file" id="pl-img-file" accept="image/*" style="display: none;">
+                        </div>
+                        <input type="text" id="pl-image" placeholder="Ou URL/chemin de l'image..." style="margin-top: 8px;">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="pl-club-logo">Logo du club (URL) - optionnel</label>
+                        <input type="text" id="pl-club-logo" placeholder="assets/images/dijon.webp">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="pl-extra-lines">Infos supplémentaires (une par ligne)</label>
+                        <textarea id="pl-extra-lines" rows="2" placeholder="Pied Gauche&#10;Académie Afca Burkina"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="pl-bio">Bio / Description</label>
+                        <textarea id="pl-bio" rows="3" placeholder="Explosif et percutant. Révélation à Dijon..."></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="pl-stats-title">Titre du bloc stats/parcours</label>
+                        <input type="text" id="pl-stats-title" placeholder="Ex: Stats Clés :">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="pl-stats-lines">Lignes stats/parcours (une par ligne)</label>
+                        <textarea id="pl-stats-lines" rows="4" placeholder="Dijon (N1) : 26 matchs, 7 buts&#10;Troyes (L2) : 14 matchs, 2 buts"></textarea>
+                    </div>
+
+                    <div style="display: flex; gap: 15px; flex-wrap: wrap;">
+                        <button type="submit" class="btn btn-primary" style="flex: 1; padding: 15px;"><i class="fa-solid fa-floppy-disk"></i> Enregistrer le Joueur</button>
+                        <button type="button" id="cancel-player-edit-btn" class="btn" style="display: none; background: #64748b; color: white; padding: 15px;"><i class="fa-solid fa-xmark"></i> Annuler</button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- ==========================================
+                 TAB 4: GESTION DES SERVICES
+                 ========================================== -->
+            <div id="tab-services" class="admin-card" style="display: none;">
+                <h2 style="color: var(--primary-color); margin-bottom: 10px;"><i class="fa-solid fa-briefcase" style="color: var(--secondary-color);"></i> Gestion des Services</h2>
+                <p style="color: #64748b; margin-bottom: 25px;">Modifiez les services affichés sur la page Services du site.</p>
+
+                <div style="margin-bottom: 40px; background: #f8fafc; padding: 25px; border-radius: 16px; border: 1px solid #e2e8f0;">
+                    <h3 style="color: var(--primary-color); margin-bottom: 15px;"><i class="fa-solid fa-list-check" style="color: var(--secondary-color);"></i> Services en ligne</h3>
+                    <div id="admin-services-list"></div>
+                </div>
+
+                <hr style="margin: 30px 0; border-color: #e2e8f0;">
+
+                <h2 id="service-form-title" style="color: var(--primary-color); margin-bottom: 25px;"><i class="fa-solid fa-plus" style="color: var(--secondary-color);"></i> Ajouter un Service</h2>
+                <form id="service-form" class="admin-form">
+                    <input type="hidden" id="editing-service-id" value="">
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                        <div class="form-group">
+                            <label for="sv-title">Titre du service *</label>
+                            <input type="text" id="sv-title" placeholder="Ex: Gestion de Carrière" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="sv-icon">Icône Font Awesome</label>
+                            <input type="text" id="sv-icon" placeholder="Ex: fa-solid fa-chess-knight">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="sv-description">Description</label>
+                        <textarea id="sv-description" rows="3" placeholder="Décrivez ce service..."></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="sv-points">Points clés (un par ligne)</label>
+                        <textarea id="sv-points" rows="4" placeholder="Planification à court, moyen et long terme&#10;Analyse des opportunités sportives"></textarea>
+                    </div>
+
+                    <div style="display: flex; gap: 15px; flex-wrap: wrap;">
+                        <button type="submit" class="btn btn-primary" style="flex: 1; padding: 15px;"><i class="fa-solid fa-floppy-disk"></i> Enregistrer le Service</button>
+                        <button type="button" id="cancel-service-edit-btn" class="btn" style="display: none; background: #64748b; color: white; padding: 15px;"><i class="fa-solid fa-xmark"></i> Annuler</button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- ==========================================
+                 TAB 5: PAGE AGENCE
+                 ========================================== -->
+            <div id="tab-agent" class="admin-card" style="display: none;">
+                <h2 style="color: var(--primary-color); margin-bottom: 10px;"><i class="fa-solid fa-user-tie" style="color: var(--secondary-color);"></i> Page Agence & Agent</h2>
+                <p style="color: #64748b; margin-bottom: 25px;">Modifiez le contenu de la page L'Agence (présentation, timeline, galerie).</p>
+
+                <form id="agent-form" class="admin-form">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                        <div class="form-group">
+                            <label for="ag-hero-title">Titre du hero</label>
+                            <input type="text" id="ag-hero-title" placeholder="L'Agence & L'Agent">
+                        </div>
+                        <div class="form-group">
+                            <label for="ag-hero-subtitle">Sous-titre du hero</label>
+                            <input type="text" id="ag-hero-subtitle" placeholder="Une expertise reconnue au service de votre réussite.">
+                        </div>
+                        <div class="form-group">
+                            <label for="ag-name">Nom de l'agent</label>
+                            <input type="text" id="ag-name" placeholder="Ibrahim Niang">
+                        </div>
+                        <div class="form-group">
+                            <label for="ag-vision-title">Titre de la vision</label>
+                            <input type="text" id="ag-vision-title" placeholder="Une Vision de Terrain">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label><i class="fa-solid fa-image"></i> Photo de l'agent</label>
+                        <div class="upload-zone" onclick="document.getElementById('ag-img-file').click();">
+                            <i class="fa-solid fa-cloud-arrow-up" style="font-size: 1.8rem; color: var(--secondary-color);"></i>
+                            <p style="margin: 5px 0 0; font-size: 0.9rem; font-weight: 600;">Choisir la photo</p>
+                            <input type="file" id="ag-img-file" accept="image/*" style="display: none;">
+                        </div>
+                        <input type="text" id="ag-image" placeholder="Ou URL/chemin de l'image..." style="margin-top: 8px;">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="ag-intro">Texte d'introduction</label>
+                        <textarea id="ag-intro" rows="4" placeholder="Fondée par Ibrahim Niang..."></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="ag-vision-text">Texte de la vision</label>
+                        <textarea id="ag-vision-text" rows="4" placeholder="Passé par de nombreux clubs..."></textarea>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 20px;">
+                        <div class="form-group">
+                            <label for="ag-stat1-num">Stat 1 - Nombre</label>
+                            <input type="text" id="ag-stat1-num" placeholder="10+">
+                        </div>
+                        <div class="form-group">
+                            <label for="ag-stat1-label">Stat 1 - Libellé</label>
+                            <input type="text" id="ag-stat1-label" placeholder="Clubs fréquentés">
+                        </div>
+                        <div class="form-group">
+                            <label for="ag-stat2-num">Stat 2 - Nombre</label>
+                            <input type="text" id="ag-stat2-num" placeholder="FIFA">
+                        </div>
+                        <div class="form-group">
+                            <label for="ag-stat2-label">Stat 2 - Libellé</label>
+                            <input type="text" id="ag-stat2-label" placeholder="Agent Licencié">
+                        </div>
+                    </div>
+
+                    <h3 style="color: var(--primary-color); margin: 30px 0 15px;"><i class="fa-solid fa-timeline" style="color: var(--secondary-color);"></i> Timeline (Parcours)</h3>
+                    <div id="agent-timeline-container">
+                        <!-- Timeline items rendered dynamically -->
+                    </div>
+                    <button type="button" id="add-timeline-btn" class="btn" style="background: var(--primary-color); color: white; margin-bottom: 15px;"><i class="fa-solid fa-plus"></i> Ajouter une étape</button>
+
+                    <h3 style="color: var(--primary-color); margin: 30px 0 15px;"><i class="fa-solid fa-images" style="color: var(--secondary-color);"></i> Galerie « En Action »</h3>
+                    <div class="form-group">
+                        <label><i class="fa-solid fa-image"></i> Photos de la galerie (ajoutez plusieurs)</label>
+                        <div class="upload-zone" onclick="document.getElementById('ag-gallery-files').click();">
+                            <i class="fa-solid fa-cloud-arrow-up" style="font-size: 1.8rem; color: var(--secondary-color);"></i>
+                            <p style="margin: 5px 0 0; font-size: 0.95rem; font-weight: 600;">Cliquez pour Téléverser des Photos</p>
+                            <input type="file" id="ag-gallery-files" accept="image/*" multiple style="display: none;">
+                        </div>
+                        <div style="display: flex; gap: 10px; margin-top: 8px;">
+                            <input type="text" id="ag-gallery-url-add" placeholder="Ou entrez l'URL d'une photo à ajouter..." style="flex: 1;">
+                            <button type="button" id="add-gallery-url-btn" class="btn" style="background: var(--primary-color); color: white; padding: 0 18px; font-weight: 600;"><i class="fa-solid fa-plus"></i> Ajouter</button>
+                        </div>
+                        <div id="agent-gallery-container" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 10px; margin-top: 15px;">
+                            <!-- Gallery thumbnails rendered dynamically -->
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary" style="width: 100%; padding: 15px; font-size: 1.1rem;"><i class="fa-solid fa-floppy-disk"></i> Enregistrer la Page Agence</button>
+                </form>
+            </div>
+
+            <!-- ==========================================
+                 TAB 6: SAUVEGARDE GLOBALE
+                 ========================================== -->
+            <div id="tab-backup" class="admin-card" style="display: none;">
+                <h2 style="color: var(--primary-color); margin-bottom: 10px;"><i class="fa-solid fa-database" style="color: var(--secondary-color);"></i> Sauvegarde Globale du Site</h2>
+                <p style="color: #64748b; margin-bottom: 25px;">Exportez ou importez <strong>toutes</strong> les données du site (articles, joueurs, services, page agence et configuration) en un seul fichier JSON.</p>
+
+                <div style="display: flex; gap: 15px; flex-wrap: wrap; margin-bottom: 25px;">
+                    <button type="button" id="backup-export-btn" class="btn btn-primary" style="flex: 1; padding: 16px; font-size: 1.05rem;"><i class="fa-solid fa-download"></i> Exporter TOUT le site</button>
+                    <button type="button" id="backup-import-btn" class="btn" style="flex: 1; padding: 16px; background: var(--secondary-color); color: white; font-size: 1.05rem;"><i class="fa-solid fa-upload"></i> Importer une sauvegarde</button>
+                    <input type="file" id="backup-import-file" accept=".json,application/json" style="display: none;">
+                </div>
+
+                <div style="background: #f8fafc; padding: 20px; border-radius: 12px; border: 1px solid #e2e8f0; font-size: 0.9rem; color: #64748b;">
+                    <i class="fa-solid fa-circle-info" style="color: var(--secondary-color);"></i>
+                    <strong>Comment publier pour tous les visiteurs ?</strong> Après avoir personnalisé le site dans ce navigateur, exportez la sauvegarde puis <em>importez-la sur l'ordinateur de publication</em> (ou le navigateur utilisé pour mettre à jour le site) afin que les changements soient visibles par tout le monde. Les données sont stockées dans le navigateur (localStorage).
+                </div>
+            </div>
+
         </div>
 
     </div>
 
     <script src="site-config.js?v=2.0"></script>
+    <script src="news-data.js"></script>
+    <script src="site-data.js"></script>
     <script src="script.js?v=2.1"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            const passcodeVal = "NICONSEILS2026";
+            // Authentification sécurisée : le mot de passe n'est plus stocké en clair
+            // (hash SHA-256 du code d'accès)
+            const PASSCODE_HASH = "cea83ce05df91056a6f2fc8ff2bd12f8936f92e84517b30e67a2e1495d093e28";
+
+            async function sha256(text) {
+                if (window.crypto && crypto.subtle) {
+                    const data = new TextEncoder().encode(text);
+                    const digest = await crypto.subtle.digest('SHA-256', data);
+                    return Array.from(new Uint8Array(digest)).map(b => b.toString(16).padStart(2, '0')).join('');
+                }
+                // Fallback simple (navigateur très ancien) - déprécié
+                let hash = 0;
+                for (let i = 0; i < text.length; i++) {
+                    hash = ((hash << 5) - hash + text.charCodeAt(i)) | 0;
+                }
+                return 'fallback-' + Math.abs(hash).toString(16);
+            }
             const loginBtn = document.getElementById('admin-login-btn');
             const passInput = document.getElementById('admin-passcode');
             const authSec = document.getElementById('admin-auth-sec');
@@ -470,13 +833,28 @@
                 loadAdminArticlesList();
             }
 
-            loginBtn.addEventListener('click', () => {
-                if (passInput.value.trim() === passcodeVal) {
+            loginBtn.addEventListener('click', async () => {
+                const errorEl = document.getElementById('admin-error');
+                let inputHash = '';
+                try {
+                    inputHash = await sha256(passInput.value.trim());
+                } catch (err) {
+                    console.error('Erreur de hachage du code d\'accès:', err);
+                    errorEl.textContent = 'Connexion sécurisée requise (HTTPS ou localhost).';
+                    errorEl.style.display = 'block';
+                    return;
+                }
+                if (inputHash === PASSCODE_HASH) {
                     sessionStorage.setItem('admin_logged', 'true');
                     authSec.style.display = 'none';
                     adminPanel.style.display = 'block';
                     tabControls.style.display = 'flex';
                     loadAdminArticlesList();
+                    setTimeout(() => {
+                        if (typeof window.loadAdminPlayersList === 'function') window.loadAdminPlayersList();
+                        if (typeof window.loadAdminServicesList === 'function') window.loadAdminServicesList();
+                        if (typeof loadAgentForm === 'function') loadAgentForm();
+                    }, 200);
                 } else {
                     document.getElementById('admin-error').style.display = 'block';
                 }
@@ -491,8 +869,9 @@
                     btn.classList.add('active');
 
                     const targetTab = btn.dataset.tab;
-                    document.getElementById('tab-articles').style.display = targetTab === 'tab-articles' ? 'block' : 'none';
-                    document.getElementById('tab-customization').style.display = targetTab === 'tab-customization' ? 'block' : 'none';
+                    document.querySelectorAll('.admin-card').forEach(p => { p.style.display = 'none'; });
+                    const panel = document.getElementById(targetTab);
+                    if (panel) panel.style.display = 'block';
                 });
             });
 
@@ -578,41 +957,7 @@
 
                 listContainer.innerHTML = '<p style="color:#64748b;"><i class="fa-solid fa-spinner fa-spin"></i> Chargement des articles...</p>';
 
-                const defaultArticles = [
-                    {
-                        "id": "joel-bayala-transfert-dijon-fco",
-                        "title": "Mercato : Le milieu burkinabè Bayala Joël s’engage officiellement au Dijon FCO grâce à N.I Conseils Managements",
-                        "date": "2026-07-23",
-                        "dateFormatted": "23 Juillet 2026",
-                        "category": "Transfert",
-                        "player": "Bayala Joël",
-                        "images": ["assets/images/mercato_dijon_1.webp"],
-                        "summary": "À 19 ans, le prodige du milieu de terrain burkinabè Bayala Joël quitte le Sporting Club de Tenakourou pour signer son contrat avec le Dijon FCO.",
-                        "content": "<p>C'est une grande étape pour le football burkinabè. Le jeune milieu de terrain de 19 ans, <strong>Bayala Joël</strong>, s'est officiellement engagé en faveur du club français du <strong>Dijon FCO</strong>.</p>"
-                    },
-                    {
-                        "id": "kelvin-kwasi-adamtay-premier-contrat-pro-dijon",
-                        "title": "Premier contrat pro au Dijon FCO pour l’attaquant Kelvin Kwasi Adamtay supervisé par Ibrahim Niang",
-                        "date": "2026-07-23",
-                        "dateFormatted": "23 Juillet 2026",
-                        "category": "Transfert",
-                        "player": "Kelvin Kwasi Adamtay",
-                        "images": ["assets/images/dijon.png"],
-                        "summary": "Formé à l’Académie Afca Burkina, le jeune avant-centre polyvalent de 18 ans Kelvin Kwasi Adamtay signe son premier contrat professionnel au Dijon FCO.",
-                        "content": "<p>Le marché des transferts s'emballe pour l'agence <strong>N.I Conseils Managements</strong> ! L'avant-centre de 18 ans <strong>Kelvin Kwasi Adamtay</strong> signe son premier contrat pro.</p>"
-                    },
-                    {
-                        "id": "cyriaque-irie-transfert-fribourg",
-                        "title": "Cyriaque Irié rejoint le SC Fribourg en Bundesliga",
-                        "date": "2026-07-20",
-                        "dateFormatted": "20 Juillet 2026",
-                        "category": "Transfert",
-                        "player": "Cyriaque Irié",
-                        "images": ["assets/images/cyriaque.png"],
-                        "summary": "Après une saison étincelante à Dijon puis Troyes, le jeune ailier international burkinabé s'engage avec le SC Fribourg en Bundesliga.",
-                        "content": "<p>N.I. CONSEILS-MANAGEMENTS annonce la signature officielle de <strong>Cyriaque Irié</strong> au <strong>SC Fribourg</strong>.</p>"
-                    }
-                ];
+                const defaultArticles = (window.NewsData && window.NewsData.defaultBackupArticles) ? window.NewsData.defaultBackupArticles : [];
 
                 let jsonArticles = [];
                 try {
@@ -716,6 +1061,9 @@
                 document.getElementById('art-category').value = art.category;
                 document.getElementById('art-player').value = art.player || '';
                 document.getElementById('art-summary').value = art.summary || '';
+                document.getElementById('art-date').value = art.date || '';
+                document.getElementById('art-author').value = art.author || 'Ibrahim Niang';
+                document.getElementById('art-tags').value = (art.tags || []).join(', ');
 
                 const tempDiv = document.createElement('div');
                 tempDiv.innerHTML = art.content || '';
@@ -788,11 +1136,15 @@
             function initConfigForm() {
                 const cfg = (typeof niCmsConfig !== 'undefined') ? niCmsConfig.config : {};
                 const fields = [
-                    'agencyName','agencyNameShort','footerText','logo','heroCover','agentCover',
-                    'primaryColor','secondaryColor','fontFamily','fontUrl',
+                    'agencyName','agencyNameShort','footerText','logo','heroCover','agentCover','favicon',
+                    'primaryColor','secondaryColor','accentColor','fontFamily','fontUrl',
                     'heroTitle','heroSubtitle','heroDescription',
                     'phone','phone2','whatsapp','email','address',
-                    'facebook','instagram','twitter','metaDescription'
+                    'facebook','instagram','twitter','metaDescription',
+                    'rccm','ifu',
+                    'playersHeaderTitle','playersHeaderSubtitle','servicesHeaderTitle','servicesHeaderSubtitle',
+                    'contactHeaderTitle','contactHeaderSubtitle','newsHeaderTitle','newsHeaderSubtitle',
+                    'agentHeaderTitle','agentHeaderSubtitle'
                 ];
 
                 fields.forEach(key => {
@@ -855,10 +1207,12 @@
                     logo: getVal('cfg-logo-url') || getVal('cfg-logo'),
                     heroCover: getVal('cfg-cover-url') || getVal('cfg-cover'),
                     agentCover: getVal('cfg-agentCover-url') || getVal('cfg-agentCover'),
+                    favicon: getVal('cfg-favicon'),
                     fontFamily: getVal('cfg-fontFamily'),
                     fontUrl: getVal('cfg-fontUrl'),
                     primaryColor: getVal('cfg-primaryColor'),
                     secondaryColor: getVal('cfg-secondaryColor'),
+                    accentColor: getVal('cfg-accentColor'),
                     heroTitle: getVal('cfg-heroTitle'),
                     heroSubtitle: getVal('cfg-heroSubtitle'),
                     heroDescription: getVal('cfg-heroDescription'),
@@ -870,7 +1224,19 @@
                     facebook: getVal('cfg-facebook'),
                     instagram: getVal('cfg-instagram'),
                     twitter: getVal('cfg-twitter'),
-                    metaDescription: getVal('cfg-metaDescription')
+                    metaDescription: getVal('cfg-metaDescription'),
+                    rccm: getVal('cfg-rccm'),
+                    ifu: getVal('cfg-ifu'),
+                    playersHeaderTitle: getVal('cfg-playersHeaderTitle'),
+                    playersHeaderSubtitle: getVal('cfg-playersHeaderSubtitle'),
+                    servicesHeaderTitle: getVal('cfg-servicesHeaderTitle'),
+                    servicesHeaderSubtitle: getVal('cfg-servicesHeaderSubtitle'),
+                    contactHeaderTitle: getVal('cfg-contactHeaderTitle'),
+                    contactHeaderSubtitle: getVal('cfg-contactHeaderSubtitle'),
+                    newsHeaderTitle: getVal('cfg-newsHeaderTitle'),
+                    newsHeaderSubtitle: getVal('cfg-newsHeaderSubtitle'),
+                    agentHeaderTitle: getVal('cfg-agentHeaderTitle'),
+                    agentHeaderSubtitle: getVal('cfg-agentHeaderSubtitle')
                 };
 
                 // Clean empty values so defaults remain
@@ -956,9 +1322,13 @@
                 const contentHtml = rawContent.includes('<p>') ? rawContent : rawContent.split('\n\n').map(p => `<p>${p.replace(/\n/g, '<br>')}</p>`).join('');
                 
                 const today = new Date();
-                const dateIso = today.toISOString().split('T')[0];
-                const dateFr = today.toLocaleDateString('fr-FR', { day: '2-digit', month: 'long', year: 'numeric' });
+                const chosenDate = document.getElementById('art-date').value;
+                const dateIso = chosenDate || today.toISOString().split('T')[0];
+                const dateObj = new Date(dateIso + 'T12:00:00');
+                const dateFr = isNaN(dateObj) ? today.toLocaleDateString('fr-FR', { day: '2-digit', month: 'long', year: 'numeric' }) : dateObj.toLocaleDateString('fr-FR', { day: '2-digit', month: 'long', year: 'numeric' });
                 const idSlug = editId ? editId : title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '') + '-' + Date.now().toString().slice(-4);
+                const chosenAuthor = document.getElementById('art-author').value.trim() || 'Ibrahim Niang';
+                const chosenTags = document.getElementById('art-tags').value.split(',').map(t => t.trim()).filter(Boolean);
 
                 const articleObj = {
                     id: idSlug,
@@ -966,14 +1336,14 @@
                     date: dateIso,
                     dateFormatted: dateFr,
                     category: category,
-                    author: "Ibrahim Niang",
+                    author: chosenAuthor,
                     player: player,
                     image: currentArticlePhotos[0], // Image principale
                     images: [...currentArticlePhotos], // Galerie multi-photos
                     video: finalVid,
                     summary: summary,
                     content: contentHtml,
-                    tags: [player, category, "N.I. Conseils"]
+                    tags: chosenTags.length ? chosenTags : [player, category, "N.I. Conseils"]
                 };
 
                 let customArticles = JSON.parse(localStorage.getItem('custom_news_articles') || '[]');
@@ -995,6 +1365,437 @@
                 resetForm();
                 loadAdminArticlesList();
             });
+
+            // ==========================================
+            // TAB 3 : GESTION DES JOUEURS (CRUD)
+            // ==========================================
+            window.loadAdminPlayersList = function () {
+                const container = document.getElementById('admin-players-list');
+                if (!container || typeof window.SiteData === 'undefined') return;
+
+                const players = window.SiteData.getPlayers();
+                container.innerHTML = '';
+
+                if (!players.length) {
+                    container.innerHTML = '<p style="color:#64748b;">Aucun joueur pour le moment.</p>';
+                    return;
+                }
+
+                players.forEach((p, idx) => {
+                    const item = document.createElement('div');
+                    item.className = 'article-admin-item';
+                    item.innerHTML = `
+                        <div class="article-admin-info">
+                            <img src="${p.image || 'assets/images/player1.webp'}" class="article-admin-thumb" alt="">
+                            <div>
+                                <h4 style="margin:0; color:var(--primary-color); font-size:1.05rem;">${p.name}</h4>
+                                <span style="font-size:0.8rem; color:#64748b;">${p.position || ''} | ${p.age || ''} | ${p.club || ''}</span>
+                            </div>
+                        </div>
+                        <div style="display:flex; gap:10px;">
+                            <button class="btn edit-player-btn" style="background:#3b82f6; color:white; padding:8px 15px; font-size:0.85rem;" data-index="${idx}"><i class="fa-solid fa-pen-to-square"></i> Modifier</button>
+                            <button class="btn del-player-btn" style="background:#ef4444; color:white; padding:8px 15px; font-size:0.85rem;" data-index="${idx}"><i class="fa-solid fa-trash"></i> Supprimer</button>
+                        </div>
+                    `;
+
+                    item.querySelector('.edit-player-btn').addEventListener('click', () => editPlayer(idx));
+                    item.querySelector('.del-player-btn').addEventListener('click', () => deletePlayer(idx, p.name));
+
+                    container.appendChild(item);
+                });
+            };
+
+            function deletePlayer(idx, name) {
+                if (confirm(`Supprimer définitivement le joueur :\n"${name}" ?`)) {
+                    const players = window.SiteData.getPlayers();
+                    players.splice(idx, 1);
+                    window.SiteData.savePlayers(players);
+                    alert('Joueur supprimé du site !');
+                    loadAdminPlayersList();
+                }
+            }
+
+            function editPlayer(idx) {
+                const p = window.SiteData.getPlayers()[idx];
+                if (!p) return;
+
+                document.getElementById('editing-player-id').value = p.id || '';
+                document.getElementById('pl-name').value = p.name || '';
+                document.getElementById('pl-position').value = p.position || '';
+                document.getElementById('pl-age').value = p.age || '';
+                document.getElementById('pl-club').value = p.club || '';
+                document.getElementById('pl-badge').value = p.badge || '';
+                document.getElementById('pl-badge-color').value = p.badgeColor || '#d97706';
+                document.getElementById('pl-nationality').value = p.nationality || '';
+                document.getElementById('pl-video-url').value = p.videoUrl || '';
+                document.getElementById('pl-image').value = p.image || '';
+                document.getElementById('pl-club-logo').value = p.clubLogo || '';
+                document.getElementById('pl-extra-lines').value = (p.extraLines || []).join('\n');
+                document.getElementById('pl-bio').value = p.bio || '';
+                document.getElementById('pl-stats-title').value = p.statsTitle || '';
+                document.getElementById('pl-stats-lines').value = (p.statsLines || []).join('\n');
+
+                document.getElementById('player-form-title').innerHTML = `<i class="fa-solid fa-pen-to-square" style="color:var(--secondary-color);"></i> Modification du joueur`;
+                document.getElementById('cancel-player-edit-btn').style.display = 'inline-block';
+                window.scrollTo({ top: document.getElementById('player-form').offsetTop - 100, behavior: 'smooth' });
+            }
+
+            function resetPlayerForm() {
+                document.getElementById('editing-player-id').value = '';
+                document.getElementById('player-form').reset();
+                document.getElementById('pl-badge-color').value = '#d97706';
+                document.getElementById('player-form-title').innerHTML = `<i class="fa-solid fa-user-plus" style="color:var(--secondary-color);"></i> Ajouter un Joueur`;
+                document.getElementById('cancel-player-edit-btn').style.display = 'none';
+            }
+
+            // Upload photo joueur
+            document.getElementById('pl-img-file').addEventListener('change', (e) => {
+                const file = e.target.files[0];
+                if (!file) return;
+                const reader = new FileReader();
+                reader.onload = (evt) => {
+                    document.getElementById('pl-image').value = evt.target.result;
+                };
+                reader.readAsDataURL(file);
+            });
+
+            document.getElementById('player-form').addEventListener('submit', (e) => {
+                e.preventDefault();
+
+                const editId = document.getElementById('editing-player-id').value;
+                const name = document.getElementById('pl-name').value.trim();
+                if (!name) {
+                    alert('Veuillez saisir le nom du joueur.');
+                    return;
+                }
+
+                const idSlug = editId || name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '') + '-' + Date.now().toString().slice(-4);
+
+                const playerObj = {
+                    id: idSlug,
+                    name: name,
+                    position: document.getElementById('pl-position').value.trim(),
+                    age: document.getElementById('pl-age').value.trim(),
+                    club: document.getElementById('pl-club').value.trim(),
+                    badge: document.getElementById('pl-badge').value.trim(),
+                    badgeColor: document.getElementById('pl-badge-color').value,
+                    nationality: document.getElementById('pl-nationality').value.trim(),
+                    videoUrl: document.getElementById('pl-video-url').value.trim(),
+                    image: document.getElementById('pl-image').value.trim() || 'assets/images/player1.webp',
+                    clubLogo: document.getElementById('pl-club-logo').value.trim(),
+                    extraLines: document.getElementById('pl-extra-lines').value.split('\n').map(s => s.trim()).filter(Boolean),
+                    bio: document.getElementById('pl-bio').value.trim(),
+                    statsTitle: document.getElementById('pl-stats-title').value.trim() || 'Stats Clés :',
+                    statsLines: document.getElementById('pl-stats-lines').value.split('\n').map(s => s.trim()).filter(Boolean)
+                };
+
+                const players = window.SiteData.getPlayers();
+                const existing = players.findIndex(p => p.id === idSlug);
+                if (editId && existing !== -1) {
+                    players[existing] = playerObj;
+                } else {
+                    players.unshift(playerObj);
+                }
+                window.SiteData.savePlayers(players);
+
+                alert(editId ? '🎉 Joueur modifié avec succès !' : '🎉 Joueur ajouté avec succès !');
+                resetPlayerForm();
+                loadAdminPlayersList();
+            });
+
+            document.getElementById('cancel-player-edit-btn').addEventListener('click', resetPlayerForm);
+
+            // ==========================================
+            // TAB 4 : GESTION DES SERVICES (CRUD)
+            // ==========================================
+            window.loadAdminServicesList = function () {
+                const container = document.getElementById('admin-services-list');
+                if (!container || typeof window.SiteData === 'undefined') return;
+
+                const services = window.SiteData.getServices();
+                container.innerHTML = '';
+
+                if (!services.length) {
+                    container.innerHTML = '<p style="color:#64748b;">Aucun service pour le moment.</p>';
+                    return;
+                }
+
+                services.forEach((s, idx) => {
+                    const item = document.createElement('div');
+                    item.className = 'article-admin-item';
+                    item.innerHTML = `
+                        <div class="article-admin-info">
+                            <i class="${s.icon || 'fa-solid fa-star'}" style="font-size:1.8rem; color:var(--secondary-color); width:60px; text-align:center;"></i>
+                            <div>
+                                <h4 style="margin:0; color:var(--primary-color); font-size:1.05rem;">${s.title}</h4>
+                                <span style="font-size:0.8rem; color:#64748b;">${(s.points || []).length} point(s)</span>
+                            </div>
+                        </div>
+                        <div style="display:flex; gap:10px;">
+                            <button class="btn edit-service-btn" style="background:#3b82f6; color:white; padding:8px 15px; font-size:0.85rem;" data-index="${idx}"><i class="fa-solid fa-pen-to-square"></i> Modifier</button>
+                            <button class="btn del-service-btn" style="background:#ef4444; color:white; padding:8px 15px; font-size:0.85rem;" data-index="${idx}"><i class="fa-solid fa-trash"></i> Supprimer</button>
+                        </div>
+                    `;
+
+                    item.querySelector('.edit-service-btn').addEventListener('click', () => editService(idx));
+                    item.querySelector('.del-service-btn').addEventListener('click', () => deleteService(idx, s.title));
+
+                    container.appendChild(item);
+                });
+            };
+
+            function deleteService(idx, title) {
+                if (confirm(`Supprimer définitivement le service :\n"${title}" ?`)) {
+                    const services = window.SiteData.getServices();
+                    services.splice(idx, 1);
+                    window.SiteData.saveServices(services);
+                    alert('Service supprimé du site !');
+                    loadAdminServicesList();
+                }
+            }
+
+            function editService(idx) {
+                const s = window.SiteData.getServices()[idx];
+                if (!s) return;
+
+                document.getElementById('editing-service-id').value = s.id || '';
+                document.getElementById('sv-title').value = s.title || '';
+                document.getElementById('sv-icon').value = s.icon || '';
+                document.getElementById('sv-description').value = s.description || '';
+                document.getElementById('sv-points').value = (s.points || []).join('\n');
+
+                document.getElementById('service-form-title').innerHTML = `<i class="fa-solid fa-pen-to-square" style="color:var(--secondary-color);"></i> Modification du service`;
+                document.getElementById('cancel-service-edit-btn').style.display = 'inline-block';
+                window.scrollTo({ top: document.getElementById('service-form').offsetTop - 100, behavior: 'smooth' });
+            }
+
+            function resetServiceForm() {
+                document.getElementById('editing-service-id').value = '';
+                document.getElementById('service-form').reset();
+                document.getElementById('service-form-title').innerHTML = `<i class="fa-solid fa-plus" style="color:var(--secondary-color);"></i> Ajouter un Service`;
+                document.getElementById('cancel-service-edit-btn').style.display = 'none';
+            }
+
+            document.getElementById('service-form').addEventListener('submit', (e) => {
+                e.preventDefault();
+
+                const editId = document.getElementById('editing-service-id').value;
+                const title = document.getElementById('sv-title').value.trim();
+                if (!title) {
+                    alert('Veuillez saisir le titre du service.');
+                    return;
+                }
+
+                const idSlug = editId || title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '') + '-' + Date.now().toString().slice(-4);
+
+                const serviceObj = {
+                    id: idSlug,
+                    icon: document.getElementById('sv-icon').value.trim() || 'fa-solid fa-star',
+                    title: title,
+                    description: document.getElementById('sv-description').value.trim(),
+                    points: document.getElementById('sv-points').value.split('\n').map(s => s.trim()).filter(Boolean)
+                };
+
+                const services = window.SiteData.getServices();
+                const existing = services.findIndex(s => s.id === idSlug);
+                if (editId && existing !== -1) {
+                    services[existing] = serviceObj;
+                } else {
+                    services.push(serviceObj);
+                }
+                window.SiteData.saveServices(services);
+
+                alert(editId ? '🎉 Service modifié avec succès !' : '🎉 Service ajouté avec succès !');
+                resetServiceForm();
+                loadAdminServicesList();
+            });
+
+            document.getElementById('cancel-service-edit-btn').addEventListener('click', resetServiceForm);
+
+            // ==========================================
+            // TAB 5 : PAGE AGENCE (formulaire + timeline + galerie)
+            // ==========================================
+            let agentTimelineItems = [];
+            let agentGalleryImages = [];
+
+            function loadAgentForm() {
+                if (typeof window.SiteData === 'undefined') return;
+                const a = window.SiteData.getAgent();
+
+                document.getElementById('ag-hero-title').value = a.heroTitle || '';
+                document.getElementById('ag-hero-subtitle').value = a.heroSubtitle || '';
+                document.getElementById('ag-name').value = a.name || '';
+                document.getElementById('ag-vision-title').value = a.visionTitle || '';
+                document.getElementById('ag-image').value = a.image || '';
+                document.getElementById('ag-intro').value = a.intro || '';
+                document.getElementById('ag-vision-text').value = a.visionText || '';
+                document.getElementById('ag-stat1-num').value = a.stat1Number || '';
+                document.getElementById('ag-stat1-label').value = a.stat1Label || '';
+                document.getElementById('ag-stat2-num').value = a.stat2Number || '';
+                document.getElementById('ag-stat2-label').value = a.stat2Label || '';
+
+                agentTimelineItems = (a.timeline || []).map(i => ({ ...i }));
+                agentGalleryImages = (a.gallery || []).slice();
+
+                renderTimelineItems();
+                renderAgentGallery();
+            }
+
+            function renderTimelineItems() {
+                const container = document.getElementById('agent-timeline-container');
+                container.innerHTML = '';
+
+                agentTimelineItems.forEach((item, idx) => {
+                    const row = document.createElement('div');
+                    row.style.cssText = 'display:flex; gap:10px; align-items:flex-start; margin-bottom:10px; background:#fff; padding:12px; border:1px solid #e2e8f0; border-radius:10px; flex-wrap:wrap;';
+                    row.innerHTML = `
+                        <input type="text" class="tl-date" placeholder="Date / période" value="${item.date || ''}" style="width:130px; padding:8px; border:1px solid #cbd5e1; border-radius:6px;">
+                        <input type="text" class="tl-title" placeholder="Titre de l'étape" value="${item.title || ''}" style="flex:1; min-width:150px; padding:8px; border:1px solid #cbd5e1; border-radius:6px;">
+                        <textarea class="tl-text" placeholder="Description" rows="2" style="width:100%; padding:8px; border:1px solid #cbd5e1; border-radius:6px;">${item.text || ''}</textarea>
+                        <button type="button" class="tl-remove" style="background:#ef4444; color:white; border:none; padding:8px 12px; border-radius:6px; cursor:pointer;"><i class="fa-solid fa-trash"></i> Retirer</button>
+                    `;
+                    row.querySelector('.tl-remove').addEventListener('click', () => {
+                        agentTimelineItems.splice(idx, 1);
+                        renderTimelineItems();
+                    });
+                    container.appendChild(row);
+                });
+            }
+
+            document.getElementById('add-timeline-btn').addEventListener('click', () => {
+                agentTimelineItems.push({ date: '', title: '', text: '' });
+                renderTimelineItems();
+            });
+
+            function renderAgentGallery() {
+                const container = document.getElementById('agent-gallery-container');
+                container.innerHTML = '';
+
+                if (agentGalleryImages.length === 0) {
+                    container.innerHTML = '<p style="grid-column:1/-1; font-size:0.85rem; color:#64748b; font-style:italic;">Aucune photo dans la galerie.</p>';
+                    return;
+                }
+
+                agentGalleryImages.forEach((src, idx) => {
+                    const card = document.createElement('div');
+                    card.style.cssText = 'position:relative; height:110px; border-radius:10px; overflow:hidden; border:2px solid #cbd5e1; background:#000;';
+                    card.innerHTML = `
+                        <img src="${src}" style="width:100%; height:100%; object-fit:cover;" alt="">
+                        <button type="button" class="photo-delete-single-btn" title="Supprimer cette photo"><i class="fa-solid fa-trash"></i></button>
+                    `;
+                    card.querySelector('.photo-delete-single-btn').addEventListener('click', () => {
+                        agentGalleryImages.splice(idx, 1);
+                        renderAgentGallery();
+                    });
+                    container.appendChild(card);
+                });
+            }
+
+            document.getElementById('ag-gallery-files').addEventListener('change', (e) => {
+                const files = Array.from(e.target.files);
+                if (!files.length) return;
+                let loaded = 0;
+                files.forEach(file => {
+                    const reader = new FileReader();
+                    reader.onload = (evt) => {
+                        agentGalleryImages.push(evt.target.result);
+                        loaded++;
+                        if (loaded === files.length) renderAgentGallery();
+                    };
+                    reader.readAsDataURL(file);
+                });
+            });
+
+            document.getElementById('add-gallery-url-btn').addEventListener('click', () => {
+                const input = document.getElementById('ag-gallery-url-add');
+                const val = input.value.trim();
+                if (val) {
+                    agentGalleryImages.push(val);
+                    input.value = '';
+                    renderAgentGallery();
+                }
+            });
+
+            // Upload photo agent
+            document.getElementById('ag-img-file').addEventListener('change', (e) => {
+                const file = e.target.files[0];
+                if (!file) return;
+                const reader = new FileReader();
+                reader.onload = (evt) => {
+                    document.getElementById('ag-image').value = evt.target.result;
+                };
+                reader.readAsDataURL(file);
+            });
+
+            document.getElementById('agent-form').addEventListener('submit', (e) => {
+                e.preventDefault();
+
+                const timeline = [];
+                document.querySelectorAll('#agent-timeline-container > div').forEach(row => {
+                    timeline.push({
+                        date: row.querySelector('.tl-date').value.trim(),
+                        title: row.querySelector('.tl-title').value.trim(),
+                        text: row.querySelector('.tl-text').value.trim()
+                    });
+                });
+
+                const agentObj = {
+                    heroTitle: document.getElementById('ag-hero-title').value.trim(),
+                    heroSubtitle: document.getElementById('ag-hero-subtitle').value.trim(),
+                    name: document.getElementById('ag-name').value.trim(),
+                    image: document.getElementById('ag-image').value.trim(),
+                    intro: document.getElementById('ag-intro').value.trim(),
+                    visionTitle: document.getElementById('ag-vision-title').value.trim(),
+                    visionText: document.getElementById('ag-vision-text').value.trim(),
+                    stat1Number: document.getElementById('ag-stat1-num').value.trim(),
+                    stat1Label: document.getElementById('ag-stat1-label').value.trim(),
+                    stat2Number: document.getElementById('ag-stat2-num').value.trim(),
+                    stat2Label: document.getElementById('ag-stat2-label').value.trim(),
+                    timeline: timeline,
+                    gallery: agentGalleryImages.slice()
+                };
+
+                window.SiteData.saveAgent(agentObj);
+                alert('🎉 Page Agence enregistrée avec succès !');
+            });
+
+            // ==========================================
+            // TAB 6 : SAUVEGARDE GLOBALE
+            // ==========================================
+            document.getElementById('backup-export-btn').addEventListener('click', () => {
+                if (typeof window.SiteData === 'undefined') return;
+                window.SiteData.downloadAll();
+            });
+
+            document.getElementById('backup-import-btn').addEventListener('click', () => {
+                document.getElementById('backup-import-file').click();
+            });
+
+            document.getElementById('backup-import-file').addEventListener('change', (e) => {
+                const file = e.target.files[0];
+                if (!file) return;
+                const reader = new FileReader();
+                reader.onload = (evt) => {
+                    try {
+                        const parsed = JSON.parse(evt.target.result);
+                        window.SiteData.importAll(parsed);
+                        alert('✅ Sauvegarde importée avec succès. La page va se recharger.');
+                        window.location.reload();
+                    } catch (err) {
+                        alert('Fichier JSON invalide : ' + err.message);
+                    }
+                };
+                reader.readAsText(file);
+            });
+
+            // Initialisation des listes au chargement si déjà connecté
+            if (sessionStorage.getItem('admin_logged') === 'true') {
+                setTimeout(() => {
+                    if (typeof window.loadAdminPlayersList === 'function') window.loadAdminPlayersList();
+                    if (typeof window.loadAdminServicesList === 'function') window.loadAdminServicesList();
+                    if (typeof loadAgentForm === 'function') loadAgentForm();
+                }, 300);
+            }
         });
     </script>
 </body>

@@ -6,12 +6,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>N.I. CONSEILS-MANAGEMENTS | Contact</title>
     <meta name="description" content="Contactez N.I. CONSEILS-MANAGEMENTS pour discuter de votre carrière de joueur de football, transferts et accompagnement personnalisé.">
+    <link rel="icon" type="image/png" href="assets/images/logo.png">
     <link rel="canonical" href="https://ni-conseils-managements.netlify.app/contact.html">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://ni-conseils-managements.netlify.app/contact.html">
     <meta property="og:title" content="N.I. CONSEILS-MANAGEMENTS | Contact">
     <meta property="og:description" content="Contactez N.I. CONSEILS-MANAGEMENTS pour discuter de votre carrière de joueur de football, transferts et accompagnement personnalisé.">
-    <meta property="og:image" content="https://ni-conseils-managements.netlify.app/assets/images/logo.png">
+    <meta property="og:image" content="https://ni-conseils-managements.netlify.app/assets/images/hero.webp">
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="N.I. CONSEILS-MANAGEMENTS | Contact">
+    <meta name="twitter:description" content="Contactez N.I. CONSEILS-MANAGEMENTS pour votre carrière de footballeur.">
+    <meta name="twitter:image" content="https://ni-conseils-managements.netlify.app/assets/images/hero.webp">
     <!-- Security Headers -->
     <meta http-equiv="Content-Security-Policy"
         content="default-src 'self'; script-src 'self' https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://fonts.googleapis.com; font-src 'self' https://cdnjs.cloudflare.com https://fonts.gstatic.com; img-src 'self' data: blob: https:; connect-src 'self';">
@@ -167,8 +173,8 @@
 
     <header class="contact-header">
         <div class="container">
-            <h1 class="js-reveal">Contactez-nous</h1>
-            <p class="js-reveal stagger-1">Prêt à passer au niveau supérieur ?</p>
+            <h1 class="js-reveal" data-cms="contactHeaderTitle">Contactez-nous</h1>
+            <p class="js-reveal stagger-1" data-cms="contactHeaderSubtitle">Prêt à passer au niveau supérieur ?</p>
         </div>
     </header>
 
@@ -185,8 +191,9 @@
                         <i class="fa-solid fa-location-dot"></i>
                         <div>
                             <h4>Adresse</h4>
-                            <p>OUAGADOUGOU 02 BP 6041 OUAGA 02<br>LOT: 25 section : 761, PARCELLE : 02, SECTEUR :
-                                34<br>BURKINA FASO</p>
+                            <p data-cms-lines="address">OUAGADOUGOU 02 BP 6041 OUAGA 02
+LOT: 25 section : 761, PARCELLE : 02, SECTEUR : 34
+BURKINA FASO</p>
                         </div>
                     </div>
 
@@ -194,7 +201,7 @@
                         <i class="fa-solid fa-phone"></i>
                         <div>
                             <h4>Téléphone</h4>
-                            <p>+226 74 80 60 22 / +226 75 08 73 16</p>
+                            <p><span data-cms="phone">+226 74 80 60 22</span> / <span data-cms="phone2">+226 75 08 73 16</span></p>
                         </div>
                     </div>
 
@@ -210,7 +217,7 @@
                         <i class="fa-solid fa-file-contract"></i>
                         <div>
                             <h4>Informations Légales</h4>
-                            <p>RCCM : BF-OUA-01-2023-B12-05162<br>IFU : 00201348P</p>
+                            <p>RCCM : <span data-cms="rccm">BF-OUA-01-2023-B12-05162</span><br>IFU : <span data-cms="ifu">00201348P</span></p>
                         </div>
                     </div>
 
@@ -228,7 +235,9 @@
 
                 <div class="contact-form-wrapper js-reveal-right">
                     <h3>Envoyez-nous un message</h3>
-                    <form id="contact-form">
+                    <form id="contact-form" name="contact" method="POST" data-netlify="true" data-netlify-honeypot="bot-field">
+                        <p style="display:none;"><label>Ne pas remplir : <input name="bot-field"></label></p>
+                        <input type="hidden" name="form-name" value="contact">
                         <div class="form-group">
                             <input type="text" id="name" name="user_name" class="form-control" placeholder=" "
                                 required>
@@ -290,7 +299,7 @@
                 </div>
             </div>
             <div class="copyright">
-                <p>&copy; 2024 N.I. CONSEILS-MANAGEMENTS. Tous droits réservés.</p>
+                <p>&copy; 2026 N.I. CONSEILS-MANAGEMENTS. Tous droits réservés.</p>
             </div>
         </div>
     </footer>

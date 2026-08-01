@@ -6,12 +6,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>N.I. CONSEILS-MANAGEMENTS | L'Agence</title>
     <meta name="description" content="Découvrez N.I. CONSEILS-MANAGEMENTS, fondée par Ibrahim Niang, agent FIFA. Gestion de carrière, transferts et accompagnement de joueurs de football.">
+    <link rel="icon" type="image/png" href="assets/images/logo.png">
     <link rel="canonical" href="https://ni-conseils-managements.netlify.app/agent.html">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://ni-conseils-managements.netlify.app/agent.html">
     <meta property="og:title" content="N.I. CONSEILS-MANAGEMENTS | L'Agence">
     <meta property="og:description" content="Découvrez N.I. CONSEILS-MANAGEMENTS, fondée par Ibrahim Niang, agent FIFA. Gestion de carrière, transferts et accompagnement de joueurs de football.">
-    <meta property="og:image" content="https://ni-conseils-managements.netlify.app/assets/images/logo.png">
+    <meta property="og:image" content="https://ni-conseils-managements.netlify.app/assets/images/agent/unnamed.webp">
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="N.I. CONSEILS-MANAGEMENTS | L'Agence">
+    <meta name="twitter:description" content="Découvrez N.I. CONSEILS-MANAGEMENTS, fondée par Ibrahim Niang, agent FIFA.">
+    <meta name="twitter:image" content="https://ni-conseils-managements.netlify.app/assets/images/agent/unnamed.webp">
     <!-- Security Headers -->
     <meta http-equiv="Content-Security-Policy"
         content="default-src 'self'; script-src 'self' https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://fonts.googleapis.com; font-src 'self' https://cdnjs.cloudflare.com https://fonts.gstatic.com; img-src 'self' data: blob: https:; connect-src 'self';">
@@ -32,7 +38,7 @@
     <link rel="apple-touch-icon" href="assets/images/logo.png">
     <style>
         .agent-hero {
-            background: linear-gradient(rgba(15, 23, 42, 0.8), rgba(15, 23, 42, 0.9)), url('assets/images/hero.png');
+            background: linear-gradient(rgba(15, 23, 42, 0.8), rgba(15, 23, 42, 0.9)), url('assets/images/hero.webp');
             background-size: cover;
             background-position: center;
             background-position: center;
@@ -220,89 +226,27 @@
 
     <header class="agent-hero">
         <div class="container">
-            <h1>L'Agence & L'Agent</h1>
-            <p>Une expertise reconnue au service de votre réussite.</p>
+            <h1 id="agent-hero-title" data-cms="agentHeaderTitle">L'Agence & L'Agent</h1>
+            <p id="agent-hero-subtitle" data-cms="agentHeaderSubtitle">Une expertise reconnue au service de votre réussite.</p>
         </div>
     </header>
 
     <section class="section-padding">
         <div class="container">
-            <div class="agent-content">
-                <div class="agent-img reveal float-image js-reveal">
-                    <img src="assets/images/agent/unnamed.jpg" alt="Ibrahim Niang - Agent FIFA"
-                        style="width: 100%; height: auto; border-radius: 20px; display: block;" loading="lazy" decoding="async">
-                </div>
-                <div class="agent-text">
-                    <h2 style="color: var(--primary-color);">Ibrahim Niang</h2>
-                    <p>Fondée par Ibrahim Niang, un passionné du ballon rond originaire de Niangoloko au Burkina Faso,
-                        N.I. CONSEILS-MANAGEMENTS est le fruit d'un parcours riche et authentique. Installé dans la
-                        Nièvre depuis plus de 10 ans, Ibrahim a su transformer son expérience de joueur en une expertise
-                        de conseil reconnue.</p>
-
-                    <h3>Une Vision de Terrain</h3>
-                    <p>Passé par de nombreux clubs (Burkina Faso, Sénégal, Algérie, Maroc) avant de s'installer en
-                        France, Ibrahim Niang possède une compréhension unique des défis auxquels font face les joueurs.
-                        Agent officiellement reconnu par la FIFA, il met aujourd'hui son réseau et son carnet d'adresses
-                        au service des talents de demain.</p>
-
-                    <div class="stat-grid">
-                        <div class="stat-box js-reveal stagger-1">
-                            <div class="stat-number"><span class="stat-counter" data-target="10" data-suffix="+">10+</span></div>
-                            <div>Clubs fréquentés</div>
-                        </div>
-                        <div class="stat-box js-reveal stagger-2">
-                            <div class="stat-number">FIFA</div>
-                            <div>Agent Licencié</div>
-                        </div>
-                    </div>
-                </div>
+            <div class="agent-content" id="agent-content">
+                <!-- Contenu rendu dynamiquement via site-data.js -->
             </div>
         </div>
         <section class="timeline-section">
             <div class="container">
                 <div class="text-center">
-                    <h2 class="section-title">Mon Parcours</h2>
-                    <p style="max-width: 600px; margin: 0 auto 40px;">De la passion du terrain à l'expertise du
+                    <h2 class="section-title" id="agent-timeline-title">Mon Parcours</h2>
+                    <p id="agent-timeline-subtitle" style="max-width: 600px; margin: 0 auto 40px;">De la passion du terrain à l'expertise du
                         management, découvrez les étapes clés de ma carrière.</p>
                 </div>
 
-                <div class="timeline">
-                    <div class="timeline-item left js-reveal-left stagger-1">
-                        <div class="timeline-content">
-                            <span>Origines</span>
-                            <h3>De Niangoloko à l'International</h3>
-                            <p>Né au Burkina Faso, Ibrahim Niang forge son caractère et son talent sur les terrains du
-                                pays, puis s'exporte au Sénégal, en Algérie et au Maroc.</p>
-                        </div>
-                    </div>
-
-                    <div class="timeline-item right js-reveal-right stagger-2">
-                        <div class="timeline-content">
-                            <span>2014 - 2023</span>
-                            <h3>L'Ancrage en France</h3>
-                            <p>Arrivée dans la Nièvre. Joueur emblématique au SNID, RC Nevers-Challuy, US Cercy, La
-                                Machine et l'AS Charrin. Une connaissance parfaite du football régional et national
-                                français.</p>
-                        </div>
-                    </div>
-
-                    <div class="timeline-item left js-reveal-left stagger-3">
-                        <div class="timeline-content">
-                            <span>Formation</span>
-                            <h3>La Transition</h3>
-                            <p>Décision de mettre son expérience au profit des autres. Suivi de cours spécialisés et
-                                mentorat auprès d'agents expérimentés comme Pierre-Jean Mairesse.</p>
-                        </div>
-                    </div>
-
-                    <div class="timeline-item right js-reveal-right stagger-4">
-                        <div class="timeline-content">
-                            <span>Aujourd'hui</span>
-                            <h3>Agent Licencié FIFA</h3>
-                            <p>Reconnaissance officielle par la FIFA. Lancement de N.I. CONSEILS-MANAGEMENTS pour faire
-                                éclore les carrières avec intégrité et professionnalisme.</p>
-                        </div>
-                    </div>
+                <div class="timeline" id="agent-timeline">
+                    <!-- Timeline rendue dynamiquement via site-data.js -->
                 </div>
             </div>
         </section>
@@ -311,39 +255,12 @@
         <section class="section-padding">
             <div class="container">
                 <div class="text-center">
-                    <h2 class="section-title">En Action</h2>
-                    <p style="margin-bottom: 40px;">Quelques moments forts de mon parcours et de mes rencontres dans le
+                    <h2 class="section-title" id="agent-gallery-title">En Action</h2>
+                    <p id="agent-gallery-subtitle" style="margin-bottom: 40px;">Quelques moments forts de mon parcours et de mes rencontres dans le
                         milieu du football.</p>
                 </div>
-                <div class="features-grid">
-                    <div class="feature-card js-reveal stagger-1" style="padding: 10px; overflow: hidden;">
-                        <img src="assets/images/agent/481247977_9177634898940919_2701165290340722272_n.jpg"
-                            alt="Ibrahim Niang" class="agent-gallery-img" style="width: 100%; height: auto; border-radius: 10px;" loading="lazy" decoding="async">
-                    </div>
-                    <div class="feature-card js-reveal stagger-2" style="padding: 10px; overflow: hidden;">
-                        <img src="assets/images/agent/486574011_9306001556104252_7275843342198295934_n.jpg"
-                            alt="Ibrahim Niang" class="agent-gallery-img" style="width: 100%; height: auto; border-radius: 10px;" loading="lazy" decoding="async">
-                    </div>
-                    <div class="feature-card js-reveal stagger-3" style="padding: 10px; overflow: hidden;">
-                        <img src="assets/images/agent/506443391_9893369584034110_5142201735972524058_n.jpg"
-                            alt="Ibrahim Niang" class="agent-gallery-img" style="width: 100%; height: auto; border-radius: 10px;" loading="lazy" decoding="async">
-                    </div>
-                    <div class="feature-card js-reveal stagger-4" style="padding: 10px; overflow: hidden;">
-                        <img src="assets/images/agent/463658277_8403962779641472_2898967800483370328_n.jpg"
-                            alt="Ibrahim Niang" class="agent-gallery-img" style="width: 100%; height: auto; border-radius: 10px;" loading="lazy" decoding="async">
-                    </div>
-                    <div class="feature-card js-reveal stagger-1" style="padding: 10px; overflow: hidden;">
-                        <img src="assets/images/agent/492537016_9517619501609122_2719008199893929919_n.jpg"
-                            alt="Ibrahim Niang" class="agent-gallery-img" style="width: 100%; height: auto; border-radius: 10px;" loading="lazy" decoding="async">
-                    </div>
-                    <div class="feature-card js-reveal stagger-2" style="padding: 10px; overflow: hidden;">
-                        <img src="assets/images/agent/492547691_9523694034335002_961695162708248134_n.jpg"
-                            alt="Ibrahim Niang" class="agent-gallery-img" style="width: 100%; height: auto; border-radius: 10px;" loading="lazy" decoding="async">
-                    </div>
-                    <div class="feature-card js-reveal stagger-3" style="padding: 10px; overflow: hidden;">
-                        <img src="assets/images/agent/597570804_1983761392480548_4239413806129994270_n.jpg"
-                            alt="Ibrahim Niang" class="agent-gallery-img" style="width: 100%; height: auto; border-radius: 10px;" loading="lazy" decoding="async">
-                    </div>
+                <div class="features-grid" id="agent-gallery">
+                    <!-- Galerie rendue dynamiquement via site-data.js -->
                 </div>
             </div>
         </section>
@@ -386,10 +303,11 @@
                     </div>
                 </div>
                 <div class="copyright">
-                    <p>&copy; 2024 N.I. CONSEILS-MANAGEMENTS. Tous droits réservés.</p>
+                    <p>&copy; 2026 N.I. CONSEILS-MANAGEMENTS. Tous droits réservés.</p>
                 </div>
             </div>
         </footer>
+        <script src="site-data.js"></script>
         <script src="script.js"></script>
     <script src="animations.js?v=1.0"></script>
 </body>

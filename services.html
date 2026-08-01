@@ -6,12 +6,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>N.I. CONSEILS-MANAGEMENTS | Nos Services</title>
     <meta name="description" content="N.I. CONSEILS-MANAGEMENTS accompagne les joueurs de football en gestion de carrière, transferts, négociation, marketing et conseil juridique.">
+    <link rel="icon" type="image/png" href="assets/images/logo.png">
     <link rel="canonical" href="https://ni-conseils-managements.netlify.app/services.html">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://ni-conseils-managements.netlify.app/services.html">
     <meta property="og:title" content="N.I. CONSEILS-MANAGEMENTS | Nos Services">
     <meta property="og:description" content="N.I. CONSEILS-MANAGEMENTS accompagne les joueurs de football en gestion de carrière, transferts, négociation, marketing et conseil juridique.">
-    <meta property="og:image" content="https://ni-conseils-managements.netlify.app/assets/images/logo.png">
+    <meta property="og:image" content="https://ni-conseils-managements.netlify.app/assets/images/hero.webp">
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="N.I. CONSEILS-MANAGEMENTS | Nos Services">
+    <meta name="twitter:description" content="Un accompagnement à 360° pour votre carrière de footballeur.">
+    <meta name="twitter:image" content="https://ni-conseils-managements.netlify.app/assets/images/hero.webp">
     <!-- Security Headers -->
     <meta http-equiv="Content-Security-Policy"
         content="default-src 'self'; script-src 'self' https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://fonts.googleapis.com; font-src 'self' https://cdnjs.cloudflare.com https://fonts.gstatic.com; img-src 'self' data: blob: https:; connect-src 'self';">
@@ -129,82 +135,14 @@
 
     <header class="services-header">
         <div class="container">
-            <h1 class="js-reveal">Nos Services</h1>
-            <p class="js-reveal stagger-1">Un accompagnement à 360° pour votre carrière.</p>
+            <h1 class="js-reveal" data-cms="servicesHeaderTitle">Nos Services</h1>
+            <p class="js-reveal stagger-1" data-cms="servicesHeaderSubtitle">Un accompagnement à 360° pour votre carrière.</p>
         </div>
     </header>
 
     <section class="section-padding">
-        <div class="container">
-
-            <!-- Service 1 -->
-            <div class="service-row js-reveal-left">
-                <div class="service-text">
-                    <h2>Gestion de Carrière</h2>
-                    <p>Nous définissons ensemble un plan de carrière clair et ambitieux. Chaque choix est stratégique
-                        pour vous permettre d'atteindre vos objectifs sportifs.</p>
-                    <ul class="service-list">
-                        <li><i class="fa-solid fa-check"></i> Planification à court, moyen et long terme</li>
-                        <li><i class="fa-solid fa-check"></i> Analyse des opportunités sportives</li>
-                        <li><i class="fa-solid fa-check"></i> Suivi des performances et débriefing</li>
-                    </ul>
-                </div>
-                <div class="service-icon-large">
-                    <i class="fa-solid fa-chess-knight"></i>
-                </div>
-            </div>
-
-            <!-- Service 2 -->
-            <div class="service-row js-reveal-right">
-                <div class="service-text">
-                    <h2>Transferts & Négociation</h2>
-                    <p>Notre expertise juridique et notre réseau nous permettent de négocier les meilleurs contrats pour
-                        vous, en protégeant vos intérêts avant tout.</p>
-                    <ul class="service-list">
-                        <li><i class="fa-solid fa-check"></i> Négociation salariale et primes</li>
-                        <li><i class="fa-solid fa-check"></i> Clauses libératoires et bonus</li>
-                        <li><i class="fa-solid fa-check"></i> Gestion des transferts internationaux</li>
-                    </ul>
-                </div>
-                <div class="service-icon-large">
-                    <i class="fa-solid fa-file-signature"></i>
-                </div>
-            </div>
-
-            <!-- Service 3 -->
-            <div class="service-row js-reveal-left">
-                <div class="service-text">
-                    <h2>Marketing & Sponsoring</h2>
-                    <p>Votre image est un atout précieux. Nous vous aidons à la développer et à la monétiser auprès de
-                        marques prestigieuses.</p>
-                    <ul class="service-list">
-                        <li><i class="fa-solid fa-check"></i> Gestion des réseaux sociaux</li>
-                        <li><i class="fa-solid fa-check"></i> Recherche de sponsors et partenariats</li>
-                        <li><i class="fa-solid fa-check"></i> Relations presse et media training</li>
-                    </ul>
-                </div>
-                <div class="service-icon-large">
-                    <i class="fa-solid fa-bullhorn"></i>
-                </div>
-            </div>
-
-            <!-- Service 4 -->
-            <div class="service-row js-reveal-right">
-                <div class="service-text">
-                    <h2>Accompagnement Vie Privée</h2>
-                    <p>Pour que vous puissiez vous concentrer à 100% sur le terrain, nous vous assistons dans la gestion
-                        de votre quotidien.</p>
-                    <ul class="service-list">
-                        <li><i class="fa-solid fa-check"></i> Gestion de patrimoine et fiscalité</li>
-                        <li><i class="fa-solid fa-check"></i> Conciergerie de luxe</li>
-                        <li><i class="fa-solid fa-check"></i> Soutien à la famille</li>
-                    </ul>
-                </div>
-                <div class="service-icon-large">
-                    <i class="fa-solid fa-house-user"></i>
-                </div>
-            </div>
-
+        <div class="container" id="services-container">
+            <!-- Services rendus dynamiquement via site-data.js -->
         </div>
     </section>
 
@@ -234,10 +172,11 @@
                 </div>
             </div>
             <div class="copyright">
-                <p>&copy; 2024 N.I. CONSEILS-MANAGEMENTS. Tous droits réservés.</p>
+                <p>&copy; 2026 N.I. CONSEILS-MANAGEMENTS. Tous droits réservés.</p>
             </div>
         </div>
     </footer>
+    <script src="site-data.js"></script>
     <script src="script.js"></script>
     <script src="animations.js?v=1.0"></script>
 </body>

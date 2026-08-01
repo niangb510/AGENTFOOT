@@ -221,7 +221,7 @@ p {
 .hero {
     min-height: 100vh;
     height: auto;
-    background: linear-gradient(rgba(15, 23, 42, 0.7), rgba(15, 23, 42, 0.8)), url('assets/images/hero.png');
+    background: linear-gradient(rgba(15, 23, 42, 0.7), rgba(15, 23, 42, 0.8)), url('assets/images/hero.webp');
     background-size: cover;
     background-position: center;
     background-attachment: scroll; /* Better for performance on mobile */

@@ -15,8 +15,8 @@
 
         // Branding
         logo: 'assets/images/logo.png',
-        heroCover: 'assets/images/hero.png',
-        agentCover: 'assets/images/hero.png',
+        heroCover: 'assets/images/hero.webp',
+        agentCover: 'assets/images/hero.webp',
         favicon: '',
 
         // Typography
@@ -109,6 +109,17 @@
             document.querySelectorAll('.logo img').forEach(img => {
                 img.src = cfg.logo;
             });
+        }
+
+        // 3bis. Favicon
+        if (cfg.favicon) {
+            let faviconLink = document.querySelector('link[rel="icon"]');
+            if (!faviconLink) {
+                faviconLink = document.createElement('link');
+                faviconLink.rel = 'icon';
+                document.head.appendChild(faviconLink);
+            }
+            faviconLink.href = cfg.favicon;
         }
 
         // 4. Hero / Agent hero backgrounds

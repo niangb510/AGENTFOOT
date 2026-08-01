@@ -88,7 +88,9 @@ document.addEventListener('DOMContentLoaded', async () => {
                     </div>`;
             }
         } else {
-            videoHtml += `<video controls src="${videoUrl}" style="max-height: 80vh; width: auto; max-width: 100%; margin: 0 auto; display: block; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.12);"></video>`;
+            // preload="none" + poster : la vidéo n'est téléchargée qu'au clic sur play
+            const posterAttr = article.image ? ` poster="${article.image}"` : '';
+            videoHtml += `<video controls preload="none"${posterAttr} src="${videoUrl}" style="max-height: 80vh; width: auto; max-width: 100%; margin: 0 auto; display: block; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.12);"></video>`;
         }
 
         videoHtml += '</div>';
@@ -129,6 +131,22 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (!schemaTag) return;
 
         const currentUrl = window.location.origin + window.location.pathname + '?id=' + encodeURIComponent(article.id);
+
+        // Mise à jour dynamique des métadonnées sociales (og:, twitter:, canonical)
+        const rawImage = article.image || 'assets/images/logo.png';
+        const articleImage = rawImage.startsWith('http') ? rawImage : (window.location.origin + '/' + rawImage);
+        const setMeta = (selector, attr, value) => {
+            let el = document.querySelector(selector);
+            if (el) el.setAttribute(attr, value);
+        };
+        setMeta('meta[property="og:title"]', 'content', article.title);
+        setMeta('meta[property="og:description"]', 'content', article.summary);
+        setMeta('meta[property="og:image"]', 'content', articleImage);
+        setMeta('meta[property="og:url"]', 'content', currentUrl);
+        setMeta('meta[name="twitter:title"]', 'content', article.title);
+        setMeta('meta[name="twitter:description"]', 'content', article.summary);
+        setMeta('meta[name="twitter:image"]', 'content', articleImage);
+        setMeta('link[rel="canonical"]', 'href', currentUrl);
 
         schemaTag.textContent = JSON.stringify({
             "@context": "https://schema.org",
