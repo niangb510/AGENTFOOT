@@ -16,6 +16,9 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
         integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
         crossorigin="anonymous" referrerpolicy="no-referrer">
+    <!-- Cropper.js -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.js"></script>
     <link rel="stylesheet" href="style.css?v=2.0">
     <!-- Dynamic Config Loader -->
     <script src="site-config.js"></script>
@@ -133,6 +136,42 @@
             height: 60px;
             border-radius: 8px;
             object-fit: cover;
+        }
+        
+        /* Cropper Modal styling */
+        #cropper-modal {
+            transition: opacity 0.3s ease;
+        }
+        .cropper-ratio-btn {
+            border: 1px solid #cbd5e1;
+            transition: all 0.2s ease;
+        }
+        .cropper-ratio-btn.active {
+            box-shadow: 0 2px 8px rgba(217, 119, 6, 0.4) !important;
+        }
+        #cropper-modal .btn {
+            text-transform: none !important;
+            letter-spacing: normal !important;
+        }
+        
+        /* Fix cropper container styling to avoid breaking layouts */
+        .cropper-container {
+            direction: ltr;
+            font-size: 0;
+            line-height: 0;
+            position: relative;
+            user-select: none;
+            touch-action: none;
+        }
+        
+        /* Spinner de chargement de la modale de recadrage */
+        @keyframes cropper-spin {
+            to { transform: rotate(360deg); }
+        }
+        /* Bouton Valider désactivé pendant le chargement */
+        #cropper-confirm-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
         }
     </style>
 </head>
@@ -803,28 +842,398 @@
     <script src="script.js?v=2.1"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
+            // ==================== SYSTEME DE RECADRAGE (CROPPER.JS) ====================
+            let croppingQueue = [];
+            let currentCropperInstance = null;
+            let currentQueueCallback = null;
+            let currentQueueItem = null;
+
+            // Ajoute une image à la file de recadrage.
+            // options : { maxDim: taille de sortie max en px, label: texte d'info }
+            function enqueueCropping(src, defaultRatio, callback, options = {}) {
+                croppingQueue.push({
+                    src,
+                    defaultRatio,
+                    callback,
+                    maxDim: options.maxDim || 1600,
+                    label: options.label || 'Image'
+                });
+                if (croppingQueue.length === 1) {
+                    processNextInCroppingQueue();
+                }
+            }
+
+            function processNextInCroppingQueue() {
+                if (croppingQueue.length === 0) {
+                    document.getElementById('cropper-modal').style.display = 'none';
+                    document.body.style.overflow = '';
+                    currentQueueItem = null;
+                    currentQueueCallback = null;
+                    return;
+                }
+
+                currentQueueItem = croppingQueue[0];
+                currentQueueCallback = currentQueueItem.callback;
+
+                // Ouvre la modale + bloque le scroll de la page
+                const modal = document.getElementById('cropper-modal');
+                modal.style.display = 'flex';
+                document.body.style.overflow = 'hidden';
+
+                // Indicateur de file d'attente
+                const indicator = document.getElementById('cropper-modal-queue-indicator');
+                if (indicator) {
+                    indicator.innerText = `Image 1 / ${croppingQueue.length}`;
+                }
+
+                // Détruit le recadreur précédent
+                if (currentCropperInstance) {
+                    currentCropperInstance.destroy();
+                    currentCropperInstance = null;
+                }
+
+                // Nouvelle balise <img> à chaque image : évite les soucis de cache
+                // navigateur quand deux images consécutives ont le même src.
+                const stage = document.getElementById('cropper-modal-stage');
+                const oldImg = stage.querySelector('#cropper-modal-image');
+                if (oldImg) oldImg.remove();
+                const imgEl = document.createElement('img');
+                imgEl.id = 'cropper-modal-image';
+                imgEl.alt = 'Image à recadrer';
+                imgEl.style.cssText = 'max-width: 100%; max-height: 100%; display: block;';
+                stage.appendChild(imgEl);
+
+                // Surligne le bon bouton de format (ou « Libre »)
+                activateRatioButton(currentQueueItem.defaultRatio);
+
+                // État « chargement » tant que l'image n'est pas prête
+                setCropperLoading(true);
+
+                imgEl.onload = () => { if (imgEl.isConnected) setCropperLoading(false); };
+                imgEl.onerror = () => {
+                    // Garde anti-double-finalisation : si une finalisation précédente a déjà
+                    // retiré cette <img> du DOM (ex: librairie indisponible), on ne fait rien.
+                    if (!imgEl.isConnected) return;
+                    setCropperLoading(false);
+                    alert('⚠️ Impossible de charger cette image. Elle sera ignorée de la sélection.');
+                    finalizeQueueItem();
+                };
+                imgEl.src = currentQueueItem.src;
+
+                // Initialise Cropper.js
+                try {
+                    currentCropperInstance = new Cropper(imgEl, {
+                        aspectRatio: currentQueueItem.defaultRatio,
+                        viewMode: 1,
+                        autoCropArea: 0.9,
+                        responsive: true,
+                        checkOrientation: true,
+                        background: false,
+                        modal: true,
+                        guides: true,
+                        highlight: true,
+                        cropBoxMovable: true,
+                        cropBoxResizable: true,
+                        toggleDragModeOnDblclick: false
+                    });
+
+                    currentCropperInstance.on('ready', () => {
+                        setCropperLoading(false);
+                        updateCropInfo();
+                    });
+                    currentCropperInstance.on('crop', updateCropInfo);
+                } catch (err) {
+                    // Sécurité : si la librairie Cropper.js n'a pas pu se charger (CDN bloqué,
+                    // navigateur incompatible), on ne bloque JAMAIS la file d'attente :
+                    // l'image originale est utilisée telle quelle et on passe à la suivante.
+                    console.error('Cropper.js indisponible, image originale utilisée :', err);
+                    setCropperLoading(false);
+                    alert('⚠️ L\'outil de recadrage n\'est pas disponible (librairie non chargée). L\'image originale sera utilisée telle quelle.');
+                    if (currentQueueCallback) {
+                        currentQueueCallback(currentQueueItem.src);
+                    }
+                    finalizeQueueItem();
+                }
+            }
+
+            // Affiche la taille de recadrage courante
+            function updateCropInfo() {
+                if (!currentCropperInstance || !currentQueueItem) return;
+                try {
+                    const data = currentCropperInstance.getData();
+                    const info = document.getElementById('cropper-output-info');
+                    if (info && data.width && data.height) {
+                        info.textContent = `${currentQueueItem.label} · ${Math.round(data.width)} × ${Math.round(data.height)} px`;
+                    } else if (info) {
+                        info.textContent = `${currentQueueItem.label} · sortie max ${currentQueueItem.maxDim}px`;
+                    }
+                } catch (e) { /* image taintée : info non disponible */ }
+            }
+
+            // État de chargement : spinner + bouton Valider désactivé
+            function setCropperLoading(loading) {
+                const overlay = document.getElementById('cropper-loading');
+                const confirmBtn = document.getElementById('cropper-confirm-btn');
+                if (overlay) overlay.style.display = loading ? 'flex' : 'none';
+                if (confirmBtn) confirmBtn.disabled = loading;
+            }
+
+            // Surligne le bouton de ratio correspondant à la valeur donnée
+            function activateRatioButton(ratio) {
+                document.querySelectorAll('.cropper-ratio-btn').forEach(btn => {
+                    const ratioVal = parseFloat(btn.dataset.ratio);
+                    const isMatch = (isNaN(ratioVal) && isNaN(ratio)) ||
+                        (!isNaN(ratioVal) && !isNaN(ratio) && Math.abs(ratioVal - ratio) < 0.05);
+                    btn.classList.toggle('active', isMatch);
+                    btn.style.background = isMatch ? 'var(--secondary-color)' : '#cbd5e1';
+                    btn.style.color = isMatch ? 'white' : 'var(--text-dark)';
+                });
+            }
+
+            // Boutons de ratio
+            const ratioBtns = document.querySelectorAll('.cropper-ratio-btn');
+            ratioBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const val = parseFloat(btn.dataset.ratio);
+                    activateRatioButton(val);
+                    if (currentCropperInstance) {
+                        currentCropperInstance.setAspectRatio(val);
+                    }
+                });
+            });
+
+            // Outils : zoom / rotation / réinitialisation
+            document.getElementById('cropper-zoom-in').addEventListener('click', () => {
+                if (currentCropperInstance) currentCropperInstance.zoom(0.1);
+            });
+            document.getElementById('cropper-zoom-out').addEventListener('click', () => {
+                if (currentCropperInstance) currentCropperInstance.zoom(-0.1);
+            });
+            document.getElementById('cropper-rotate-left').addEventListener('click', () => {
+                if (currentCropperInstance) currentCropperInstance.rotate(-90);
+            });
+            document.getElementById('cropper-rotate-right').addEventListener('click', () => {
+                if (currentCropperInstance) currentCropperInstance.rotate(90);
+            });
+            document.getElementById('cropper-reset-btn').addEventListener('click', () => {
+                if (currentCropperInstance) currentCropperInstance.reset();
+            });
+
+            // Raccourcis clavier : Entrée = valider, Échap = utiliser l'originale
+            document.addEventListener('keydown', (e) => {
+                const modal = document.getElementById('cropper-modal');
+                if (!modal || modal.style.display !== 'flex' || !currentQueueItem) return;
+                // Ne pas interférer si le focus est déjà sur un bouton/élément de la modale
+                if (e.target && e.target.closest && e.target.closest('button, input, select, textarea, a')) return;
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    document.getElementById('cropper-confirm-btn').click();
+                } else if (e.key === 'Escape') {
+                    e.preventDefault();
+                    document.getElementById('cropper-use-original-btn').click();
+                }
+            });
+
+            // Valide le recadrage (redimensionne + compresse en WebP)
+            document.getElementById('cropper-confirm-btn').addEventListener('click', () => {
+                if (!currentCropperInstance || !currentQueueItem) return;
+
+                try {
+                    const canvas = currentCropperInstance.getCroppedCanvas({
+                        maxWidth: currentQueueItem.maxDim,
+                        maxHeight: currentQueueItem.maxDim,
+                        imageSmoothingEnabled: true,
+                        imageSmoothingQuality: 'high'
+                    });
+
+                    if (!canvas) {
+                        throw new Error('Impossible de générer le recadrage.');
+                    }
+
+                    let resultDataUrl = null;
+                    try {
+                        resultDataUrl = canvas.toDataURL('image/webp', 0.82);
+                    } catch (e) { /* WebP non supporté → JPEG */ }
+                    if (!resultDataUrl || resultDataUrl.indexOf('data:image/webp') !== 0) {
+                        resultDataUrl = canvas.toDataURL('image/jpeg', 0.85);
+                    }
+
+                    if (currentQueueCallback) {
+                        currentQueueCallback(resultDataUrl);
+                    }
+                    finalizeQueueItem();
+                } catch (err) {
+                    console.error('Erreur recadrage:', err);
+                    const isCORS = err.name === 'SecurityError' || (err.message && err.message.includes('tainted'));
+                    if (isCORS) {
+                        // Toujours finaliser pour ne JAMAIS bloquer la file d'attente
+                        const useOriginal = confirm('Impossible de modifier cette image externe (restrictions CORS).\n\n« OK » : utiliser l\'image originale.\n« Annuler » : ignorer cette image.');
+                        if (useOriginal && currentQueueCallback) {
+                            currentQueueCallback(currentQueueItem.src);
+                        }
+                        finalizeQueueItem();
+                    } else {
+                        alert('Erreur lors du recadrage : ' + err.message);
+                    }
+                }
+            });
+
+            // Utiliser l'image originale, sans recadrage ni compression
+            document.getElementById('cropper-use-original-btn').addEventListener('click', () => {
+                if (!currentQueueItem) return;
+                if (currentQueueCallback) {
+                    currentQueueCallback(currentQueueItem.src);
+                }
+                finalizeQueueItem();
+            });
+
+            // Ignorer complètement cette image (ne pas l'ajouter)
+            document.getElementById('cropper-cancel-btn').addEventListener('click', () => {
+                finalizeQueueItem();
+            });
+
+            function finalizeQueueItem() {
+                if (currentCropperInstance) {
+                    currentCropperInstance.destroy();
+                    currentCropperInstance = null;
+                }
+                croppingQueue.shift();
+                processNextInCroppingQueue();
+            }
             // Authentification sécurisée : le mot de passe n'est plus stocké en clair
             // (hash SHA-256 du code d'accès)
             const PASSCODE_HASH = "cea83ce05df91056a6f2fc8ff2bd12f8936f92e84517b30e67a2e1495d093e28";
 
+            // Hachage SHA-256 du code d'accès.
+            // crypto.subtle n'existe qu'en contexte sécurisé (HTTPS ou localhost) :
+            // en file:// ou HTTP simple, on bascule sur un SHA-256 100% JavaScript
+            // (même résultat, donc la connexion fonctionne partout).
             async function sha256(text) {
                 if (window.crypto && crypto.subtle) {
                     const data = new TextEncoder().encode(text);
                     const digest = await crypto.subtle.digest('SHA-256', data);
                     return Array.from(new Uint8Array(digest)).map(b => b.toString(16).padStart(2, '0')).join('');
                 }
-                // Fallback simple (navigateur très ancien) - déprécié
-                let hash = 0;
-                for (let i = 0; i < text.length; i++) {
-                    hash = ((hash << 5) - hash + text.charCodeAt(i)) | 0;
+                return sha256Sync(text);
+            }
+
+            // Implémentation synchrone de SHA-256 en JavaScript pur
+            // (utilisée quand crypto.subtle est indisponible).
+            // Le texte est d'abord encodé en UTF-8 afin de produire EXACTEMENT le
+            // même résultat que crypto.subtle.digest('SHA-256', TextEncoder).
+            function sha256Sync(text) {
+                function rightRotate(value, amount) {
+                    return (value >>> amount) | (value << (32 - amount));
                 }
-                return 'fallback-' + Math.abs(hash).toString(16);
+                // UTF-8 : chaque caractère devient ses octets (0-255)
+                let ascii = unescape(encodeURIComponent(String(text)));
+                const mathPow = Math.pow;
+                const maxWord = mathPow(2, 32);
+                let result = '';
+
+                const words = [];
+                const asciiBitLength = ascii.length * 8;
+
+                // Constantes initiales (premiers 32 bits des parties fractionnaires
+                // des racines carrées/cubiques des 8/64 premiers nombres premiers)
+                let hash = sha256Sync.h = sha256Sync.h || [];
+                const k = sha256Sync.k = sha256Sync.k || [];
+                let primeCounter = k.length;
+                const isComposite = {};
+                for (let candidate = 2; primeCounter < 64; candidate++) {
+                    if (!isComposite[candidate]) {
+                        for (let i = 0; i < 313; i += candidate) {
+                            isComposite[i] = candidate;
+                        }
+                        hash[primeCounter] = (mathPow(candidate, 0.5) * maxWord) | 0;
+                        k[primeCounter++] = (mathPow(candidate, 1 / 3) * maxWord) | 0;
+                    }
+                }
+
+                // Remplissage (padding) conforme au standard
+                ascii += '\x80';
+                while (ascii.length % 64 - 56) ascii += '\x00';
+                for (let i = 0; i < ascii.length; i++) {
+                    // Après encodage UTF-8, chaque charCode est un octet (0-255)
+                    const j = ascii.charCodeAt(i);
+                    words[i >> 2] |= j << ((3 - i) % 4) * 8;
+                }
+                words[words.length] = ((asciiBitLength / maxWord) | 0);
+                words[words.length] = asciiBitLength;
+
+                // Boucle de compression
+                for (let j = 0; j < words.length;) {
+                    const w = words.slice(j, j += 16);
+                    const oldHash = hash;
+                    hash = hash.slice(0, 8);
+                    for (let i = 0; i < 64; i++) {
+                        const w15 = w[i - 15], w2 = w[i - 2];
+                        const a = hash[0], e = hash[4];
+                        const temp1 = hash[7]
+                            + (rightRotate(e, 6) ^ rightRotate(e, 11) ^ rightRotate(e, 25))
+                            + ((e & hash[5]) ^ (~e & hash[6]))
+                            + k[i]
+                            + (w[i] = (i < 16) ? w[i] : (
+                                w[i - 16]
+                                + (rightRotate(w15, 7) ^ rightRotate(w15, 18) ^ (w15 >>> 3))
+                                + w[i - 7]
+                                + (rightRotate(w2, 17) ^ rightRotate(w2, 19) ^ (w2 >>> 10))
+                            ) | 0);
+                        const temp2 = (rightRotate(a, 2) ^ rightRotate(a, 13) ^ rightRotate(a, 22))
+                            + ((a & hash[1]) ^ (a & hash[2]) ^ (hash[1] & hash[2]));
+                        hash = [(temp1 + temp2) | 0].concat(hash);
+                        hash[4] = (hash[4] + temp1) | 0;
+                    }
+                    for (let i = 0; i < 8; i++) {
+                        hash[i] = (hash[i] + oldHash[i]) | 0;
+                    }
+                }
+
+                for (let i = 0; i < 8; i++) {
+                    for (let j = 3; j + 1; j--) {
+                        const b = (hash[i] >> (j * 8)) & 255;
+                        result += ((b < 16) ? 0 : '') + b.toString(16);
+                    }
+                }
+                return result;
             }
             const loginBtn = document.getElementById('admin-login-btn');
             const passInput = document.getElementById('admin-passcode');
             const authSec = document.getElementById('admin-auth-sec');
             const adminPanel = document.getElementById('admin-panel');
             const tabControls = document.getElementById('tab-controls');
+
+            // ========== OUTILS MULTIMÉDIA (correction photos + stockage) ==========
+            // La compression/redimensionnement est désormais intégrée au système de
+            // recadrage (Cropper.js) : chaque image ajoutée passe par la modale qui
+            // exporte en WebP compressé, ce qui évite de saturer le localStorage.
+
+            // Écriture localStorage sécurisée avec message d'erreur clair
+            function safeStore(key, value) {
+                try {
+                    localStorage.setItem(key, JSON.stringify(value));
+                    return true;
+                } catch (err) {
+                    alert('⚠️ Stockage du navigateur plein. Vos photos sont trop lourdes ou trop nombreuses. Supprimez d\'anciens contenus ou utilisez des images plus légères, puis réessayez.');
+                    console.error('Erreur localStorage [' + key + ']:', err);
+                    return false;
+                }
+            }
+
+            // Bandeau d'erreurs visible (évite les blocages silencieux des onglets)
+            window.addEventListener('error', (evt) => {
+                console.error('Erreur admin détectée:', evt.error || evt.message);
+                let banner = document.getElementById('admin-error-banner');
+                if (!banner) {
+                    banner = document.createElement('div');
+                    banner.id = 'admin-error-banner';
+                    banner.style.cssText = 'position:fixed; bottom:20px; right:20px; z-index:99999; background:#ef4444; color:#fff; padding:14px 18px; border-radius:10px; font-size:0.85rem; box-shadow:0 8px 24px rgba(0,0,0,0.25); max-width:340px;';
+                    document.body.appendChild(banner);
+                }
+                banner.innerHTML = '<strong>⚠️ Une erreur est survenue :</strong> ' + (evt.message || 'erreur inconnue') + '<br><small>Rechargez la page si le panneau semble bloqué.</small>';
+                banner.style.display = 'block';
+                setTimeout(() => { banner.style.display = 'none'; }, 8000);
+            });
 
             if (sessionStorage.getItem('admin_logged') === 'true') {
                 authSec.style.display = 'none';
@@ -919,34 +1328,35 @@
                 });
             }
 
-            // Ajout de fichiers photos (sélection multiple)
+            // Ajout de fichiers photos (sélection multiple) — recadrage & compression intégrés
             const imgFilesInput = document.getElementById('art-img-files');
             imgFilesInput.addEventListener('change', (e) => {
                 const files = Array.from(e.target.files);
-                if (files.length > 0) {
-                    let loadedCount = 0;
-                    files.forEach(file => {
-                        const reader = new FileReader();
-                        reader.onload = (evt) => {
-                            currentArticlePhotos.push(evt.target.result);
-                            loadedCount++;
-                            if (loadedCount === files.length) {
-                                renderPhotosGallery();
-                            }
-                        };
-                        reader.readAsDataURL(file);
-                    });
-                }
+                if (files.length === 0) return;
+                
+                files.forEach(file => {
+                    const reader = new FileReader();
+                    reader.onload = (evt) => {
+                        enqueueCropping(evt.target.result, NaN, (croppedResult) => {
+                            currentArticlePhotos.push(croppedResult);
+                            renderPhotosGallery();
+                        }, { maxDim: 1600, label: 'Photo article' });
+                    };
+                    reader.readAsDataURL(file);
+                });
+                e.target.value = '';
             });
 
-            // Ajout d'image par URL
+            // Ajout d'image par URL — recadrage & compression intégrés
             document.getElementById('add-url-img-btn').addEventListener('click', () => {
                 const urlInput = document.getElementById('art-img-url-add');
                 const val = urlInput.value.trim();
                 if (val !== '') {
-                    currentArticlePhotos.push(val);
+                    enqueueCropping(val, NaN, (croppedResult) => {
+                        currentArticlePhotos.push(croppedResult);
+                        renderPhotosGallery();
+                    }, { maxDim: 1600, label: 'Photo article' });
                     urlInput.value = '';
-                    renderPhotosGallery();
                 }
             });
 
@@ -1043,12 +1453,12 @@
                     let deletedIds = JSON.parse(localStorage.getItem('deleted_news_ids') || '[]');
                     if (!deletedIds.includes(id)) {
                         deletedIds.push(id);
-                        localStorage.setItem('deleted_news_ids', JSON.stringify(deletedIds));
+                        safeStore('deleted_news_ids', deletedIds);
                     }
 
                     let customArticles = JSON.parse(localStorage.getItem('custom_news_articles') || '[]');
                     customArticles = customArticles.filter(a => a.id !== id);
-                    localStorage.setItem('custom_news_articles', JSON.stringify(customArticles));
+                    safeStore('custom_news_articles', customArticles);
 
                     alert('Article supprimé du site avec succès !');
                     loadAdminArticlesList();
@@ -1095,18 +1505,22 @@
                 window.scrollTo({ top: document.getElementById('publish-form').offsetTop - 100, behavior: 'smooth' });
             }
 
-            // Vidéo
+            // Vidéo (limitée : une vidéo en base64 dépasse le stockage du navigateur)
             document.getElementById('art-video-file').addEventListener('change', (e) => {
                 const file = e.target.files[0];
-                if (file) {
-                    const r = new FileReader();
-                    r.onload = (evt) => {
-                        currentArtVideoData = evt.target.result;
-                        document.getElementById('article-video-preview').src = currentArtVideoData;
-                        document.getElementById('article-video-preview-box').style.display = 'block';
-                    };
-                    r.readAsDataURL(file);
+                if (!file) return;
+                if (file.size > 1024 * 1024) {
+                    alert('⚠️ Vidéo trop lourde (' + Math.round(file.size / 1024) + ' Ko). Le stockage du navigateur ne peut pas contenir de vidéos volumineuses. Utilisez plutôt un lien YouTube (recommandé) ou une vidéo de moins de 1 Mo.');
+                    e.target.value = '';
+                    return;
                 }
+                const r = new FileReader();
+                r.onload = (evt) => {
+                    currentArtVideoData = evt.target.result;
+                    document.getElementById('article-video-preview').src = currentArtVideoData;
+                    document.getElementById('article-video-preview-box').style.display = 'block';
+                };
+                r.readAsDataURL(file);
             });
 
             document.getElementById('remove-video-btn').addEventListener('click', () => {
@@ -1165,25 +1579,34 @@
 
             initConfigForm();
 
-            // Handle image file uploads -> Data URL
+            // Handle image file uploads -> Recadrage et compression intégrés (évite de saturer le stockage)
             function handleFileUpload(inputId, targetUrlInputId, callback) {
                 const input = document.getElementById(inputId);
                 if (!input) return;
                 input.addEventListener('change', (e) => {
                     const file = e.target.files[0];
                     if (!file) return;
-                    if (file.size > 1024 * 1024 * 1.5) {
-                        alert('Image trop lourde. Choisissez une image < 1.5 Mo pour éviter de remplir le stockage du navigateur.');
-                        input.value = '';
-                        return;
-                    }
+                    
                     const reader = new FileReader();
                     reader.onload = (evt) => {
-                        const urlInput = document.getElementById(targetUrlInputId);
-                        if (urlInput) urlInput.value = evt.target.result;
-                        if (callback) callback(evt.target.result);
+                        let ratio = NaN;
+                        let cropOpts = { maxDim: 1600, label: 'Image' };
+                        if (inputId === 'cfg-logo-file') {
+                            ratio = 1; // Logo: carré 1:1
+                            cropOpts = { maxDim: 600, label: 'Logo' };
+                        } else if (inputId === 'cfg-cover-file' || inputId === 'cfg-agent-cover-file') {
+                            ratio = 2.6666; // Bannières: panoramique (ex: 1600x600 soit 8:3 ou 2.6666)
+                            cropOpts = { maxDim: 1920, label: 'Bannière' }; // résolution suffisante pour l'affichage plein écran
+                        }
+                        
+                        enqueueCropping(evt.target.result, ratio, (croppedResult) => {
+                            const urlInput = document.getElementById(targetUrlInputId);
+                            if (urlInput) urlInput.value = croppedResult;
+                            if (callback) callback(croppedResult);
+                        }, cropOpts);
                     };
                     reader.readAsDataURL(file);
+                    input.value = '';
                 });
             }
 
@@ -1359,7 +1782,8 @@
                     customArticles.unshift(articleObj);
                 }
 
-                localStorage.setItem('custom_news_articles', JSON.stringify(customArticles));
+                const stored = safeStore('custom_news_articles', customArticles);
+                if (!stored) return;
 
                 alert(editId ? '🎉 Article et galerie de photos modifiés avec succès !' : '🎉 Nouvel article publié avec sa galerie de photos !');
                 resetForm();
@@ -1448,15 +1872,20 @@
                 document.getElementById('cancel-player-edit-btn').style.display = 'none';
             }
 
-            // Upload photo joueur
+            // Upload photo joueur (recadrée & compressée, ratio 3:4 portrait par défaut)
             document.getElementById('pl-img-file').addEventListener('change', (e) => {
                 const file = e.target.files[0];
                 if (!file) return;
+                
                 const reader = new FileReader();
                 reader.onload = (evt) => {
-                    document.getElementById('pl-image').value = evt.target.result;
+                    enqueueCropping(evt.target.result, 0.75, (croppedResult) => {
+                        const imgInput = document.getElementById('pl-image');
+                        if (imgInput) imgInput.value = croppedResult;
+                    }, { maxDim: 1200, label: 'Photo joueur' });
                 };
                 reader.readAsDataURL(file);
+                e.target.value = '';
             });
 
             document.getElementById('player-form').addEventListener('submit', (e) => {
@@ -1496,7 +1925,8 @@
                 } else {
                     players.unshift(playerObj);
                 }
-                window.SiteData.savePlayers(players);
+                const savedPlayer = window.SiteData.savePlayers(players);
+                if (savedPlayer === false) return;
 
                 alert(editId ? '🎉 Joueur modifié avec succès !' : '🎉 Joueur ajouté avec succès !');
                 resetPlayerForm();
@@ -1603,7 +2033,8 @@
                 } else {
                     services.push(serviceObj);
                 }
-                window.SiteData.saveServices(services);
+                const savedService = window.SiteData.saveServices(services);
+                if (savedService === false) return;
 
                 alert(editId ? '🎉 Service modifié avec succès !' : '🎉 Service ajouté avec succès !');
                 resetServiceForm();
@@ -1694,37 +2125,46 @@
             document.getElementById('ag-gallery-files').addEventListener('change', (e) => {
                 const files = Array.from(e.target.files);
                 if (!files.length) return;
-                let loaded = 0;
+                
                 files.forEach(file => {
                     const reader = new FileReader();
                     reader.onload = (evt) => {
-                        agentGalleryImages.push(evt.target.result);
-                        loaded++;
-                        if (loaded === files.length) renderAgentGallery();
+                        enqueueCropping(evt.target.result, NaN, (croppedResult) => {
+                            agentGalleryImages.push(croppedResult);
+                            renderAgentGallery();
+                        }, { maxDim: 1600, label: 'Galerie agence' });
                     };
                     reader.readAsDataURL(file);
                 });
+                e.target.value = '';
             });
 
             document.getElementById('add-gallery-url-btn').addEventListener('click', () => {
                 const input = document.getElementById('ag-gallery-url-add');
                 const val = input.value.trim();
                 if (val) {
-                    agentGalleryImages.push(val);
+                    enqueueCropping(val, NaN, (croppedResult) => {
+                        agentGalleryImages.push(croppedResult);
+                        renderAgentGallery();
+                    }, { maxDim: 1600, label: 'Galerie agence' });
                     input.value = '';
-                    renderAgentGallery();
                 }
             });
 
-            // Upload photo agent
+            // Upload photo agent (recadrée & compressée, carré par défaut)
             document.getElementById('ag-img-file').addEventListener('change', (e) => {
                 const file = e.target.files[0];
                 if (!file) return;
+                
                 const reader = new FileReader();
                 reader.onload = (evt) => {
-                    document.getElementById('ag-image').value = evt.target.result;
+                    enqueueCropping(evt.target.result, 1, (croppedResult) => { // Carré 1:1 par défaut pour le profil de l'agent
+                        const imgInput = document.getElementById('ag-image');
+                        if (imgInput) imgInput.value = croppedResult;
+                    }, { maxDim: 1200, label: 'Photo agent' });
                 };
                 reader.readAsDataURL(file);
+                e.target.value = '';
             });
 
             document.getElementById('agent-form').addEventListener('submit', (e) => {
@@ -1755,7 +2195,8 @@
                     gallery: agentGalleryImages.slice()
                 };
 
-                window.SiteData.saveAgent(agentObj);
+                const savedAgent = window.SiteData.saveAgent(agentObj);
+                if (savedAgent === false) return;
                 alert('🎉 Page Agence enregistrée avec succès !');
             });
 
@@ -1798,6 +2239,58 @@
             }
         });
     </script>
+
+    <!-- CROPPING MODAL -->
+    <div id="cropper-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(8px); z-index: 10000; align-items: center; justify-content: center; padding: 20px;">
+        <div style="background: white; border-radius: 20px; width: 100%; max-width: 700px; max-height: 90vh; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); border: 1px solid rgba(255, 255, 255, 0.2);">
+            <div style="padding: 18px 24px; border-bottom: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; background: var(--primary-color); color: white;">
+                <h3 style="margin: 0; font-size: 1.25rem; font-weight: 700; display: flex; align-items: center; gap: 10px; font-family: var(--font-main);"><i class="fa-solid fa-crop-simple" style="color: var(--secondary-color);"></i> Recadrer l'Image</h3>
+                <span id="cropper-modal-queue-indicator" style="font-size: 0.85rem; background: rgba(255, 255, 255, 0.15); padding: 4px 12px; border-radius: 20px; font-weight: 700; font-family: var(--font-main);">Image 1 / 1</span>
+            </div>
+            
+            <div id="cropper-modal-stage" style="flex: 1; padding: 20px; background: #0f172a; display: flex; align-items: center; justify-content: center; min-height: 320px; max-height: 48vh; overflow: hidden; position: relative;">
+                <img id="cropper-modal-image" src="" style="max-width: 100%; max-height: 100%; display: block;">
+                <!-- Overlay de chargement -->
+                <div id="cropper-loading" style="display: none; position: absolute; inset: 0; background: rgba(15, 23, 42, 0.75); align-items: center; justify-content: center; z-index: 10; flex-direction: column; gap: 10px;">
+                    <div style="width: 44px; height: 44px; border: 4px solid rgba(255,255,255,0.2); border-top-color: var(--secondary-color); border-radius: 50%; animation: cropper-spin 0.8s linear infinite;"></div>
+                    <span style="color: white; font-size: 0.85rem; font-weight: 600; font-family: var(--font-main);">Chargement de l'image…</span>
+                </div>
+            </div>
+            
+            <div style="padding: 20px 24px; border-top: 1px solid #e2e8f0; background: #f8fafc; display: flex; flex-direction: column; gap: 16px;">
+                <!-- Aspect Ratio controls and action controls -->
+                <div style="display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; align-items: center;">
+                    <span style="font-size: 0.85rem; font-weight: 700; color: #475569; margin-right: 4px; font-family: var(--font-main);">Format :</span>
+                    <button type="button" class="btn cropper-ratio-btn active" data-ratio="NaN" style="padding: 8px 16px; font-size: 0.85rem; background: var(--secondary-color); color: white; border-radius: 30px; font-weight: 700;">Libre</button>
+                    <button type="button" class="btn cropper-ratio-btn" data-ratio="1" style="padding: 8px 16px; font-size: 0.85rem; background: #cbd5e1; color: var(--text-dark); border-radius: 30px; font-weight: 700;">1:1 (Carré)</button>
+                    <button type="button" class="btn cropper-ratio-btn" data-ratio="0.75" style="padding: 8px 16px; font-size: 0.85rem; background: #cbd5e1; color: var(--text-dark); border-radius: 30px; font-weight: 700;">3:4 (Portrait)</button>
+                    <button type="button" class="btn cropper-ratio-btn" data-ratio="1.3333" style="padding: 8px 16px; font-size: 0.85rem; background: #cbd5e1; color: var(--text-dark); border-radius: 30px; font-weight: 700;">4:3</button>
+                    <button type="button" class="btn cropper-ratio-btn" data-ratio="1.7777" style="padding: 8px 16px; font-size: 0.85rem; background: #cbd5e1; color: var(--text-dark); border-radius: 30px; font-weight: 700;">16:9</button>
+                    <button type="button" class="btn cropper-ratio-btn" data-ratio="2.6666" style="padding: 8px 16px; font-size: 0.85rem; background: #cbd5e1; color: var(--text-dark); border-radius: 30px; font-weight: 700;">Bannière</button>
+                </div>
+                
+                <div style="display: flex; justify-content: center; gap: 12px; align-items: center; border-top: 1px solid #e2e8f0; padding-top: 12px;">
+                    <!-- Zoom & rotate tools -->
+                    <button type="button" id="cropper-zoom-in" class="btn" style="padding: 10px 18px; font-size: 0.95rem; background: #e2e8f0; color: var(--text-dark); border-radius: 30px;" title="Zoom + (Entrée : valider)"><i class="fa-solid fa-magnifying-glass-plus"></i></button>
+                    <button type="button" id="cropper-zoom-out" class="btn" style="padding: 10px 18px; font-size: 0.95rem; background: #e2e8f0; color: var(--text-dark); border-radius: 30px;" title="Zoom - (Échap : utiliser l'originale)"><i class="fa-solid fa-magnifying-glass-minus"></i></button>
+                    <button type="button" id="cropper-rotate-left" class="btn" style="padding: 10px 18px; font-size: 0.95rem; background: #e2e8f0; color: var(--text-dark); border-radius: 30px;" title="Pivoter à gauche"><i class="fa-solid fa-rotate-left"></i></button>
+                    <button type="button" id="cropper-rotate-right" class="btn" style="padding: 10px 18px; font-size: 0.95rem; background: #e2e8f0; color: var(--text-dark); border-radius: 30px;" title="Pivoter à droite"><i class="fa-solid fa-rotate-right"></i></button>
+                    <button type="button" id="cropper-reset-btn" class="btn" style="padding: 10px 18px; font-size: 0.95rem; background: #e2e8f0; color: var(--text-dark); border-radius: 30px;" title="Réinitialiser le cadrage"><i class="fa-solid fa-rotate"></i></button>
+                </div>
+                
+                <div style="display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; border-top: 1px solid #e2e8f0; padding-top: 10px;">
+                    <span id="cropper-output-info" style="font-size: 0.8rem; color: #64748b; font-weight: 600; font-family: var(--font-main);"></span>
+                    <span style="font-size: 0.72rem; color: #94a3b8; font-family: var(--font-main);">↵ Valider · ⎋ Originale</span>
+                </div>
+                
+                <div style="display: flex; gap: 12px; margin-top: 4px; border-top: 1px solid #e2e8f0; padding-top: 16px;">
+                    <button type="button" id="cropper-cancel-btn" class="btn" style="flex: 1; padding: 14px; font-size: 1rem; background: #e2e8f0; color: #475569; border-radius: 30px; font-weight: 700; text-transform: none; letter-spacing: normal;"><i class="fa-solid fa-xmark"></i> Ignorer</button>
+                    <button type="button" id="cropper-use-original-btn" class="btn" style="flex: 1; padding: 14px; font-size: 1rem; background: var(--primary-color); color: white; border-radius: 30px; font-weight: 700; text-transform: none; letter-spacing: normal;"><i class="fa-solid fa-file-image"></i> Utiliser l'originale</button>
+                    <button type="button" id="cropper-confirm-btn" class="btn btn-primary" style="flex: 1.5; padding: 14px; font-size: 1rem; border-radius: 30px; font-weight: 700; text-transform: none; letter-spacing: normal;"><i class="fa-solid fa-crop-simple"></i> Valider le Recadrage</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 
 </html>

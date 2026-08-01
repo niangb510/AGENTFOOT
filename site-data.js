@@ -187,7 +187,16 @@
     }
 
     function writeLS(key, value) {
-        localStorage.setItem(key, JSON.stringify(value));
+        try {
+            localStorage.setItem(key, JSON.stringify(value));
+            return true;
+        } catch (err) {
+            console.error('Erreur stockage localStorage [' + key + ']:', err);
+            if (typeof alert === 'function') {
+                alert('⚠️ Stockage du navigateur plein. Vos photos sont trop lourdes : supprimez d\'anciens contenus ou utilisez des images plus légères.');
+            }
+            return false;
+        }
     }
 
     /* ------------------ GETTERS / SETTERS ------------------ */
@@ -196,14 +205,14 @@
         return readLS(LS_PLAYERS, defaultPlayers);
     }
     function savePlayers(list) {
-        writeLS(LS_PLAYERS, list);
+        return writeLS(LS_PLAYERS, list);
     }
 
     function getServices() {
         return readLS(LS_SERVICES, defaultServices);
     }
     function saveServices(list) {
-        writeLS(LS_SERVICES, list);
+        return writeLS(LS_SERVICES, list);
     }
 
     function getAgent() {
@@ -211,7 +220,7 @@
         return Object.assign({}, defaultAgent, saved);
     }
     function saveAgent(obj) {
-        writeLS(LS_AGENT, obj);
+        return writeLS(LS_AGENT, obj);
     }
 
     /* ------------------ RENDU PAGES PUBLIQUES ------------------ */
