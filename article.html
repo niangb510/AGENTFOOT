@@ -9,7 +9,7 @@
     <link rel="icon" type="image/png" href="assets/images/logo.png">
     <!-- Security & Resource Headers -->
     <meta http-equiv="Content-Security-Policy"
-        content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://fonts.googleapis.com; font-src 'self' https://cdnjs.cloudflare.com https://fonts.gstatic.com; img-src 'self' data: blob: https:; connect-src 'self'; frame-src 'self' https://www.youtube.com https://www.youtube-nocookie.com https://www.facebook.com;">
+        content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://fonts.googleapis.com; font-src 'self' https://cdnjs.cloudflare.com https://fonts.gstatic.com; img-src 'self' data: blob: https:; connect-src 'self' https://*.supabase.co; frame-src 'self' https://www.youtube.com https://www.youtube-nocookie.com https://www.facebook.com;">
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -36,6 +36,9 @@
     <!-- Custom CSS -->
     <link rel="stylesheet" href="style.css?v=2.1">
     <link rel="stylesheet" href="animations.css?v=1.0">
+    <!-- Supabase SDK & Database Manager -->
+    <script src="supabase.js"></script>
+    <script src="site-database.js"></script>
     <script src="site-config.js"></script>
     <!-- PWA Settings -->
     <link rel="manifest" href="manifest.json">

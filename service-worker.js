@@ -1,4 +1,4 @@
-const CACHE_NAME = 'ni-conseils-v4';
+const CACHE_NAME = 'ni-conseils-v5';
 const ASSETS = [
     '/',
     '/index.html',
@@ -18,6 +18,10 @@ const ASSETS = [
     '/article.js',
     '/news.json',
     '/manifest.json',
+    '/cropper.min.js',
+    '/cropper.min.css',
+    '/supabase.js',
+    '/site-database.js',
     '/assets/images/logo.png',
     '/assets/images/hero.webp',
     '/assets/images/cyriaque.webp',

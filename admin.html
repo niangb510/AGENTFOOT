@@ -7,7 +7,7 @@
     <title>N.I. CONSEILS | Panneau d'Administration & Galerie Multi-Photos</title>
     <meta name="description" content="Panneau d'administration sécurisé de N.I. CONSEILS-MANAGEMENTS pour la gestion des articles et la personnalisation du site.">
     <meta http-equiv="Content-Security-Policy"
-        content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://fonts.googleapis.com; font-src 'self' https://cdnjs.cloudflare.com https://fonts.gstatic.com; img-src 'self' data: blob: https:; connect-src 'self';">
+        content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://fonts.googleapis.com; font-src 'self' https://cdnjs.cloudflare.com https://fonts.gstatic.com; img-src 'self' data: blob: https:; connect-src 'self' https://*.supabase.co;">
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -21,6 +21,9 @@
     <script src="cropper.min.js"></script>
     <link rel="stylesheet" href="style.css?v=2.0">
     <!-- Dynamic Config Loader -->
+    <!-- Supabase SDK & Database Manager -->
+    <script src="supabase.js"></script>
+    <script src="site-database.js"></script>
     <script src="site-config.js"></script>
     <style>
         .admin-header {
@@ -559,6 +562,31 @@
                                 <label for="cfg-ifu">IFU</label>
                                 <input type="text" id="cfg-ifu">
                             </div>
+                        </div>
+                    </div>
+
+                    <!-- Section 9: Synchronisation Cloud (Supabase) -->
+                    <div style="background: #f8fafc; padding: 25px; border-radius: 15px; margin-bottom: 30px; border: 1px solid #e2e8f0;">
+                        <h3 style="color: var(--primary-color); font-size: 1.2rem; margin-bottom: 15px;"><i class="fa-solid fa-database" style="color: var(--secondary-color);"></i> Synchronisation Cloud (Supabase)</h3>
+                        <p style="font-size: 0.85rem; color: #64748b; margin-bottom: 15px;">Configurez une base de données gratuite Supabase pour que vos modifications (articles, photos, joueurs) s'affichent instantanément pour tous les visiteurs du site, sans rebuild Netlify.</p>
+                        
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;">
+                            <div class="form-group">
+                                <label for="cfg-supabaseUrl">Supabase API URL</label>
+                                <input type="text" id="cfg-supabaseUrl" placeholder="Ex: https://xyz.supabase.co">
+                            </div>
+                            <div class="form-group">
+                                <label for="cfg-supabaseKey">Supabase Anon Key</label>
+                                <input type="text" id="cfg-supabaseKey" placeholder="Clé publique (anon/public)">
+                            </div>
+                        </div>
+                        
+                        <div style="margin-top: 20px; padding: 15px; background: #0f172a; border-radius: 10px; color: #e2e8f0; font-family: monospace; font-size: 0.8rem; overflow-x: auto;">
+                            <span style="color: #64748b; font-style: italic;">-- SQL à exécuter dans l'éditeur SQL de Supabase pour créer la table :</span><br>
+                            <span style="color: #38bdf8;">CREATE TABLE</span> site_data (<br>
+                            &nbsp;&nbsp;key <span style="color: #38bdf8;">TEXT PRIMARY KEY</span>,<br>
+                            &nbsp;&nbsp;value <span style="color: #38bdf8;">JSONB</span><br>
+                            );
                         </div>
                     </div>
 
@@ -1491,8 +1519,18 @@
                     customArticles = customArticles.filter(a => a.id !== id);
                     safeStore('custom_news_articles', customArticles);
 
-                    alert('Article supprimé du site avec succès !');
-                    loadAdminArticlesList();
+                    if (window.SiteDatabase && window.SiteDatabase.isEnabled()) {
+                        Promise.all([
+                            window.SiteDatabase.setValue('custom_news_articles', customArticles),
+                            window.SiteDatabase.setValue('deleted_news_ids', deletedIds)
+                        ]).then(() => {
+                            alert('🎉 Article supprimé du site et synchronisé sur Supabase !');
+                            loadAdminArticlesList();
+                        });
+                    } else {
+                        alert('Article supprimé du site avec succès !');
+                        loadAdminArticlesList();
+                    }
                 }
             }
 
@@ -1589,7 +1627,8 @@
                     'rccm','ifu',
                     'playersHeaderTitle','playersHeaderSubtitle','servicesHeaderTitle','servicesHeaderSubtitle',
                     'contactHeaderTitle','contactHeaderSubtitle','newsHeaderTitle','newsHeaderSubtitle',
-                    'agentHeaderTitle','agentHeaderSubtitle'
+                    'agentHeaderTitle','agentHeaderSubtitle',
+                    'supabaseUrl','supabaseKey'
                 ];
 
                 fields.forEach(key => {
@@ -1690,7 +1729,9 @@
                     newsHeaderTitle: getVal('cfg-newsHeaderTitle'),
                     newsHeaderSubtitle: getVal('cfg-newsHeaderSubtitle'),
                     agentHeaderTitle: getVal('cfg-agentHeaderTitle'),
-                    agentHeaderSubtitle: getVal('cfg-agentHeaderSubtitle')
+                    agentHeaderSubtitle: getVal('cfg-agentHeaderSubtitle'),
+                    supabaseUrl: getVal('cfg-supabaseUrl'),
+                    supabaseKey: getVal('cfg-supabaseKey')
                 };
 
                 // Clean empty values so defaults remain
@@ -1709,7 +1750,18 @@
                     niCmsConfig.applySiteConfig(merged);
                 }
 
-                alert('Configuration enregistrée et appliquée sur ce navigateur !');
+                // Sync with Supabase if configured
+                if (window.SiteDatabase && window.SiteDatabase.init(merged.supabaseUrl, merged.supabaseKey) && window.SiteDatabase.isEnabled()) {
+                    window.SiteDatabase.setValue('ni_site_custom_config', merged).then(success => {
+                        if (success) {
+                            alert('🎉 Configuration enregistrée localement et synchronisée sur Supabase !');
+                        } else {
+                            alert('⚠️ Enregistré localement, mais échec de la synchronisation avec Supabase. Vérifiez votre table SQL et votre connexion.');
+                        }
+                    });
+                } else {
+                    alert('Configuration enregistrée et appliquée sur ce navigateur !');
+                }
             });
 
             // Export config
@@ -1816,9 +1868,21 @@
                 const stored = safeStore('custom_news_articles', customArticles);
                 if (!stored) return;
 
-                alert(editId ? '🎉 Article et galerie de photos modifiés avec succès !' : '🎉 Nouvel article publié avec sa galerie de photos !');
-                resetForm();
-                loadAdminArticlesList();
+                if (window.SiteDatabase && window.SiteDatabase.isEnabled()) {
+                    window.SiteDatabase.setValue('custom_news_articles', customArticles).then(success => {
+                        if (success) {
+                            alert(editId ? '🎉 Article et galerie modifiés et synchronisés sur Supabase !' : '🎉 Nouvel article publié et synchronisé sur Supabase !');
+                        } else {
+                            alert('⚠️ Enregistré localement, mais échec de la synchronisation avec Supabase.');
+                        }
+                        resetForm();
+                        loadAdminArticlesList();
+                    });
+                } else {
+                    alert(editId ? '🎉 Article et galerie de photos modifiés avec succès !' : '🎉 Nouvel article publié avec sa galerie de photos !');
+                    resetForm();
+                    loadAdminArticlesList();
+                }
             });
 
             // ==========================================
@@ -1864,9 +1928,22 @@
                 if (confirm(`Supprimer définitivement le joueur :\n"${name}" ?`)) {
                     const players = window.SiteData.getPlayers();
                     players.splice(idx, 1);
-                    window.SiteData.savePlayers(players);
-                    alert('Joueur supprimé du site !');
-                    loadAdminPlayersList();
+                    const savedPlayer = window.SiteData.savePlayers(players);
+                    if (savedPlayer === false) return;
+
+                    if (window.SiteDatabase && window.SiteDatabase.isEnabled()) {
+                        window.SiteDatabase.setValue('ni_site_players', players).then(success => {
+                            if (success) {
+                                alert('🎉 Joueur supprimé du site et synchronisé sur Supabase !');
+                            } else {
+                                alert('⚠️ Supprimé localement, mais échec de la synchronisation avec Supabase.');
+                            }
+                            loadAdminPlayersList();
+                        });
+                    } else {
+                        alert('Joueur supprimé du site !');
+                        loadAdminPlayersList();
+                    }
                 }
             }
 
@@ -1959,9 +2036,21 @@
                 const savedPlayer = window.SiteData.savePlayers(players);
                 if (savedPlayer === false) return;
 
-                alert(editId ? '🎉 Joueur modifié avec succès !' : '🎉 Joueur ajouté avec succès !');
-                resetPlayerForm();
-                loadAdminPlayersList();
+                if (window.SiteDatabase && window.SiteDatabase.isEnabled()) {
+                    window.SiteDatabase.setValue('ni_site_players', players).then(success => {
+                        if (success) {
+                            alert(editId ? '🎉 Joueur modifié et synchronisé sur Supabase !' : '🎉 Joueur ajouté et synchronisé sur Supabase !');
+                        } else {
+                            alert('⚠️ Enregistré localement, mais échec de la synchronisation avec Supabase.');
+                        }
+                        resetPlayerForm();
+                        loadAdminPlayersList();
+                    });
+                } else {
+                    alert(editId ? '🎉 Joueur modifié avec succès !' : '🎉 Joueur ajouté avec succès !');
+                    resetPlayerForm();
+                    loadAdminPlayersList();
+                }
             });
 
             document.getElementById('cancel-player-edit-btn').addEventListener('click', resetPlayerForm);
@@ -2009,9 +2098,22 @@
                 if (confirm(`Supprimer définitivement le service :\n"${title}" ?`)) {
                     const services = window.SiteData.getServices();
                     services.splice(idx, 1);
-                    window.SiteData.saveServices(services);
-                    alert('Service supprimé du site !');
-                    loadAdminServicesList();
+                    const savedService = window.SiteData.saveServices(services);
+                    if (savedService === false) return;
+
+                    if (window.SiteDatabase && window.SiteDatabase.isEnabled()) {
+                        window.SiteDatabase.setValue('ni_site_services', services).then(success => {
+                            if (success) {
+                                alert('🎉 Service supprimé du site et synchronisé sur Supabase !');
+                            } else {
+                                alert('⚠️ Supprimé localement, mais échec de la synchronisation avec Supabase.');
+                            }
+                            loadAdminServicesList();
+                        });
+                    } else {
+                        alert('Service supprimé du site !');
+                        loadAdminServicesList();
+                    }
                 }
             }
 
@@ -2067,9 +2169,21 @@
                 const savedService = window.SiteData.saveServices(services);
                 if (savedService === false) return;
 
-                alert(editId ? '🎉 Service modifié avec succès !' : '🎉 Service ajouté avec succès !');
-                resetServiceForm();
-                loadAdminServicesList();
+                if (window.SiteDatabase && window.SiteDatabase.isEnabled()) {
+                    window.SiteDatabase.setValue('ni_site_services', services).then(success => {
+                        if (success) {
+                            alert(editId ? '🎉 Service modifié et synchronisé sur Supabase !' : '🎉 Service ajouté et synchronisé sur Supabase !');
+                        } else {
+                            alert('⚠️ Enregistré localement, mais échec de la synchronisation avec Supabase.');
+                        }
+                        resetServiceForm();
+                        loadAdminServicesList();
+                    });
+                } else {
+                    alert(editId ? '🎉 Service modifié avec succès !' : '🎉 Service ajouté avec succès !');
+                    resetServiceForm();
+                    loadAdminServicesList();
+                }
             });
 
             document.getElementById('cancel-service-edit-btn').addEventListener('click', resetServiceForm);
@@ -2228,7 +2342,18 @@
 
                 const savedAgent = window.SiteData.saveAgent(agentObj);
                 if (savedAgent === false) return;
-                alert('🎉 Page Agence enregistrée avec succès !');
+
+                if (window.SiteDatabase && window.SiteDatabase.isEnabled()) {
+                    window.SiteDatabase.setValue('ni_site_agent', agentObj).then(success => {
+                        if (success) {
+                            alert('🎉 Page Agence enregistrée et synchronisée sur Supabase !');
+                        } else {
+                            alert('⚠️ Enregistrée localement, mais échec de la synchronisation avec Supabase.');
+                        }
+                    });
+                } else {
+                    alert('🎉 Page Agence enregistrée avec succès !');
+                }
             });
 
             // ==========================================
