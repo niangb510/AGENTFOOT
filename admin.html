@@ -16,9 +16,9 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
         integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
         crossorigin="anonymous" referrerpolicy="no-referrer">
-    <!-- Cropper.js -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.js"></script>
+    <!-- Cropper.js (Local copies for CSP/Offline compatibility) -->
+    <link rel="stylesheet" href="cropper.min.css">
+    <script src="cropper.min.js"></script>
     <link rel="stylesheet" href="style.css?v=2.0">
     <!-- Dynamic Config Loader -->
     <script src="site-config.js"></script>
@@ -1391,7 +1391,7 @@
             });
 
             // GESTION DE LA LISTE DES ARTICLES EXISTANTS (Lister, Éditer, Supprimer)
-            window.loadAdminArticlesList = async function() {
+            async function loadAdminArticlesList() {
                 const listContainer = document.getElementById('admin-articles-list');
                 if (!listContainer) return;
 
@@ -1476,7 +1476,8 @@
 
                     listContainer.appendChild(item);
                 });
-            };
+            }
+            window.loadAdminArticlesList = loadAdminArticlesList;
 
             function deleteArticle(id, title) {
                 if (confirm(`Êtes-vous sûr de vouloir SUPPRIMER DÉFINITIVEMENT l'article :\n"${title}" ?`)) {
