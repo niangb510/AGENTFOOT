@@ -836,7 +836,6 @@
 
     </div>
 
-    <script src="site-config.js?v=2.0"></script>
     <script src="news-data.js"></script>
     <script src="site-data.js"></script>
     <script src="script.js?v=2.1"></script>
@@ -1078,13 +1077,44 @@
                 }
             });
 
-            // Utiliser l'image originale, sans recadrage ni compression
+            // Utiliser l'image originale, compressée pour éviter de saturer le stockage
             document.getElementById('cropper-use-original-btn').addEventListener('click', () => {
                 if (!currentQueueItem) return;
-                if (currentQueueCallback) {
-                    currentQueueCallback(currentQueueItem.src);
-                }
-                finalizeQueueItem();
+
+                // Compression sans recadrage : on redessine l'image sur un canvas
+                // à une taille max raisonnable pour ne pas saturer le localStorage.
+                const compressOriginal = (src, callback) => {
+                    const img = new Image();
+                    img.onload = () => {
+                        let { width, height } = img;
+                        const maxDim = currentQueueItem.maxDim || 1600;
+                        if (width > maxDim || height > maxDim) {
+                            const ratio = Math.min(maxDim / width, maxDim / height);
+                            width = Math.round(width * ratio);
+                            height = Math.round(height * ratio);
+                        }
+                        const canvas = document.createElement('canvas');
+                        canvas.width = width;
+                        canvas.height = height;
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(img, 0, 0, width, height);
+                        let result = null;
+                        try { result = canvas.toDataURL('image/webp', 0.82); } catch (e) {}
+                        if (!result || result.indexOf('data:image/webp') !== 0) {
+                            try { result = canvas.toDataURL('image/jpeg', 0.85); } catch (e) { result = src; }
+                        }
+                        callback(result || src);
+                    };
+                    img.onerror = () => { callback(src); };
+                    img.src = src;
+                };
+
+                compressOriginal(currentQueueItem.src, (compressedResult) => {
+                    if (currentQueueCallback) {
+                        currentQueueCallback(compressedResult);
+                    }
+                    finalizeQueueItem();
+                });
             });
 
             // Ignorer complètement cette image (ne pas l'ajouter)

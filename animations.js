@@ -333,13 +333,12 @@
     }
 
     // ----------------------------------------------------------------
-    // 12. Contact form submit animation
+    // 12. Contact form validation animation (shake on error)
+    //     Note: script.js handles the actual form submission flow.
     // ----------------------------------------------------------------
     function initContactForm() {
         const form = document.getElementById('contact-form');
         if (!form) return;
-
-        const submitBtn = form.querySelector('button[type="submit"]');
 
         form.addEventListener('submit', function (e) {
             const requiredFields = form.querySelectorAll('[required]');
@@ -354,25 +353,7 @@
 
             if (!valid) {
                 e.preventDefault();
-                return;
             }
-
-            if (submitBtn) {
-                submitBtn.classList.add('btn-submit-loading');
-            }
-
-            setTimeout(() => {
-                if (submitBtn) {
-                    submitBtn.classList.remove('btn-submit-loading');
-                    submitBtn.classList.add('btn-submit-success');
-                    submitBtn.innerHTML = '<i class="fa-solid fa-check"></i> Envoyé';
-
-                    setTimeout(() => {
-                        submitBtn.classList.remove('btn-submit-success');
-                        submitBtn.innerHTML = 'Envoyer';
-                    }, 3000);
-                }
-            }, 1000);
         });
     }
 
@@ -409,7 +390,7 @@
 
         function enhanceNewsCards(container) {
             container.querySelectorAll('.news-card').forEach((card, index) => {
-                card.classList.add('shine-card');
+                card.classList.add('shine-card', 'glow-border', 'card-lift');
                 if (!card.classList.contains('js-reveal')) {
                     card.classList.add('js-reveal');
                     const stagger = (index % 4) + 1;
@@ -447,9 +428,140 @@
     }
 
     // ----------------------------------------------------------------
+    // 16. Page Preloader
+    // ----------------------------------------------------------------
+    function initPreloader() {
+        const preloader = document.getElementById('page-preloader');
+        if (!preloader) return;
+
+        // Cache le preloader quand la page est complètement chargée
+        const hide = () => {
+            preloader.classList.add('fade-out');
+            setTimeout(() => { if (preloader.parentNode) preloader.remove(); }, 500);
+        };
+
+        window.addEventListener('load', () => {
+            setTimeout(hide, 600); // Petit délai pour que l'animation soit visible
+        });
+
+        // Fallback : cacher après 5s max si load ne se déclenche pas
+        setTimeout(() => {
+            if (preloader.parentNode && !preloader.classList.contains('fade-out')) {
+                hide();
+            }
+        }, 5000);
+    }
+
+    // ----------------------------------------------------------------
+    // 17. Hero floating particles (génération CSS-only)
+    // ----------------------------------------------------------------
+    function initHeroParticles() {
+        const hero = document.querySelector('.hero');
+        if (!hero || prefersReducedMotion) return;
+
+        const container = document.createElement('div');
+        container.className = 'hero-particles';
+        hero.style.position = 'relative';
+        hero.appendChild(container);
+
+        const count = 20;
+        for (let i = 0; i < count; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'hero-particle';
+            const size = Math.random() * 6 + 2;
+            particle.style.width = size + 'px';
+            particle.style.height = size + 'px';
+            particle.style.left = Math.random() * 100 + '%';
+            particle.style.animationDuration = (Math.random() * 8 + 8) + 's';
+            particle.style.animationDelay = (Math.random() * 8) + 's';
+            container.appendChild(particle);
+        }
+    }
+
+    // ----------------------------------------------------------------
+    // 18. Staggered list reveal
+    // ----------------------------------------------------------------
+    function initStaggerLists() {
+        if (prefersReducedMotion) {
+            document.querySelectorAll('.stagger-list > *').forEach(el => {
+                el.style.opacity = '1';
+                el.style.transform = 'none';
+            });
+            return;
+        }
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('is-visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.stagger-list').forEach(list => observer.observe(list));
+    }
+
+    // ----------------------------------------------------------------
+    // 19. Glow border observer
+    // ----------------------------------------------------------------
+    function initGlowBorders() {
+        document.querySelectorAll('.feature-card, .player-card, .news-card').forEach(card => {
+            if (!card.classList.contains('glow-border')) {
+                card.classList.add('glow-border');
+            }
+        });
+    }
+
+    // ----------------------------------------------------------------
+    // 20. Card lift effect
+    // ----------------------------------------------------------------
+    function initCardLift() {
+        document.querySelectorAll('.feature-card, .player-card, .partner-item').forEach(card => {
+            if (!card.classList.contains('card-lift')) {
+                card.classList.add('card-lift');
+            }
+        });
+    }
+
+    // ----------------------------------------------------------------
+    // 21. Toast notification system
+    // ----------------------------------------------------------------
+    window.showToast = function(message, type) {
+        let toast = document.getElementById('site-toast');
+        if (!toast) {
+            toast = document.createElement('div');
+            toast.id = 'site-toast';
+            document.body.appendChild(toast);
+        }
+
+        type = type || '';
+        toast.className = type;
+        const icon = type === 'success' ? '<i class="fa-solid fa-circle-check"></i>'
+            : type === 'error' ? '<i class="fa-solid fa-circle-exclamation"></i>'
+            : '<i class="fa-solid fa-circle-info"></i>';
+        toast.innerHTML = icon + ' ' + message;
+
+        // Force reflow
+        void toast.offsetWidth;
+        toast.classList.add('show');
+
+        clearTimeout(toast._timeout);
+        toast._timeout = setTimeout(() => {
+            toast.classList.remove('show');
+        }, 3500);
+    };
+
+    // ----------------------------------------------------------------
     // Initialization
     // ----------------------------------------------------------------
     onReady(() => {
+        initPreloader();
+        initHeroParticles();
+        initStaggerLists();
+        initGlowBorders();
+        initCardLift();
+
         if (!prefersReducedMotion) {
             initScrollHelpers();
             initScrollReveal();

@@ -41,9 +41,7 @@
             background: linear-gradient(rgba(15, 23, 42, 0.8), rgba(15, 23, 42, 0.9)), url('assets/images/hero.webp');
             background-size: cover;
             background-position: center;
-            background-position: center;
             padding: 180px 0 80px;
-            color: white;
             color: white;
             text-align: center;
         }
@@ -203,6 +201,12 @@
 
 <body>
 
+    <!-- Preloader -->
+    <div id="page-preloader">
+        <img src="assets/images/logo.png" alt="N.I. CONSEILS" class="preloader-logo" decoding="async">
+        <div class="preloader-spinner"></div>
+    </div>
+
     <nav class="navbar">
         <div class="container">
             <a href="index.html" class="logo">
@@ -226,7 +230,7 @@
 
     <header class="agent-hero">
         <div class="container">
-            <h1 id="agent-hero-title" data-cms="agentHeaderTitle">L'Agence & L'Agent</h1>
+            <h1 id="agent-hero-title" data-cms="agentHeaderTitle" class="gradient-text">L'Agence & L'Agent</h1>
             <p id="agent-hero-subtitle" data-cms="agentHeaderSubtitle">Une expertise reconnue au service de votre réussite.</p>
         </div>
     </header>
@@ -237,7 +241,9 @@
                 <!-- Contenu rendu dynamiquement via site-data.js -->
             </div>
         </div>
-        <section class="timeline-section">
+    </section>
+
+    <section class="timeline-section">
             <div class="container">
                 <div class="text-center">
                     <h2 class="section-title" id="agent-timeline-title">Mon Parcours</h2>

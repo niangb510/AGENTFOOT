@@ -907,6 +907,10 @@ footer {
     padding-left: 12px;
 }
 
+.modal-article-text p {
+    margin-bottom: 18px;
+}
+
 .modal-meta {
     display: flex;
     gap: 20px;
@@ -916,16 +920,6 @@ footer {
     border-bottom: 1px solid #e2e8f0;
     padding-bottom: 15px;
     flex-wrap: wrap;
-}
-
-.modal-article-text {
-    font-size: 1.05rem;
-    line-height: 1.7;
-    color: #334155;
-}
-
-.modal-article-text p {
-    margin-bottom: 18px;
 }
 
 .modal-share-bar {

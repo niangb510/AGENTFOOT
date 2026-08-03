@@ -756,7 +756,239 @@ body.page-transition {
 }
 
 /* ----------------------------------------------------------------
-   25. Responsive : désactiver certains effets sur mobile
+   25. Preloader (logo animé au chargement)
+   ---------------------------------------------------------------- */
+#page-preloader {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: var(--primary-color);
+  z-index: 99999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 20px;
+  transition: opacity 0.5s ease, visibility 0.5s ease;
+}
+
+#page-preloader.fade-out {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.preloader-logo {
+  width: 100px;
+  height: 100px;
+  border-radius: 20px;
+  animation: preloaderPulse 1.2s ease-in-out infinite, preloaderRotate 3s linear infinite;
+  box-shadow: 0 0 40px rgba(217, 119, 6, 0.4);
+}
+
+@keyframes preloaderPulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.12); }
+}
+
+@keyframes preloaderRotate {
+  0% { filter: hue-rotate(0deg); }
+  100% { filter: hue-rotate(360deg); }
+}
+
+.preloader-spinner {
+  width: 50px;
+  height: 50px;
+  border: 3px solid rgba(255,255,255,0.12);
+  border-top-color: var(--secondary-color);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+/* ----------------------------------------------------------------
+   26. Gradient texte animé pour les titres
+   ---------------------------------------------------------------- */
+.gradient-text {
+  background: linear-gradient(135deg, var(--secondary-color), #f59e0b, #fbbf24, var(--secondary-color));
+  background-size: 300% 300%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: gradientShift 4s ease infinite;
+}
+
+@keyframes gradientShift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+/* ----------------------------------------------------------------
+   27. Section divider (vague SVG animée)
+   ---------------------------------------------------------------- */
+.section-divider {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  line-height: 0;
+  margin-top: -2px;
+  z-index: 5;
+}
+
+.section-divider svg {
+  display: block;
+  width: 100%;
+  height: 80px;
+}
+
+.section-divider .wave-path {
+  animation: waveDrift 6s ease-in-out infinite alternate;
+}
+
+/* L'animation translateY est compatible tous navigateurs (Firefox, Safari, Chrome) */
+@keyframes waveDrift {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(-12px); }
+}
+
+/* ----------------------------------------------------------------
+   28. Bordure glow animée sur les cartes au hover
+   ---------------------------------------------------------------- */
+.glow-border {
+  position: relative;
+  z-index: 1;
+}
+
+.glow-border::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border-radius: inherit;
+  background: linear-gradient(45deg, var(--secondary-color), var(--accent-color), #f59e0b, var(--secondary-color));
+  background-size: 300% 300%;
+  z-index: -1;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  animation: gradientShift 3s ease infinite;
+}
+
+.glow-border:hover::before {
+  opacity: 1;
+}
+
+/* ----------------------------------------------------------------
+   29. Particules flottantes CSS-only dans le hero
+   ---------------------------------------------------------------- */
+.hero-particles {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.hero-particle {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.07);
+  animation: floatParticle linear infinite;
+}
+
+@keyframes floatParticle {
+  0% { transform: translateY(100vh) scale(0); opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { transform: translateY(-10vh) scale(1); opacity: 0; }
+}
+
+/* ----------------------------------------------------------------
+   30. Compteurs avec pop animé au reveal
+   ---------------------------------------------------------------- */
+.stat-box.is-visible .stat-number {
+  animation: countPop 0.6s var(--ease-out-back) forwards;
+}
+
+@keyframes countPop {
+  0% { transform: scale(0.4); opacity: 0; }
+  60% { transform: scale(1.15); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+/* ----------------------------------------------------------------
+   31. Staggered list items
+   ---------------------------------------------------------------- */
+.stagger-list > * {
+  opacity: 0;
+  transform: translateY(15px);
+  transition: opacity 0.5s var(--ease-out-expo), transform 0.5s var(--ease-out-expo);
+}
+
+.stagger-list.is-visible > *:nth-child(1) { transition-delay: 0.05s; }
+.stagger-list.is-visible > *:nth-child(2) { transition-delay: 0.12s; }
+.stagger-list.is-visible > *:nth-child(3) { transition-delay: 0.19s; }
+.stagger-list.is-visible > *:nth-child(4) { transition-delay: 0.26s; }
+.stagger-list.is-visible > *:nth-child(5) { transition-delay: 0.33s; }
+.stagger-list.is-visible > *:nth-child(6) { transition-delay: 0.40s; }
+.stagger-list.is-visible > *:nth-child(7) { transition-delay: 0.47s; }
+.stagger-list.is-visible > *:nth-child(8) { transition-delay: 0.54s; }
+.stagger-list.is-visible > *:nth-child(n+9) { transition-delay: 0.60s; }
+
+.stagger-list.is-visible > * {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ----------------------------------------------------------------
+   32. Card hover lift + scale
+   ---------------------------------------------------------------- */
+.card-lift {
+  transition: transform 0.35s var(--ease-out-expo), box-shadow 0.35s ease;
+}
+
+.card-lift:hover {
+  transform: translateY(-10px) scale(1.02);
+  box-shadow: 0 25px 50px -12px rgba(0,0,0,0.15);
+}
+
+/* ----------------------------------------------------------------
+   33. Toast notification
+   ---------------------------------------------------------------- */
+#site-toast {
+  position: fixed;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%) translateY(120px);
+  background: var(--primary-color);
+  color: white;
+  padding: 16px 30px;
+  border-radius: 50px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  z-index: 99999;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+  opacity: 0;
+  visibility: hidden;
+  transition: transform 0.5s var(--ease-out-expo), opacity 0.4s ease, visibility 0.4s ease;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+#site-toast.show {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) translateY(0);
+}
+
+#site-toast.success { background: #10b981; }
+#site-toast.error { background: #ef4444; }
+
+/* ----------------------------------------------------------------
+   34. Responsive : désactiver certains effets sur mobile
    ---------------------------------------------------------------- */
 @media (max-width: 768px) {
   .tilt-card {
@@ -766,5 +998,31 @@ body.page-transition {
   .typing-text {
     white-space: normal;
     border-right: none;
+  }
+
+  .section-divider svg {
+    height: 40px;
+  }
+
+  .gradient-text {
+    -webkit-text-fill-color: var(--secondary-color);
+  }
+
+  .hero-particle {
+    display: none;
+  }
+
+  #site-toast {
+    bottom: 20px;
+    left: 20px;
+    right: 20px;
+    transform: translateY(120px);
+    border-radius: 16px;
+    font-size: 0.85rem;
+    padding: 14px 20px;
+  }
+
+  #site-toast.show {
+    transform: translateY(0);
   }
 }
