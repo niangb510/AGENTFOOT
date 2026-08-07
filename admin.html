@@ -588,6 +588,12 @@
                             &nbsp;&nbsp;value <span style="color: #38bdf8;">JSONB</span><br>
                             );
                         </div>
+
+                        <div style="margin-top: 20px; display: flex; gap: 10px; flex-wrap: wrap;">
+                            <button type="button" id="sb-test-btn" class="btn" style="background: var(--primary-color); color: white; padding: 10px 18px;"><i class="fa-solid fa-plug"></i> Tester la connexion</button>
+                            <button type="button" id="sb-push-btn" class="btn" style="background: #0f766e; color: white; padding: 10px 18px;"><i class="fa-solid fa-cloud-arrow-up"></i> Tout envoyer vers le Cloud</button>
+                        </div>
+                        <div id="sb-status" style="margin-top: 12px; padding: 12px 15px; border-radius: 10px; font-size: 0.9rem; background: #f1f5f9; border: 1px solid #e2e8f0; display: none;"></div>
                     </div>
 
                     <div style="display: flex; gap: 15px; flex-wrap: wrap;">
@@ -1752,15 +1758,80 @@
 
                 // Sync with Supabase if configured
                 if (window.SiteDatabase && window.SiteDatabase.init(merged.supabaseUrl, merged.supabaseKey) && window.SiteDatabase.isEnabled()) {
-                    window.SiteDatabase.setValue('ni_site_custom_config', merged).then(success => {
+                    // 1) Push the config, then 2) upload ALL existing local data
+                    // (articles, joueurs, services, page agence) so the cloud
+                    // contains everything — y compris le contenu créé AVANT la
+                    // configuration Supabase.
+                    window.SiteDatabase.setValue('ni_site_custom_config', merged).then(async success => {
                         if (success) {
-                            alert('🎉 Configuration enregistrée localement et synchronisée sur Supabase !');
+                            let extraMsg = '';
+                            try {
+                                const res = await window.SiteDatabase.pushAll();
+                                if (res && res.total > 0) {
+                                    extraMsg = res.ok
+                                        ? ' ' + res.pushed + '/' + res.total + ' données envoyées au cloud.'
+                                        : ' ⚠️ Seulement ' + res.pushed + '/' + res.total + ' données envoyées au cloud (connexion partielle).';
+                                }
+                            } catch (e) {
+                                console.warn('Push de toutes les données échoué:', e);
+                            }
+                            alert('🎉 Configuration enregistrée localement et synchronisée sur Supabase !' + extraMsg);
                         } else {
                             alert('⚠️ Enregistré localement, mais échec de la synchronisation avec Supabase. Vérifiez votre table SQL et votre connexion.');
                         }
                     });
                 } else {
                     alert('Configuration enregistrée et appliquée sur ce navigateur !');
+                }
+            });
+
+            // ---- Synchronisation Cloud : test de connexion & envoi complet ----
+            function showSbStatus(html, isOk) {
+                const el = document.getElementById('sb-status');
+                if (!el) return;
+                el.style.display = 'block';
+                el.innerHTML = html;
+                el.style.background = isOk ? '#ecfdf5' : '#fef2f2';
+                el.style.borderColor = isOk ? '#34d399' : '#fca5a5';
+            }
+
+            document.getElementById('sb-test-btn').addEventListener('click', () => {
+                const url = document.getElementById('cfg-supabaseUrl').value.trim();
+                const key = document.getElementById('cfg-supabaseKey').value.trim();
+                showSbStatus('<i class="fa-solid fa-spinner fa-spin"></i> Test de la connexion en cours...', true);
+                if (window.SiteDatabase && window.SiteDatabase.init(url, key) && window.SiteDatabase.isEnabled()) {
+                    window.SiteDatabase.fetchAll().then(data => {
+                        if (data && Array.isArray(data)) {
+                            const keys = data.map(r => r.key).join(', ') || 'aucune';
+                            showSbStatus('✅ Connexion réussie ! <strong>' + data.length + '</strong> donnée(s) dans le cloud : <code>' + keys + '</code>', true);
+                        } else {
+                            window.SiteDatabase.init('', ''); // restaure le client par défaut intégré
+                            showSbStatus('❌ Connexion impossible. Vérifiez l\'URL, la clé et que la table <code>site_data</code> existe (SQL Editor).', false);
+                        }
+                    });
+                } else {
+                    showSbStatus('❌ SDK Supabase non chargé. Rechargez la page.', false);
+                }
+            });
+
+            const sbPushBtn = document.getElementById('sb-push-btn');
+            sbPushBtn.addEventListener('click', () => {
+                if (sbPushBtn.disabled) return;
+                sbPushBtn.disabled = true;
+                showSbStatus('<i class="fa-solid fa-spinner fa-spin"></i> Envoi de toutes les données vers le cloud...', true);
+                const finish = (html, isOk) => { showSbStatus(html, isOk); sbPushBtn.disabled = false; };
+                if (window.SiteDatabase && window.SiteDatabase.isEnabled()) {
+                    window.SiteDatabase.pushAll().then(res => {
+                        if (res && res.total === 0) {
+                            finish('ℹ️ Rien à envoyer : aucune donnée locale trouvée. Publiez d\'abord des articles/joueurs/services.', true);
+                        } else if (res && res.ok) {
+                            finish('🎉 ' + res.pushed + '/' + res.total + ' données envoyées vers le cloud avec succès !', true);
+                        } else {
+                            finish('⚠️ ' + (res ? res.pushed : 0) + '/' + (res ? res.total : 0) + ' données envoyées. Vérifiez la connexion avec « Tester la connexion ».', false);
+                        }
+                    });
+                } else {
+                    finish('❌ Supabase non configuré. Renseignez l\'URL et la clé ci-dessus puis réessayez.', false);
                 }
             });
 

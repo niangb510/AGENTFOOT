@@ -15,9 +15,20 @@
         }
     }
 
+    // Clés publiques Supabase intégrées par défaut.
+    // La clé anon est conçue pour être publique (elle est déjà visible dans le
+    // code du site). Grâce à ces valeurs par défaut, CHAQUE visiteur se connecte
+    // automatiquement à la base cloud et voit les dernières modifications
+    // (articles, joueurs, photos...) sans avoir à configurer quoi que ce soit.
+    // NOTE MAINTENANCE : si la clé anon est régénérée dans le dashboard
+    // Supabase, mettre à jour DEFAULT_SUPABASE_KEY ici, sinon le site se
+    // déconnectera silencieusement du cloud.
+    const DEFAULT_SUPABASE_URL = "https://sknyzontcxwohnjuvztb.supabase.co";
+    const DEFAULT_SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNrbnl6b250Y3h3b2huanV2enRiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODU3NDQ5MjQsImV4cCI6MjEwMTMyMDkyNH0.pxZMVD_TpFZstfzNtClv8nMPpPbQCCKb3LbDEKMhOOg";
+
     const cfg = getStoredConfig();
-    const url = cfg.supabaseUrl || "";
-    const key = cfg.supabaseKey || "";
+    const url = cfg.supabaseUrl || DEFAULT_SUPABASE_URL;
+    const key = cfg.supabaseKey || DEFAULT_SUPABASE_KEY;
 
     let client = null;
     if (url && key && typeof supabase !== 'undefined') {
@@ -33,9 +44,11 @@
         isEnabled: () => client !== null,
         
         init: (supabaseUrl, supabaseKey) => {
-            if (supabaseUrl && supabaseKey && typeof supabase !== 'undefined') {
+            const u = supabaseUrl || DEFAULT_SUPABASE_URL;
+            const k = supabaseKey || DEFAULT_SUPABASE_KEY;
+            if (u && k && typeof supabase !== 'undefined') {
                 try {
-                    client = supabase.createClient(supabaseUrl, supabaseKey);
+                    client = supabase.createClient(u, k);
                     return true;
                 } catch (e) {
                     console.error('Erreur init Supabase:', e);
@@ -71,6 +84,36 @@
                 console.error(`Erreur setValue pour [${rowKey}]:`, err);
                 return false;
             }
+        },
+
+        // Push ALL site data currently stored locally to the cloud.
+        // Used to upload pre-existing content (articles, players, services,
+        // agent page, config) that was created before Supabase was configured.
+        pushAll: async () => {
+            if (!client) return { ok: false, pushed: 0, total: 0 };
+            const keys = [
+                'ni_site_custom_config',
+                'custom_news_articles',
+                'deleted_news_ids',
+                'ni_site_players',
+                'ni_site_services',
+                'ni_site_agent'
+            ];
+            let pushed = 0;
+            let total = 0;
+            for (const k of keys) {
+                try {
+                    const raw = localStorage.getItem(k);
+                    if (raw === null) continue;
+                    total++;
+                    const val = JSON.parse(raw);
+                    const ok = await window.SiteDatabase.setValue(k, val);
+                    if (ok) pushed++;
+                } catch (err) {
+                    console.warn(`pushAll skip [${k}]:`, err);
+                }
+            }
+            return { ok: total > 0 && pushed === total, pushed, total };
         }
     };
 
