@@ -51,7 +51,7 @@
                 'Académie Afca Burkina',
                 'Dijon FCO : 1er contrat pro (2026)'
             ],
-            image: 'assets/images/player1.webp',
+            image: 'assets/images/adamtay.webp',
             videoUrl: 'https://www.youtube.com/results?search_query=Kelvin+Kwasi+Adamtay+highlights'
         },
         {
