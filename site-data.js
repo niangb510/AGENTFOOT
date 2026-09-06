@@ -71,7 +71,7 @@
                 'Sporting Club de Tenakourou (Fasofoot)',
                 'Dijon FCO : contrat pro (2026)'
             ],
-            image: 'assets/images/player1.webp',
+            image: 'assets/images/mercato_dijon_1.webp',
             videoUrl: 'https://www.youtube.com/results?search_query=Bayala+Jo%C3%ABl+highlights'
         }
     ];
