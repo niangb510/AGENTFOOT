@@ -71,7 +71,7 @@
                 'Sporting Club de Tenakourou (Fasofoot)',
                 'Dijon FCO : contrat pro (2026)'
             ],
-            image: 'assets/images/mercato_dijon_1.webp',
+            image: 'assets/images/bayala.webp',
             videoUrl: 'https://www.youtube.com/results?search_query=Bayala+Jo%C3%ABl+highlights'
         }
     ];
@@ -267,13 +267,12 @@
                         ${p.clubLogo ? `<img src="${p.clubLogo}" alt="${escapeHtml(p.club)}" class="club-logo-mini">` : ''}
                         ${escapeHtml(p.club)}
                     </div>
-                    <div class="js-reveal stagger-1" style="margin-top: 10px; font-size: 0.85rem; color: #64748b;">
+                    <div style="margin-top: 10px; font-size: 0.85rem; color: #64748b;">
                         <p><i class="fa-solid fa-flag"></i> ${escapeHtml(p.nationality)}</p>
                         ${(p.extraLines || []).map(l => `<p><i class="fa-solid fa-shoe-prints"></i> ${escapeHtml(l)}</p>`).join('')}
                     </div>
-                    <p class="js-reveal stagger-2" style="font-size: 0.9rem; margin-top: 10px;">${escapeHtml(p.bio)}</p>
-                    <div class="js-reveal stagger-3"
-                        style="background: #f8fafc; padding: 10px; border-radius: 8px; margin-top: 10px; font-size: 0.8rem;">
+                    <p style="font-size: 0.9rem; margin-top: 10px; color: #334155; line-height: 1.5;">${escapeHtml(p.bio)}</p>
+                    <div style="background: #f8fafc; padding: 10px; border-radius: 8px; margin-top: 10px; font-size: 0.8rem; color: #1e293b;">
                         <strong>${escapeHtml(p.statsTitle)}</strong><br>
                         ${(p.statsLines || []).map(l => escapeHtml(l)).join('<br>')}
                     </div>

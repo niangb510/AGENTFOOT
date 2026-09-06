@@ -1,4 +1,4 @@
-const CACHE_NAME = 'ni-conseils-v6';
+const CACHE_NAME = 'ni-conseils-v7';
 const ASSETS = [
     '/',
     '/index.html',
@@ -27,7 +27,8 @@ const ASSETS = [
     '/assets/images/cyriaque.webp',
     '/assets/images/dijon.webp',
     '/assets/images/player1.webp',
-    '/assets/images/adamtay.webp'
+    '/assets/images/adamtay.webp',
+    '/assets/images/bayala.webp'
 ];
 
 self.addEventListener('install', (event) => {
