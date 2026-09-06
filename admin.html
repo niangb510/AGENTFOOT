@@ -1085,10 +1085,10 @@
 
                     let resultDataUrl = null;
                     try {
-                        resultDataUrl = canvas.toDataURL('image/webp', 0.82);
+                        resultDataUrl = canvas.toDataURL('image/webp', 0.75);
                     } catch (e) { /* WebP non supporté → JPEG */ }
                     if (!resultDataUrl || resultDataUrl.indexOf('data:image/webp') !== 0) {
-                        resultDataUrl = canvas.toDataURL('image/jpeg', 0.85);
+                        resultDataUrl = canvas.toDataURL('image/jpeg', 0.78);
                     }
 
                     if (currentQueueCallback) {
@@ -1133,9 +1133,9 @@
                         const ctx = canvas.getContext('2d');
                         ctx.drawImage(img, 0, 0, width, height);
                         let result = null;
-                        try { result = canvas.toDataURL('image/webp', 0.82); } catch (e) {}
+                        try { result = canvas.toDataURL('image/webp', 0.75); } catch (e) {}
                         if (!result || result.indexOf('data:image/webp') !== 0) {
-                            try { result = canvas.toDataURL('image/jpeg', 0.85); } catch (e) { result = src; }
+                            try { result = canvas.toDataURL('image/jpeg', 0.78); } catch (e) { result = src; }
                         }
                         callback(result || src);
                     };
@@ -1404,7 +1404,7 @@
                         enqueueCropping(evt.target.result, NaN, (croppedResult) => {
                             currentArticlePhotos.push(croppedResult);
                             renderPhotosGallery();
-                        }, { maxDim: 1600, label: 'Photo article' });
+                        }, { maxDim: 1000, label: 'Photo article' });
                     };
                     reader.readAsDataURL(file);
                 });
@@ -1419,7 +1419,7 @@
                     enqueueCropping(val, NaN, (croppedResult) => {
                         currentArticlePhotos.push(croppedResult);
                         renderPhotosGallery();
-                    }, { maxDim: 1600, label: 'Photo article' });
+                    }, { maxDim: 1000, label: 'Photo article' });
                     urlInput.value = '';
                 }
             });

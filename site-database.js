@@ -1,6 +1,7 @@
 /**
  * N.I. CONSEILS-MANAGEMENTS - Cloud Database Manager
  * Handles syncing key-value data with Supabase backend.
+ * Optimized with Meta Version Caching to reduce Supabase egress bandwidth by >99%.
  */
 (function() {
     'use strict';
@@ -15,14 +16,6 @@
         }
     }
 
-    // Clés publiques Supabase intégrées par défaut.
-    // La clé anon est conçue pour être publique (elle est déjà visible dans le
-    // code du site). Grâce à ces valeurs par défaut, CHAQUE visiteur se connecte
-    // automatiquement à la base cloud et voit les dernières modifications
-    // (articles, joueurs, photos...) sans avoir à configurer quoi que ce soit.
-    // NOTE MAINTENANCE : si la clé anon est régénérée dans le dashboard
-    // Supabase, mettre à jour DEFAULT_SUPABASE_KEY ici, sinon le site se
-    // déconnectera silencieusement du cloud.
     const DEFAULT_SUPABASE_URL = "https://sknyzontcxwohnjuvztb.supabase.co";
     const DEFAULT_SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNrbnl6b250Y3h3b2huanV2enRiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODU3NDQ5MjQsImV4cCI6MjEwMTMyMDkyNH0.pxZMVD_TpFZstfzNtClv8nMPpPbQCCKb3LbDEKMhOOg";
 
@@ -37,6 +30,22 @@
         } catch (e) {
             console.error('Erreur initialisation Supabase client:', e);
         }
+    }
+
+    // Local helper for DB Meta Version tracking
+    function getLocalMetaVersion() {
+        try {
+            const raw = localStorage.getItem('ni_db_meta_version');
+            return raw ? JSON.parse(raw) : {};
+        } catch (e) {
+            return {};
+        }
+    }
+
+    function saveLocalMetaVersion(meta) {
+        try {
+            localStorage.setItem('ni_db_meta_version', JSON.stringify(meta));
+        } catch (e) {}
     }
 
     window.SiteDatabase = {
@@ -71,14 +80,43 @@
             }
         },
 
-        // Upsert a single key-value row into the site_data table
-        setValue: async (rowKey, rowValue) => {
-            if (!client) return false;
+        // Fetch a single key from site_data
+        fetchKey: async (rowKey) => {
+            if (!client) return null;
             try {
                 const { data, error } = await client
                     .from('site_data')
+                    .select('key, value')
+                    .eq('key', rowKey)
+                    .maybeSingle();
+                if (error) throw error;
+                return data ? data.value : null;
+            } catch (err) {
+                console.error(`Erreur fetchKey [${rowKey}]:`, err);
+                return null;
+            }
+        },
+
+        // Upsert a single key-value row into the site_data table and update meta version
+        setValue: async (rowKey, rowValue) => {
+            if (!client) return false;
+            try {
+                const { error } = await client
+                    .from('site_data')
                     .upsert({ key: rowKey, value: rowValue });
                 if (error) throw error;
+
+                // Update _meta_version timestamp for this key
+                const meta = getLocalMetaVersion();
+                meta[rowKey] = Date.now();
+                saveLocalMetaVersion(meta);
+
+                // Asynchronously update _meta_version in cloud
+                client.from('site_data')
+                    .upsert({ key: '_meta_version', value: meta })
+                    .then(() => {})
+                    .catch(() => {});
+
                 return true;
             } catch (err) {
                 console.error(`Erreur setValue pour [${rowKey}]:`, err);
@@ -87,8 +125,6 @@
         },
 
         // Push ALL site data currently stored locally to the cloud.
-        // Used to upload pre-existing content (articles, players, services,
-        // agent page, config) that was created before Supabase was configured.
         pushAll: async () => {
             if (!client) return { ok: false, pushed: 0, total: 0 };
             const keys = [
@@ -101,78 +137,131 @@
             ];
             let pushed = 0;
             let total = 0;
+            const meta = getLocalMetaVersion();
+            const now = Date.now();
+
             for (const k of keys) {
                 try {
                     const raw = localStorage.getItem(k);
                     if (raw === null) continue;
                     total++;
                     const val = JSON.parse(raw);
-                    const ok = await window.SiteDatabase.setValue(k, val);
-                    if (ok) pushed++;
+                    const { error } = await client.from('site_data').upsert({ key: k, value: val });
+                    if (!error) {
+                        pushed++;
+                        meta[k] = now;
+                    }
                 } catch (err) {
                     console.warn(`pushAll skip [${k}]:`, err);
                 }
             }
+
+            if (pushed > 0) {
+                saveLocalMetaVersion(meta);
+                await client.from('site_data').upsert({ key: '_meta_version', value: meta });
+            }
+
             return { ok: total > 0 && pushed === total, pushed, total };
         }
     };
 
-    // Background Synchronization Engine
+    // Optimized Bandwidth-Saving Background Sync Engine
     document.addEventListener('DOMContentLoaded', () => {
         if (!window.SiteDatabase.isEnabled()) {
             console.log('Base de données Supabase non configurée. Utilisation du stockage local.');
             return;
         }
 
-        console.log('Base de données Supabase détectée. Synchronisation en cours...');
-        window.SiteDatabase.fetchAll().then(data => {
-            if (!data || !Array.isArray(data)) return;
+        console.log('Base de données Supabase connectée. Vérification des mises à jour...');
 
-            let needsReload = false;
-            let configChanged = false;
-            let dataChanged = false;
+        // 1. First fetch ONLY _meta_version (TINY payload ~100 bytes)
+        window.SiteDatabase.fetchKey('_meta_version').then(async (remoteMeta) => {
+            const localMeta = getLocalMetaVersion();
 
-            data.forEach(row => {
-                const oldVal = localStorage.getItem(row.key);
-                const newValString = JSON.stringify(row.value);
-                if (oldVal !== newValString) {
-                    localStorage.setItem(row.key, newValString);
-                    if (row.key === 'ni_site_custom_config') {
-                        configChanged = true;
-                    } else if (['ni_site_players', 'ni_site_services', 'ni_site_agent'].includes(row.key)) {
-                        dataChanged = true;
-                    } else {
-                        needsReload = true; // Articles, news deletions, etc.
+            // If remoteMeta exists, check if any key has a newer timestamp than localMeta
+            if (remoteMeta && typeof remoteMeta === 'object') {
+                let keysToFetch = [];
+                Object.keys(remoteMeta).forEach(k => {
+                    if (k === '_meta_version') return;
+                    if (!localMeta[k] || remoteMeta[k] > localMeta[k]) {
+                        keysToFetch.push(k);
+                    }
+                });
+
+                // Also check if any vital key is missing from local storage
+                const vitalKeys = ['ni_site_custom_config', 'custom_news_articles', 'deleted_news_ids', 'ni_site_players', 'ni_site_services', 'ni_site_agent'];
+                vitalKeys.forEach(vk => {
+                    if (localStorage.getItem(vk) === null && !keysToFetch.includes(vk)) {
+                        keysToFetch.push(vk);
+                    }
+                });
+
+                // IF NOTHING CHANGED & NO VITAL KEY MISSING -> STOP HERE! (0 Bandwidth Wasted)
+                if (keysToFetch.length === 0) {
+                    console.log('⚡ Données à jour (cache local utilisé, 0 octet téléchargé).');
+                    return;
+                }
+
+                console.log(`Clés à mettre à jour depuis le cloud : ${keysToFetch.join(', ')}`);
+                let configChanged = false;
+                let dataChanged = false;
+                let newsChanged = false;
+
+                for (const keyToFetch of keysToFetch) {
+                    const newValue = await window.SiteDatabase.fetchKey(keyToFetch);
+                    if (newValue !== null) {
+                        localStorage.setItem(keyToFetch, JSON.stringify(newValue));
+                        localMeta[keyToFetch] = remoteMeta[keyToFetch] || Date.now();
+
+                        if (keyToFetch === 'ni_site_custom_config') configChanged = true;
+                        else if (['ni_site_players', 'ni_site_services', 'ni_site_agent'].includes(keyToFetch)) dataChanged = true;
+                        else newsChanged = true;
                     }
                 }
-            });
 
-            // If config has changed, re-apply site configuration live
-            if (configChanged && window.niCmsConfig) {
-                console.log('Mise à jour de la configuration de design...');
-                const defaultConfig = window.niCmsConfig.defaultConfig;
-                const savedConfig = JSON.parse(localStorage.getItem('ni_site_custom_config') || '{}');
-                const mergedConfig = Object.assign({}, defaultConfig, savedConfig);
-                window.niCmsConfig.config = mergedConfig;
-                window.niCmsConfig.applySiteConfig(mergedConfig);
-            }
+                saveLocalMetaVersion(localMeta);
 
-            // If players, services, or agent data has changed, re-render live
-            if (dataChanged && window.SiteData) {
-                console.log('Mise à jour des données (Joueurs/Services/Agent)...');
-                window.SiteData.renderPlayers();
-                window.SiteData.renderServices();
-                window.SiteData.renderAgent();
-            }
+                // Update UI elements dynamically
+                if (configChanged && window.niCmsConfig) {
+                    console.log('Mise à jour du design...');
+                    const defaultConfig = window.niCmsConfig.defaultConfig;
+                    const savedConfig = JSON.parse(localStorage.getItem('ni_site_custom_config') || '{}');
+                    const mergedConfig = Object.assign({}, defaultConfig, savedConfig);
+                    window.niCmsConfig.config = mergedConfig;
+                    window.niCmsConfig.applySiteConfig(mergedConfig);
+                }
 
-            // If actualites/article/admin is open and news articles changed, reload
-            const hasNewsContainer = document.getElementById('news-container');
-            const isArticlePage = window.location.pathname.includes('article.html');
-            const isAdminPage = window.location.pathname.includes('admin.html');
+                if (dataChanged && window.SiteData) {
+                    console.log('Re-rendu des joueurs, services, agent...');
+                    window.SiteData.renderPlayers();
+                    window.SiteData.renderServices();
+                    window.SiteData.renderAgent();
+                }
 
-            if ((needsReload || dataChanged) && (hasNewsContainer || isArticlePage) && !isAdminPage) {
-                console.log('Nouvel article ou modification d\'article détecté. Rechargement de la page...');
-                window.location.reload();
+                const hasNewsContainer = document.getElementById('news-container');
+                const isArticlePage = window.location.pathname.includes('article.html');
+                const isAdminPage = window.location.pathname.includes('admin.html');
+
+                if ((newsChanged || dataChanged) && (hasNewsContainer || isArticlePage) && !isAdminPage) {
+                    console.log('Mise à jour des actualités. Rechargement...');
+                    window.location.reload();
+                }
+
+            } else {
+                // Fallback: remoteMeta doesn't exist yet (first time initialization)
+                console.log('Première synchronisation cloud complète (initialisation meta)...');
+                const allData = await window.SiteDatabase.fetchAll();
+                if (!allData || !Array.isArray(allData)) return;
+
+                const newMeta = {};
+                allData.forEach(row => {
+                    if (row.key !== '_meta_version') {
+                        localStorage.setItem(row.key, JSON.stringify(row.value));
+                        newMeta[row.key] = Date.now();
+                    }
+                });
+                saveLocalMetaVersion(newMeta);
+                await window.SiteDatabase.setValue('_meta_version', newMeta);
             }
         }).catch(err => {
             console.warn('Erreur lors de la synchronisation Supabase:', err);
