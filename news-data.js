@@ -7,6 +7,19 @@
 
     const defaultBackupArticles = [
         {
+            "id": "ni-conseils-ufoa-b-u17-presence",
+            "title": "N.I Conseils Managements présent au Stade du 4-Août pour le Tournoi UFOA-B U17",
+            "date": "2026-10-10",
+            "dateFormatted": "10 Octobre 2026",
+            "category": "Événement",
+            "author": "N.I Conseils Managements",
+            "image": "assets/images/ufoa-presence.webp",
+            "images": ["assets/images/ufoa-presence.webp"],
+            "summary": "Les dirigeants de N.I Conseils Managements ont marqué leur présence au Stade du 4-Août lors du tournoi qualificatif UFOA-B U17, réaffirmant leur engagement envers la jeunesse et le développement du football africain.",
+            "content": "<p>Les dirigeants de <strong>N.I Conseils Managements</strong>, à l'image de leur dynamisme habituel, étaient présents dans les tribunes du <strong>Stade du 4-Août</strong>. Cet acte de présence s'inscrit dans le cadre du <strong>tournoi qualificatif UFOA-B U17</strong>, une compétition majeure regroupant les jeunes talents de la sous-région.</p><p>Organisé pour désigner les représentants de la zone B de l'Union des Fédérations Ouest-Africaines de Football (UFOA) à la prochaine Coupe d'Afrique des Nations U17, ce tournoi est un véritable vivier de futurs champions. La présence de la direction de N.I Conseils Managements témoigne de la volonté de l'agence de rester au plus près des pépites du football africain et de soutenir les événements sportifs de grande envergure sur le continent.</p><h3>Détecter et accompagner les talents de demain</h3><p>Dans un contexte où le recrutement précoce devient une norme internationale, assister à de tels événements permet à l'agence d'évaluer directement le potentiel des jeunes joueurs. Fort de son expérience dans le transfert de joueurs prometteurs vers l'Europe, l'agence réitère son objectif de bâtir des ponts solides entre la formation locale et le monde professionnel.</p><p><em>« Être présent sur le terrain est essentiel pour nous. Cela nous permet non seulement de repérer les talents bruts, mais aussi de comprendre l'environnement et l'évolution du football de jeunes dans notre région »</em>, a souligné la direction.</p>",
+            "tags": ["UFOA B U17", "Stade du 4-Août", "N.I Conseils Managements", "Détection"]
+        },
+        {
             "id": "cyriaque-irie-but-fribourg",
             "title": "Performance : But décisif pour Cyriaque Irié lors du match amical du SC Fribourg",
             "date": "2026-07-28",
