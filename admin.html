@@ -678,7 +678,7 @@
 
                     <div class="form-group">
                         <label for="pl-club-logo">Logo du club (URL) - optionnel</label>
-                        <input type="text" id="pl-club-logo" placeholder="assets/images/dijon.webp">
+                        <input type="text" id="pl-club-logo" placeholder="assets/images/LogoDFCO.svg">
                     </div>
 
                     <div class="form-group">
@@ -1976,7 +1976,7 @@
                     item.className = 'article-admin-item';
                     item.innerHTML = `
                         <div class="article-admin-info">
-                            <img src="${p.image || 'assets/images/player1.webp'}" class="article-admin-thumb" alt="">
+                            ${p.image ? `<img src="${p.image}" class="article-admin-thumb" alt="">` : '<i class="fa-solid fa-user article-admin-thumb" style="display:inline-flex;align-items:center;justify-content:center;background:#e2e8f0;color:#64748b;"></i>'}
                             <div>
                                 <h4 style="margin:0; color:var(--primary-color); font-size:1.05rem;">${p.name}</h4>
                                 <span style="font-size:0.8rem; color:#64748b;">${p.position || ''} | ${p.age || ''} | ${p.club || ''}</span>
@@ -2089,7 +2089,7 @@
                     badgeColor: document.getElementById('pl-badge-color').value,
                     nationality: document.getElementById('pl-nationality').value.trim(),
                     videoUrl: document.getElementById('pl-video-url').value.trim(),
-                    image: document.getElementById('pl-image').value.trim() || 'assets/images/player1.webp',
+                    image: document.getElementById('pl-image').value.trim(),
                     clubLogo: document.getElementById('pl-club-logo').value.trim(),
                     extraLines: document.getElementById('pl-extra-lines').value.split('\n').map(s => s.trim()).filter(Boolean),
                     bio: document.getElementById('pl-bio').value.trim(),

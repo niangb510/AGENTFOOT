@@ -42,7 +42,7 @@
             position: 'Avant-centre / Ailier',
             age: '18 ans',
             club: 'Dijon FCO',
-            clubLogo: 'assets/images/dijon.webp',
+            clubLogo: 'assets/images/LogoDFCO.svg',
             nationality: 'Origine ghanéenne',
             extraLines: ['Académie Afca Burkina'],
             bio: "Avant-centre moderne et polyvalent. Formé à l'Académie Afca Burkina, il signe son premier contrat professionnel au Dijon FCO à 18 ans.",
@@ -51,7 +51,7 @@
                 'Académie Afca Burkina',
                 'Dijon FCO : 1er contrat pro (2026)'
             ],
-            image: 'assets/images/adamtay.webp',
+            image: 'assets/images/adamtay.jpg',
             videoUrl: 'https://www.youtube.com/results?search_query=Kelvin+Kwasi+Adamtay+highlights'
         },
         {
@@ -62,7 +62,7 @@
             position: 'Milieu de terrain',
             age: '19 ans',
             club: 'Dijon FCO',
-            clubLogo: 'assets/images/dijon.webp',
+            clubLogo: 'assets/images/LogoDFCO.svg',
             nationality: 'International Espoir Burkinabé',
             extraLines: ['Sporting Club de Tenakourou'],
             bio: "Milieu récupérateur et organisateur au talent pur. Issu du Sporting Club de Tenakourou, il rejoint le Dijon FCO après une saison remarquée en Fasofoot.",
@@ -201,8 +201,21 @@
 
     /* ------------------ GETTERS / SETTERS ------------------ */
 
+    // Mise à jour des données déjà enregistrées : photos par défaut supprimées, vrai logo du DFCO.
+    const LEGACY_IMAGE_MAP = {
+        'assets/images/player1.webp': '',
+        'assets/images/player1.png': '',
+        'assets/images/dijon.webp': 'assets/images/LogoDFCO.svg'
+    };
+    function migrateImage(value) {
+        return Object.prototype.hasOwnProperty.call(LEGACY_IMAGE_MAP, value) ? LEGACY_IMAGE_MAP[value] : value;
+    }
+
     function getPlayers() {
-        return readLS(LS_PLAYERS, defaultPlayers);
+        return readLS(LS_PLAYERS, defaultPlayers).map(p => p ? Object.assign({}, p, {
+            image: migrateImage(p.image),
+            clubLogo: migrateImage(p.clubLogo)
+        }) : p);
     }
     function savePlayers(list) {
         return writeLS(LS_PLAYERS, list);
@@ -241,21 +254,24 @@
             return;
         }
 
-        // Fallback image via addEventListener (les handlers inline onerror sont bloqués par la CSP)
+        // Pas d'image par défaut : si une photo est absente ou introuvable, on affiche un placeholder neutre.
+        // addEventListener car les handlers inline onerror sont bloqués par la CSP.
         grid.addEventListener('error', (e) => {
             const img = e.target;
-            if (img.tagName === 'IMG' && img.dataset.fallback && !img.dataset.fallbackUsed) {
-                img.dataset.fallbackUsed = '1';
-                img.src = img.dataset.fallback;
-            }
+            if (img.tagName !== 'IMG' || !img.classList.contains('player-img')) return;
+            const container = img.closest('.player-img-container');
+            if (!container) return;
+            container.classList.add('player-img-empty');
+            container.innerHTML = '<i class="fa-solid fa-user"></i>';
         }, true);
 
         grid.innerHTML = players.map((p, i) => `
             <div class="player-card reveal tilt-card shine-card js-reveal">
                 ${p.badge ? `<div class="player-badge pulse-badge"${p.badgeColor ? ` style="background:${p.badgeColor};"` : ''}>${escapeHtml(p.badge)}</div>` : ''}
-                <div class="player-img-container">
-                    <img src="${p.image}" alt="${escapeHtml(p.name)}" class="player-img"
-                        data-fallback="assets/images/player1.webp" loading="lazy" decoding="async">
+                <div class="player-img-container${p.image ? '' : ' player-img-empty'}">
+                    ${p.image
+                        ? `<img src="${p.image}" alt="${escapeHtml(p.name)}" class="player-img" loading="lazy" decoding="async">`
+                        : '<i class="fa-solid fa-user"></i>'}
                 </div>
                 <div class="player-info">
                     <h3 class="player-name">${escapeHtml(p.name)}</h3>
