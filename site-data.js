@@ -330,8 +330,9 @@
         // Hero
         const heroTitle = document.getElementById('agent-hero-title');
         const heroSubtitle = document.getElementById('agent-hero-subtitle');
-        if (heroTitle) heroTitle.textContent = agent.heroTitle;
-        if (heroSubtitle) heroSubtitle.textContent = agent.heroSubtitle;
+        // Ne pas vider le titre/sous-titre si aucune valeur n'est enregistrée
+        if (heroTitle && agent.heroTitle) heroTitle.textContent = agent.heroTitle;
+        if (heroSubtitle && agent.heroSubtitle) heroSubtitle.textContent = agent.heroSubtitle;
 
         // Contenu principal
         const content = document.getElementById('agent-content');

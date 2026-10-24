@@ -136,11 +136,12 @@
     // 4. Typing effect for hero title (word by word)
     // ----------------------------------------------------------------
     function initTypingEffect() {
-        const title = document.querySelector('.hero-content h1');
+        // Titres d'en-tête de toutes les pages (accueil, agence, joueurs, services, contact, actualités)
+        const title = document.querySelector('header h1[data-cms]');
         if (!title) return;
 
         const words = title.textContent.trim().split(/\s+/);
-        if (words.length < 2) return;
+        if (!words.length || !words[0]) return;
 
         // Les mots restent dans le DOM (espace réservé), seuls leur opacité change
         title.textContent = '';

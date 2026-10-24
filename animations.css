@@ -326,13 +326,13 @@
   animation: fadeInUp 0.8s var(--ease-out-expo) 0.8s forwards;
 }
 
-/* Titre écrit mot par mot */
-.hero-content h1.typing-active .typed-word {
+/* Titres d'en-tête écrits mot par mot (toutes les pages) */
+h1.typing-active .typed-word {
   opacity: 0;
   transition: opacity 0.35s ease;
 }
 
-.hero-content h1.typing-active .typed-word.is-typed {
+h1.typing-active .typed-word.is-typed {
   opacity: 1;
 }
 
