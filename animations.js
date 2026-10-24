@@ -133,23 +133,36 @@
     }
 
     // ----------------------------------------------------------------
-    // 4. Typing effect for hero subtitle
+    // 4. Typing effect for hero title (word by word)
     // ----------------------------------------------------------------
     function initTypingEffect() {
-        const subtitle = document.querySelector('.hero-content .hero-subtitle');
-        if (!subtitle || prefersReducedMotion || isTouchDevice) return;
+        const title = document.querySelector('.hero-content h1');
+        if (!title) return;
 
-        const originalText = subtitle.textContent;
-        subtitle.textContent = '';
-        subtitle.classList.add('typing-text');
+        const words = title.textContent.trim().split(/\s+/);
+        if (words.length < 2) return;
+
+        // Les mots restent dans le DOM (espace réservé), seuls leur opacité change
+        title.textContent = '';
+        title.classList.add('typing-active');
+        const wordEls = words.map((word, index) => {
+            const span = document.createElement('span');
+            span.className = 'typed-word';
+            span.textContent = word;
+            title.appendChild(span);
+            if (index < words.length - 1) title.appendChild(document.createTextNode(' '));
+            return span;
+        });
 
         let i = 0;
-        const speed = 40;
+        const speed = 260;
         function type() {
-            if (i < originalText.length) {
-                subtitle.textContent += originalText.charAt(i);
+            if (i < wordEls.length) {
+                wordEls[i].classList.add('is-typed');
                 i++;
                 setTimeout(type, speed);
+            } else {
+                title.classList.remove('typing-active');
             }
         }
         setTimeout(type, 600);
@@ -372,13 +385,23 @@
         const track = document.createElement('div');
         track.className = 'partners-track';
 
-        // Duplicate items for seamless loop
-        items.forEach(item => track.appendChild(item.cloneNode(true)));
-        items.forEach(item => track.appendChild(item.cloneNode(true)));
+        // Deux copies minimum pour une boucle continue, puis on complète
+        // pour couvrir les écrans larges sans trou.
+        const addCopy = () => items.forEach(item => track.appendChild(item.cloneNode(true)));
+        addCopy();
+        addCopy();
 
         wrapper.appendChild(track);
         partnersGrid.innerHTML = '';
         partnersGrid.appendChild(wrapper);
+
+        const minWidth = wrapper.clientWidth * 2;
+        let copies = 2;
+        while (track.scrollWidth < minWidth && copies < 20) {
+            addCopy();
+            addCopy();
+            copies += 2;
+        }
     }
 
     // ----------------------------------------------------------------
@@ -562,17 +585,19 @@
         initGlowBorders();
         initCardLift();
 
+        // Toujours révéler le contenu du hero, même en mouvement réduit
+        initHeroAnimations();
+        initPartnersMarquee();
+        initTypingEffect();
+
         if (!prefersReducedMotion) {
             initScrollHelpers();
             initScrollReveal();
-            initHeroAnimations();
-            initTypingEffect();
             initTiltCards();
             initButtonRipple();
             initCounters();
             initTimeline();
             initServiceAnimations();
-            initPartnersMarquee();
             initNewsCards();
         } else {
             document.querySelectorAll('.js-reveal, .js-reveal-left, .js-reveal-right, .js-scale-in').forEach(el => {

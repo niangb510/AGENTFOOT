@@ -1,4 +1,4 @@
-const CACHE_NAME = 'ni-conseils-v10';
+const CACHE_NAME = 'ni-conseils-v11';
 const ASSETS = [
     '/',
     '/index.html',
@@ -27,6 +27,8 @@ const ASSETS = [
     '/assets/images/cyriaque.webp',
     '/assets/images/dijon.webp',
     '/assets/images/LogoDFCO.svg',
+    '/assets/images/estac-troyes.png',
+    '/assets/images/sc-bastia.svg',
     '/assets/images/adamtay.jpg',
     '/assets/images/bayala.webp'
 ];

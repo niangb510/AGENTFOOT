@@ -299,11 +299,15 @@
 /* ----------------------------------------------------------------
    8. Hero : effets du titre et parallax
    ---------------------------------------------------------------- */
-.hero-content h1,
-.hero-content .hero-subtitle,
-.hero-content p:not(.hero-subtitle),
-.hero-btns {
-  opacity: 0;
+/* Masquage initial uniquement si les animations sont autorisées :
+   en mouvement réduit (ou sans JS), le contenu du hero doit rester visible. */
+@media (prefers-reduced-motion: no-preference) {
+  .hero-content h1,
+  .hero-content .hero-subtitle,
+  .hero-content p:not(.hero-subtitle),
+  .hero-btns {
+    opacity: 0;
+  }
 }
 
 .hero-content.animate-in h1 {
@@ -320,6 +324,15 @@
 
 .hero-content.animate-in .hero-btns {
   animation: fadeInUp 0.8s var(--ease-out-expo) 0.8s forwards;
+}
+
+/* Titre écrit mot par mot */
+.hero-content h1.typing-active .typed-word {
+  opacity: 0;
+}
+
+.hero-content h1.typing-active .typed-word.is-typed {
+  opacity: 1;
 }
 
 /* Typing effect wrapper */
@@ -417,10 +430,21 @@
 /* ----------------------------------------------------------------
    11. Section partenaires : marquee infinie
    ---------------------------------------------------------------- */
+.partners-grid {
+  flex-wrap: nowrap;
+  overflow: hidden;
+}
+
 .partners-track {
   display: flex;
   width: max-content;
-  animation: marquee 20s linear infinite;
+  animation: marquee 30s linear infinite;
+}
+
+.partners-track .partner-item {
+  flex: 0 0 auto;
+  margin-right: 60px;
+  white-space: nowrap;
 }
 
 .partners-track:hover {
@@ -428,9 +452,18 @@
 }
 
 .partners-wrapper {
+  width: 100%;
   overflow: hidden;
   mask-image: linear-gradient(90deg, transparent, black 10%, black 90%, transparent);
   -webkit-mask-image: linear-gradient(90deg, transparent, black 10%, black 90%, transparent);
+}
+
+/* Le bandeau doit continuer à défiler, même si les animations sont réduites */
+@media (prefers-reduced-motion: reduce) {
+  .partners-track {
+    animation-duration: 30s !important;
+    animation-iteration-count: infinite !important;
+  }
 }
 
 /* ----------------------------------------------------------------
