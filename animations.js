@@ -155,7 +155,7 @@
         });
 
         let i = 0;
-        const speed = 260;
+        const speed = 800;
         function type() {
             if (i < wordEls.length) {
                 wordEls[i].classList.add('is-typed');
@@ -165,7 +165,18 @@
                 title.classList.remove('typing-active');
             }
         }
-        setTimeout(type, 600);
+
+        // Ne démarrer qu'une fois le preloader retiré, sinon l'animation
+        // se joue derrière l'écran de chargement et personne ne la voit.
+        function startWhenVisible() {
+            const preloader = document.getElementById('page-preloader');
+            if (preloader && preloader.parentNode) {
+                setTimeout(startWhenVisible, 200);
+                return;
+            }
+            setTimeout(type, 350);
+        }
+        startWhenVisible();
     }
 
     // ----------------------------------------------------------------
