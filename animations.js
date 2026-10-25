@@ -1,9 +1,7 @@
-/**
- * N.I. CONSEILS-MANAGEMENTS - Animations & Interactions
- * Gestion des effets visuels, scroll et hover.
- */
 (function () {
     'use strict';
+
+    document.documentElement.classList.add('js');
 
     // ----------------------------------------------------------------
     // Helpers
@@ -136,47 +134,57 @@
     // 4. Typing effect for hero title (word by word)
     // ----------------------------------------------------------------
     function initTypingEffect() {
-        // Titres d'en-tête de toutes les pages (accueil, agence, joueurs, services, contact, actualités)
         const title = document.querySelector('header h1[data-cms]');
         if (!title) return;
 
-        const words = title.textContent.trim().split(/\s+/);
-        if (!words.length || !words[0]) return;
+        const text = title.textContent.trim();
+        if (!text) return;
 
-        // Les mots restent dans le DOM (espace réservé), seuls leur opacité change
-        title.textContent = '';
-        title.classList.add('typing-active');
+        if (prefersReducedMotion) {
+            title.textContent = text;
+            title.classList.remove('typing-active');
+            return;
+        }
+
+        const words = text.split(/\s+/);
         const wordEls = words.map((word, index) => {
             const span = document.createElement('span');
             span.className = 'typed-word';
             span.textContent = word;
-            title.appendChild(span);
-            if (index < words.length - 1) title.appendChild(document.createTextNode(' '));
             return span;
         });
 
-        let i = 0;
-        const speed = 800;
-        function type() {
-            if (i < wordEls.length) {
-                wordEls[i].classList.add('is-typed');
-                i++;
-                setTimeout(type, speed);
-            } else {
-                title.classList.remove('typing-active');
-            }
-        }
+        title.textContent = '';
+        title.classList.add('typing-active');
 
-        // Ne démarrer qu'une fois le preloader retiré, sinon l'animation
-        // se joue derrière l'écran de chargement et personne ne la voit.
-        function startWhenVisible() {
-            const preloader = document.getElementById('page-preloader');
-            if (preloader && preloader.parentNode) {
-                setTimeout(startWhenVisible, 200);
+        wordEls.forEach((wordEl, index) => {
+            title.appendChild(wordEl);
+            if (index < wordEls.length - 1) {
+                title.appendChild(document.createTextNode(' '));
+            }
+        });
+
+        let typedIndex = 0;
+        const typeNextWord = () => {
+            if (typedIndex >= wordEls.length) {
+                title.classList.remove('typing-active');
                 return;
             }
-            setTimeout(type, 350);
-        }
+
+            wordEls[typedIndex].classList.add('is-typed');
+            typedIndex += 1;
+            setTimeout(typeNextWord, 220);
+        };
+
+        const startWhenVisible = () => {
+            const preloader = document.getElementById('page-preloader');
+            if (preloader && preloader.parentNode) {
+                setTimeout(startWhenVisible, 180);
+                return;
+            }
+            setTimeout(typeNextWord, 250);
+        };
+
         startWhenVisible();
     }
 
@@ -623,3 +631,4 @@
         initSmoothScroll();
     });
 })();
+

@@ -299,15 +299,13 @@
 /* ----------------------------------------------------------------
    8. Hero : effets du titre et parallax
    ---------------------------------------------------------------- */
-/* Masquage initial uniquement si les animations sont autorisées :
-   en mouvement réduit (ou sans JS), le contenu du hero doit rester visible. */
-@media (prefers-reduced-motion: no-preference) {
-  .hero-content h1,
-  .hero-content .hero-subtitle,
-  .hero-content p:not(.hero-subtitle),
-  .hero-btns {
-    opacity: 0;
-  }
+/* Les textes du hero restent visibles sans JS ;
+   avec JS, ils sont cachés puis révélés progressivement. */
+html.js .hero-content h1,
+html.js .hero-content .hero-subtitle,
+html.js .hero-content p:not(.hero-subtitle),
+html.js .hero-btns {
+  opacity: 0;
 }
 
 .hero-content.animate-in h1 {
@@ -998,65 +996,42 @@ body.page-transition {
   transform: translateX(-50%) translateY(120px);
   background: var(--primary-color);
   color: white;
-  padding: 16px 30px;
-  border-radius: 50px;
+  padding: 12px 20px;
+  border-radius: 9999px;
+  box-shadow: 0 15px 40px rgba(15, 23, 42, 0.25);
   font-weight: 600;
-  font-size: 0.95rem;
-  z-index: 99999;
-  box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+  z-index: 10000;
   opacity: 0;
-  visibility: hidden;
-  transition: transform 0.5s var(--ease-out-expo), opacity 0.4s ease, visibility 0.4s ease;
-  display: flex;
-  align-items: center;
-  gap: 10px;
+  transition: transform 0.35s var(--ease-out-expo), opacity 0.35s ease;
 }
 
 #site-toast.show {
   opacity: 1;
-  visibility: visible;
   transform: translateX(-50%) translateY(0);
 }
 
-#site-toast.success { background: #10b981; }
-#site-toast.error { background: #ef4444; }
+#site-toast.success {
+  background: #10b981;
+}
+
+#site-toast.error {
+  background: #ef4444;
+}
+
+#site-toast i {
+  margin-right: 8px;
+}
 
 /* ----------------------------------------------------------------
-   34. Responsive : désactiver certains effets sur mobile
+   34. Responsive fixes
    ---------------------------------------------------------------- */
 @media (max-width: 768px) {
-  .tilt-card {
-    transform: none !important;
+  .partners-track .partner-item {
+    margin-right: 30px;
   }
 
-  .typing-text {
-    white-space: normal;
-    border-right: none;
-  }
-
-  .section-divider svg {
-    height: 40px;
-  }
-
-  .gradient-text {
-    -webkit-text-fill-color: var(--secondary-color);
-  }
-
-  .hero-particle {
-    display: none;
-  }
-
-  #site-toast {
-    bottom: 20px;
-    left: 20px;
-    right: 20px;
-    transform: translateY(120px);
-    border-radius: 16px;
-    font-size: 0.85rem;
-    padding: 14px 20px;
-  }
-
-  #site-toast.show {
-    transform: translateY(0);
+  .lightbox-close {
+    top: 15px;
+    right: 15px;
   }
 }
