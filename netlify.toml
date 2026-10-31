@@ -1,0 +1,27 @@
+# Redirections permanentes (301) — consolident le référencement sur niconseils.com
+
+# Ancien sous-domaine Netlify -> nouveau nom de domaine
+[[redirects]]
+  from = "https://ni-conseils-managements.netlify.app/*"
+  to = "https://niconseils.com/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "http://ni-conseils-managements.netlify.app/*"
+  to = "https://niconseils.com/:splat"
+  status = 301
+  force = true
+
+# www -> domaine principal (évite le contenu dupliqué)
+[[redirects]]
+  from = "https://www.niconseils.com/*"
+  to = "https://niconseils.com/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "http://www.niconseils.com/*"
+  to = "https://niconseils.com/:splat"
+  status = 301
+  force = true
