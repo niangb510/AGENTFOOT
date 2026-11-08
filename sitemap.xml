@@ -21,7 +21,7 @@
   </url>
   <url>
     <loc>https://niconseils.com/actualites.html</loc>
-    <lastmod>2026-07-28</lastmod>
+    <lastmod>2026-11-08</lastmod>
     <priority>0.95</priority>
     <changefreq>daily</changefreq>
   </url>
@@ -35,6 +35,12 @@
     <loc>https://niconseils.com/contact.html</loc>
     <lastmod>2026-07-27</lastmod>
     <priority>0.8</priority>
+    <changefreq>monthly</changefreq>
+  </url>
+  <url>
+    <loc>https://niconseils.com/article.html?id=detection-de-lespoir-ouagadougou-2026</loc>
+    <lastmod>2026-11-08</lastmod>
+    <priority>0.9</priority>
     <changefreq>monthly</changefreq>
   </url>
   <url>

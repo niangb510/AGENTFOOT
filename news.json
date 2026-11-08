@@ -1,5 +1,22 @@
 [
     {
+        "id": "detection-de-lespoir-ouagadougou-2026",
+        "title": "« Détection de l’Espoir » : dix clubs et des recruteurs attendus à Ouagadougou",
+        "date": "2026-11-08",
+        "dateFormatted": "8 Novembre 2026",
+        "category": "Agence",
+        "author": "N.I. Conseils & Managements",
+        "player": "Détection de l’Espoir",
+        "image": "assets/images/detection-de-lespoir-2026.jpg",
+        "images": ["assets/images/detection-de-lespoir-2026.jpg"],
+        "video": "assets/videos/detection-de-lespoir-2026.mp4",
+        "hideHeaderImage": true,
+        "videoAsThumbnail": true,
+        "summary": "Du 10 au 12 novembre 2026, le terrain Focusport de Ouagadougou accueillera la première édition du tournoi « Détection de l’Espoir ». Dix clubs et des recruteurs du LOSC Lille, du Dijon FCO et du SC Freiburg sont annoncés.",
+        "content": "<p>Le terrain Focusport de Ouagadougou accueillera, du mardi 10 au jeudi 12 novembre 2026, la première édition de « Détection de l’Espoir », un tournoi organisé par N.I. Conseils &amp; Managements. Dix clubs sont annoncés au départ et dix rencontres sont prévues sur ces trois jours. L’événement entend mettre en lumière les talents du football burkinabè.</p><h3>Des recruteurs annoncés au bord du terrain</h3><p>La vidéo de présentation annonce la présence de recruteurs du LOSC Lille, du Dijon FCO et du SC Freiburg, venus observer et évaluer les joueurs. Le tournoi sera parrainé par Charles Kaboré, ancien international burkinabè et ambassadeur du sport national. FSB est également présenté comme partenaire officiel.</p><h3>Rendez-vous du 10 au 12 novembre</h3><p>Le coup d’envoi est annoncé le mardi 10 novembre à 7 h 30 avec la rencontre entre Riviera FC et Focusport FC. Le programme prévoit quatre matchs le mardi, deux le mercredi et quatre le jeudi, du matin jusqu’au soir.</p><p>Les supporters sont invités à venir encourager leurs équipes au terrain Focusport, en famille ou entre amis. Le programme complet est annoncé sur <a href=\"https://niconseils.com\">niconseils.com</a>. Que le meilleur gagne !</p>",
+        "tags": ["Détection de l’Espoir", "Ouagadougou", "Football burkinabè", "N.I. Conseils & Managements", "Détection"]
+    },
+    {
         "id": "ni-conseils-ufoa-b-u17-presence",
         "title": "N.I Conseils Managements présent au Stade du 4-Août pour le Tournoi UFOA-B U17",
         "date": "2026-10-10",
