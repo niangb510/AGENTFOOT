@@ -25,3 +25,40 @@
   to = "https://niconseils.com/:splat"
   status = 301
   force = true
+
+# URLs sans extension -> version .html (évite les doublons /agent et /agent.html)
+[[redirects]]
+  from = "/agent"
+  to = "/agent.html"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/players"
+  to = "/players.html"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/actualites"
+  to = "/actualites.html"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/services"
+  to = "/services.html"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/contact"
+  to = "/contact.html"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/article"
+  to = "/article.html"
+  status = 301
+  force = true

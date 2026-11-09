@@ -130,7 +130,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         const schemaTag = document.getElementById('seo-news-schema');
         if (!schemaTag) return;
 
-        const currentUrl = window.location.origin + window.location.pathname + '?id=' + encodeURIComponent(article.id);
+        const currentUrl = 'https://niconseils.com/article.html?id=' + encodeURIComponent(article.id);
 
         // Mise à jour dynamique des métadonnées sociales (og:, twitter:, canonical)
         const rawImage = article.image || 'assets/images/logo.png';
@@ -146,7 +146,13 @@ document.addEventListener('DOMContentLoaded', async () => {
         setMeta('meta[name="twitter:title"]', 'content', article.title);
         setMeta('meta[name="twitter:description"]', 'content', article.summary);
         setMeta('meta[name="twitter:image"]', 'content', articleImage);
-        setMeta('link[rel="canonical"]', 'href', currentUrl);
+        let canonical = document.querySelector('link[rel="canonical"]');
+        if (!canonical) {
+            canonical = document.createElement('link');
+            canonical.rel = 'canonical';
+            document.head.appendChild(canonical);
+        }
+        canonical.href = currentUrl;
 
         schemaTag.textContent = JSON.stringify({
             "@context": "https://schema.org",
@@ -218,7 +224,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             ? DOMPurify.sanitize(article.content, { USE_PROFILES: { html: true } })
             : article.content;
 
-        const currentUrl = window.location.origin + window.location.pathname + '?id=' + encodeURIComponent(article.id);
+        const currentUrl = 'https://niconseils.com/article.html?id=' + encodeURIComponent(article.id);
 
         // Injection du contenu complet
         articleContainer.innerHTML = `
